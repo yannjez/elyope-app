@@ -7,9 +7,6 @@
       "path": "./apps/veterinarian"
     },
     {
-      "path": "./design-system"
-    },
-    {
       "path": "./libs/design-system"
     }
   ]

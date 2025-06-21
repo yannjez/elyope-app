@@ -19,6 +19,7 @@ export default function Index() {
             <div className="text-container">
               <h2>
                 <svg
+                  className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
