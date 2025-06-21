@@ -12,7 +12,7 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js",
-      "./styles.css": "./dist/styles.css"
+      "./global.css": "./dist/global.css"
     }
   },
   "files": [
@@ -26,7 +26,7 @@
     "tailwindcss": "^4.1.10"
   },
   "scripts": {
-    "build:css": "tailwindcss -i src/styles.css -o dist/styles.css",
-    "dev:css": "tailwindcss -i src/styles.css -o dist/styles.css --watch"
+    "build:css": "tailwindcss -i src/global.css -o dist/global.css",
+    "dev:css": "tailwindcss -i src/global.css -o dist/global.css --watch"
   }
 }

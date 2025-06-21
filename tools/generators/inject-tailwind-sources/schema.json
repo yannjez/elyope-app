@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "title": "Inject Tailwind Sources",
+    "type": "object",
+    "properties": {
+      "project": {
+        "type": "string",
+        "description": "Project name (app or lib)"
+      }
+    },
+    "required": ["project"]
+  }
+  

@@ -1,0 +1,9 @@
+{
+    "generators": {
+        "inject-tailwind-sources": {
+            "factory": "./inject-tailwind-sources/generator",
+            "schema": "./inject-tailwind-sources/schema.json",
+            "description": "Inject @source lines based on dependencies"
+        }
+    }
+}

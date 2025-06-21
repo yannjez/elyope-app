@@ -37,6 +37,7 @@ __metadata:
     "@eslint/eslintrc": ^2.1.1
     "@eslint/js": ^9.8.0
     "@next/eslint-plugin-next": ^15.2.4
+    "@nx/devkit": ^21.2.1
     "@nx/eslint": 21.2.1
     "@nx/eslint-plugin": 21.2.1
     "@nx/js": 21.2.1
@@ -3128,7 +3129,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nx/devkit@npm:21.2.1":
+"@nx/devkit@npm:21.2.1, @nx/devkit@npm:^21.2.1":
   version: 21.2.1
   resolution: "@nx/devkit@npm:21.2.1"
   dependencies:
