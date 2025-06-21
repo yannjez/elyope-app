@@ -4,17 +4,69 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@eslint/compat": "^1.1.1",
+    "@eslint/eslintrc": "^2.1.1",
+    "@eslint/js": "^9.8.0",
+    "@next/eslint-plugin-next": "^15.2.4",
+    "@nx/eslint": "21.2.1",
+    "@nx/eslint-plugin": "21.2.1",
     "@nx/js": "21.2.1",
+    "@nx/next": "21.2.1",
+    "@nx/vite": "21.2.1",
+    "@nx/web": "21.2.1",
     "@swc-node/register": "~1.9.1",
+    "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@tailwindcss/postcss": "latest",
+    "@types/node": "18.16.9",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "@vitest/ui": "^3.0.0",
+    "ajv": "^8.0.0",
+    "eslint": "^9.8.0",
+    "eslint-config-next": "^15.2.4",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-jsx-a11y": "6.10.1",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "5.0.0",
+    "jiti": "2.4.2",
+    "jsonc-eslint-parser": "^2.1.0",
     "nx": "21.2.1",
+    "postcss": "^8.5.6",
     "prettier": "^2.6.2",
+    "tailwindcss": "latest",
     "tslib": "^2.3.0",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.2",
+    "typescript-eslint": "^8.29.0",
+    "verdaccio": "^6.0.5",
+    "vite": "^6.0.0",
+    "vite-plugin-dts": "~4.5.0",
+    "vitest": "^3.0.0"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*",
+    "libs/*"
   ],
-  "packageManager": "yarn@3.3.1"
+  "packageManager": "yarn@3.3.1",
+  "dependencies": {
+    "next": "~15.2.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "nx": {
+    "includedScripts": [],
+    "targets": {
+      "local-registry": {
+        "executor": "@nx/js:verdaccio",
+        "options": {
+          "port": 4873,
+          "config": ".verdaccio/config.yml",
+          "storage": "tmp/local-registry/storage"
+        }
+      }
+    }
+  }
 }
