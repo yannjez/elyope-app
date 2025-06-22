@@ -1,2 +1,6 @@
 @import "tailwindcss";
-@import "@elyope/design-system/global.css"; /* If you have shared libs */
+/* We are now directly importing the theme file from the design system, 
+   allowing the app's build process to handle all Tailwind class generation. */
+@import "../../../../libs/design-system/src/theme.css";
+
+/* Custom styles can go here */

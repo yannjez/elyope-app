@@ -1,0 +1,44 @@
+{
+    "name": "design-system",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/design-system/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/libs/design-system"
+            }
+        },
+        "test": {
+            "executor": "@nx/vite:test",
+            "outputs": [
+                "{options.reportsDirectory}"
+            ],
+            "options": {
+                "reportsDirectory": "../../coverage/libs/design-system"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "typecheck": {
+            "executor": "@nx/js:tsc",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/libs/design-system",
+                "main": "libs/design-system/src/index.ts",
+                "tsConfig": "libs/design-system/tsconfig.lib.json",
+                "assets": [
+                    "libs/design-system/*.md"
+                ]
+            }
+        }
+    },
+    "tags": []
+}
