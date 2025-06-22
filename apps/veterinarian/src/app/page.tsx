@@ -1,3 +1,5 @@
+import { AppTest2SharedComponents } from '@app-test2/shared-components';
+
 export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
@@ -8,10 +10,12 @@ export default function Index() {
             <br />
             Welcome @app-test2/veterinarian 👋
           </h1>
-          <p className="text-lg text-gray-600">
-            Tailwind CSS 4.1 is now configured and ready to use!
+          <p className="text-lg font-bold text-achak">
+            Tailwind CSS 4.1 is now configured and ready to use! 333
           </p>
         </div>
+
+        <AppTest2SharedComponents />
 
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
           <div className="flex items-center justify-between">

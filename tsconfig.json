@@ -7,7 +7,7 @@
       "path": "./apps/veterinarian"
     },
     {
-      "path": "./libs/design-system"
+      "path": "./lib/shared-components"
     }
   ]
 }

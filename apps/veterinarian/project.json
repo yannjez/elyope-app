@@ -10,6 +10,9 @@
                 "{options.outputPath}"
             ],
             "defaultConfiguration": "production",
+            "dependsOn": [
+                "^build"
+            ],
             "options": {
                 "outputPath": "dist/apps/veterinarian"
             }
@@ -17,6 +20,9 @@
         "dev": {
             "executor": "@nx/next:server",
             "defaultConfiguration": "development",
+            "dependsOn": [
+                "^build"
+            ],
             "options": {
                 "buildTarget": "veterinarian:build",
                 "dev": true
