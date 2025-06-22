@@ -1,11 +1,12 @@
-
-
-
 @import "tailwindcss";
-/* We are now directly importing the theme file from the design system, 
-   allowing the app's build process to handle all Tailwind class generation. */
+
+/* @layer theme, base, components, utilities; */
+@import "../../../../lib/theme/theme.css"; 
+/* @import "../../../../lib/theme/utilities.css"; */
+
+ 
+/* Add the sared lib path */  
+@source "../../../../lib/shared-components/src/lib/*";
 
 
-@import "../../../../lib/theme/theme.css";
-
-  
+ 
