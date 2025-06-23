@@ -3,6 +3,7 @@
 import { PageHeader, ExamensIcon, Button } from '@app-test2/shared-components';
 import { ExamenControllerProvider } from './Examen/ExamenContext';
 import ExamenFilter from './Examen/ExamenFilter';
+import ExamenList from './Examen/ExamenList';
 
 export default function ExamenContent() {
   return (
@@ -18,6 +19,7 @@ export default function ExamenContent() {
           }
           filters={<ExamenFilter />}
         />
+        <ExamenList />
       </ExamenControllerProvider>
     </>
   );

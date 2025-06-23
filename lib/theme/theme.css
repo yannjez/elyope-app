@@ -37,14 +37,17 @@
     --color-button-destructive-active:#FFBDBD;
 
     /* States */
-    --color-state-idle:#34B4EB; 
-    --color-state-running:#EBAB34;
-    --color-state-processed:#49EB34;
-    --color-state-archived:#B8B8B8;
-    --color-state-idle-light:#BDE9FF; 
-    --color-state-running-light:#BDE9FF;
-    --color-state-processed-light:#C8FFBD;
-    --color-state-archived-light:#E3E3E3;
+    --color-status-pending:#34B4EB;
+    --color-status-processing:#EBAB34;
+    --color-status-completed:#49EB34;
+    --color-status-archived:#B8B8B8;
+
+    --color-status-pending-light:#BDE9FF;
+    --color-status-processing-light:#FFE9B8;
+    --color-status-completed-light:#C8FFBD;
+    --color-status-archived-light:#B8B8B8;
+
+
  
 
     --shadow-hover: 0px 5px 20px 0px #0000000D;
@@ -57,39 +60,48 @@
     --text-24:24px;
     --text-34:34px;
 
-    }
+}
  
 
   
-    @utility control {
-        @apply  border border-transparent   outline-none ring-0 focus:!border-gray-dark border;
-    }
-   
-    @utility button {
-        @apply control cursor-pointer text-14 px-2 py-1 rounded-4  disabled:cursor-not-allowed;
-    }  
+@utility control {
+    @apply  border border-transparent   outline-none ring-0 focus:!border-gray-dark border;
+}
+
+@utility button {
+    @apply control cursor-pointer text-14 px-2 py-1 rounded-4  disabled:cursor-not-allowed;
+}  
+
+@utility button-neutral { 
+    @apply  button bg-button-neutral hover:bg-button-neutral-hover focus:bg-button-neutral-active disabled:bg-button-neutral-disabled transition-all duration-300;
+}  
     
-    @utility button-neutral { 
-        @apply  button bg-button-neutral hover:bg-button-neutral-hover focus:bg-button-neutral-active disabled:bg-button-neutral-disabled transition-all duration-300;
-    }  
-     
-    @utility button-primary { 
-        @apply  button  text-white bg-button-primary hover:bg-button-primary-hover focus:bg-button-primary-active transition-all duration-300 ;
-    }  
+@utility button-primary { 
+    @apply  button  text-white bg-button-primary hover:bg-button-primary-hover focus:bg-button-primary-active transition-all duration-300 ;
+}  
 
-    @utility button-primary-inverse { 
-        @apply  button  bg-blue-light text-blue hover:bg-button-primary hover:text-white focus:bg-button-primary-active  transition-all duration-300;
-    }  
+@utility button-primary-inverse { 
+    @apply  button  bg-blue-light text-blue hover:bg-button-primary hover:text-white focus:bg-button-primary-active  transition-all duration-300;
+}  
 
-    @utility button-destructive { 
-        @apply  button bg-button-destructive hover:bg-button-destructive-hover focus:bg-button-destructive-active  transition-all duration-300;
-    }  
+@utility button-destructive { 
+    @apply  button bg-button-destructive hover:bg-button-destructive-hover focus:bg-button-destructive-active  transition-all duration-300;
+}  
 
-    @utility select {
-        @apply control text-14 px-2 py-1 border-body rounded-4 cursor-pointer  disabled:cursor-not-allowed;
-        
-     
-    }
+@utility select {
+    @apply control text-14 px-2 py-1 border-body rounded-4 cursor-pointer  disabled:cursor-not-allowed;
+    
+    
+}
+
+@source inline("bg-status-pending-light");
+@source inline("bg-status-processing-light");
+@source inline("bg-status-completed-light");
+@source inline("bg-status-archived-light");
+@source inline("text-status-pending");
+@source inline("text-status-processing");
+@source inline("text-status-completed"); 
+@source inline("text-status-archived");  
 
 
    

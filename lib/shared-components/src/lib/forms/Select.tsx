@@ -1,5 +1,7 @@
+import CarretIcon from '../icons/Carret';
 import { Option } from '../types/Base';
 import { useState, useRef, useEffect } from 'react';
+import { cn } from '../utils/cn';
 
 type SelectProps = {
   options: Option[];
@@ -77,22 +79,17 @@ export default function Select({
         <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <span className="text-button-neutral-active">
-          <svg
+        <span
+          className={cn(
+            'text-button-neutral-active transition-transform duration-300',
+            isOpen ? 'rotate-180' : ''
+          )}
+        >
+          <CarretIcon
             className={`transition-transform duration-300 ${
               isOpen ? 'rotate-180' : ''
             }`}
-            width="10"
-            height="9"
-            viewBox="0 0 10 9"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0.497159 0.727273H9.58807L5.04261 8.45455L0.497159 0.727273Z"
-              fill="currentColor"
-            />
-          </svg>
+          />
         </span>
       </div>
 

@@ -10,6 +10,7 @@ import {
   ProfileIcon,
   AnimauxIcon,
   MenuCard,
+  DataGrid,
 } from '@app-test2/shared-components';
 
 export {
@@ -22,4 +23,5 @@ export {
   MessagerieIcon,
   ProfileIcon,
   AnimauxIcon,
+  DataGrid,
 };

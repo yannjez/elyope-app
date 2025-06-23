@@ -19,6 +19,7 @@ export { default as Select } from './lib/forms/Select';
 
 /* List */
 export { ListFilter } from './lib/list/ListFilter';
+export { DataGrid } from './lib/list/DataGrid';
 
 /* Types */
 export type { ExamenFilter, ExamenStatus } from './lib/types/Examens';
