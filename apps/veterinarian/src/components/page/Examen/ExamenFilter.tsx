@@ -37,7 +37,11 @@ export default function ExamenFilter() {
         filter={{ keyword: filters.keyword ?? '' }}
         onKeywordChange={(value: string) => updateFilters('keyword', value)}
         onSearch={() => {}}
-        onReset={() => {}}
+        onReset={() => {
+          updateFilters('status', '');
+          updateFilters('keyword', '');
+        }}
+        isFilterEmpty={!filters.status && !filters.keyword}
       >
         <ExamenStatusFilter
           onFilterChange={(value) => updateFilters('status', value)}

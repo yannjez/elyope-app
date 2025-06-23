@@ -12,10 +12,12 @@ type BaseFilterProps<T extends BaseFilter> = {
   children?: React.ReactNode;
   isSearching?: boolean;
   debounceMs?: number;
+  isFilterEmpty?: boolean;
 };
 
 export function ListFilter<T extends BaseFilter>({
   filter,
+  isFilterEmpty,
   onKeywordChange,
   onSearch,
   onReset,
@@ -62,7 +64,11 @@ export function ListFilter<T extends BaseFilter>({
       </div>
 
       <div className="flex items-center gap-2">
-        <Button className="button-neutral" disabled={true} onClick={onReset}>
+        <Button
+          className="button-neutral"
+          disabled={isFilterEmpty ?? false}
+          onClick={onReset}
+        >
           Effacer les filtres
         </Button>
         <Button
