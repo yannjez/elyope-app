@@ -1,0 +1,56 @@
+{
+    "name": "shared-components",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "lib/shared-components/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/lib/shared-components"
+            }
+        },
+        "dev": {
+            "executor": "@nx/vite:dev",
+            "options": {
+                "buildTarget": "shared-components:build"
+            }
+        },
+        "watch": {
+            "executor": "@nx/vite:build",
+            "options": {
+                "outputPath": "dist/lib/shared-components",
+                "watch": true
+            }
+        },
+        "watch-deps": {
+            "executor": "@nx/vite:build",
+            "options": {
+                "outputPath": "dist/lib/shared-components",
+                "watch": true
+            }
+        },
+        "build-deps": {
+            "executor": "@nx/vite:build",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/lib/shared-components"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "typecheck": {
+            "executor": "@nx/js:tsc",
+            "options": {
+                "tsConfig": "lib/shared-components/tsconfig.lib.json"
+            }
+        }
+    },
+    "tags": []
+}

@@ -2,11 +2,10 @@
 
 /* @layer theme, base, components, utilities; */
 @import "../../../../lib/theme/theme.css"; 
-/* @import "../../../../lib/theme/utilities.css"; */
-
+ 
  
 /* Add the sared lib path */  
-@source "../../../../lib/shared-components/src/lib/*";
+@source "../../../../lib/shared-components/src/lib/**";
 
 
  

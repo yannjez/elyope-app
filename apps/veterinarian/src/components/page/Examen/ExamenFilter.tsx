@@ -1,0 +1,49 @@
+import {
+  type ExamenFilter,
+  ExamenStatus,
+  ListFilter,
+  Select,
+} from '@app-test2/shared-components';
+import { useExamenControllerContext } from './ExamenContext';
+
+type ExamenFilterProps = {
+  onFilterChange: (value: ExamenStatus) => void;
+  value: ExamenFilter;
+};
+
+function ExamenStatusFilter({ onFilterChange, value }: ExamenFilterProps) {
+  return (
+    <Select
+      options={[
+        { label: 'Tous', value: '' },
+        { label: 'En attente', value: 'pending' },
+        { label: 'En cours', value: 'processing' },
+        { label: 'Terminé', value: 'completed' },
+        { label: 'Archivé', value: 'archived' },
+      ]}
+      value={value.status ?? ''}
+      onChange={(value) => onFilterChange(value as ExamenStatus)}
+    />
+  );
+}
+
+export default function ExamenFilter() {
+  const { filters, updateFilters } = useExamenControllerContext();
+
+  return (
+    <>
+      {/* <div>{JSON.stringify(filters)}</div> */}
+      <ListFilter
+        filter={{ keyword: filters.keyword ?? '' }}
+        onKeywordChange={(value: string) => updateFilters('keyword', value)}
+        onSearch={() => {}}
+        onReset={() => {}}
+      >
+        <ExamenStatusFilter
+          onFilterChange={(value) => updateFilters('status', value)}
+          value={filters}
+        />
+      </ListFilter>
+    </>
+  );
+}

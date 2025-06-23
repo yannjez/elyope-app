@@ -29,7 +29,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@app-test2/shared-components@workspace:lib/shared-components":
+"@app-test2/shared-components@*, @app-test2/shared-components@workspace:lib/shared-components":
   version: 0.0.0-use.local
   resolution: "@app-test2/shared-components@workspace:lib/shared-components"
   languageName: unknown
@@ -53,6 +53,7 @@ __metadata:
     "@nx/react": 21.2.1
     "@nx/vite": 21.2.1
     "@nx/web": 21.2.1
+    "@svgr/webpack": ^8.1.0
     "@swc-node/register": ~1.9.1
     "@swc/cli": ~0.6.0
     "@swc/core": ~1.5.7
@@ -98,6 +99,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@app-test2/veterinarian@workspace:apps/veterinarian"
   dependencies:
+    "@app-test2/shared-components": "*"
     next: ~15.2.4
     react: 19.0.0
     react-dom: 19.0.0

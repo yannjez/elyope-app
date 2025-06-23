@@ -1,31 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 @theme {
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
     --color-blue:#34BBEB;
     --color-blue-light:#DAF3FB;
     --color-blue-dark:#2AB1E1;
     --color-gray:#E3E3E3;
     --color-gray-light:#EDEDED;
-    --color-drak:##253031;
+    --color-gray-dark:#797A80;
+    --color-dark:#253031;
     --color-tonic:#EB5F34;
     --color-destructive-light:#FFBDBD;
     --color-destructive:#FFA6A6;
+    --color-body:#EEEEEE; 
+    --color-body-light:#FCFCFC;
+    --radius-4:4px;
 
 
     /* Buttons */
     --color-button-neutral:#CFCFCF;
     --color-button-neutral-hover:#E3E3E3;
-    --color-button-neutral-active:#D9D9D9;
-  
+    --color-button-neutral-active:#D9D9D9; 
+    --color-button-neutral-disabled:#F2F2F2;
+   
 
     --color-button-primary:#3EC5F5;
     --color-button-primary-hover:#2AB1E1;
     --color-button-primary-active:#34BBEB;
 
     --color-button-destructive:#FFA6A6;
-    --color-button-destructive-hover:#FFBDBD;
-    --color-button-destructive-active:#E3E3E3;
+    --color-button-destructive-hover:#E3E3E3;
+    --color-button-destructive-active:#FFBDBD;
 
     /* States */
-    --color-state-idle:#34B4EB;
+    --color-state-idle:#34B4EB; 
     --color-state-running:#EBAB34;
     --color-state-processed:#49EB34;
     --color-state-archived:#B8B8B8;
@@ -33,27 +43,84 @@
     --color-state-running-light:#BDE9FF;
     --color-state-processed-light:#C8FFBD;
     --color-state-archived-light:#E3E3E3;
-    --radius-4:4px;
+ 
+
+    --shadow-hover: 0px 5px 20px 0px #0000000D;
+
+
+    /* Text */
+    --text-12:12px;
+    --text-14:14px;
+    --text-17:17px;
+    --text-24:24px;
+    --text-34:34px;
 
     }
+ 
 
+    @layer utilities { 
+        select {
+          
+        } 
+        select::picker {
+         padding: 2px;
+          } 
+ 
+        option{
+            border-radius: 0;
+            @apply text-14 px-2 py-1;
+        }
+        option::hover{
+            background: #a53f3f;
+        
+        }
+    }
+  
+    @utility control {
+        @apply  border border-transparent   outline-none ring-0 focus:!border-gray-dark border;
+    }
+   
     @utility button {
-        @apply  cursor-pointer text-[12px] px-2 py-1  disabled:cursor-not-allowed;
+        @apply control cursor-pointer text-14 px-2 py-1 rounded-4  disabled:cursor-not-allowed;
     }  
     
     @utility button-neutral { 
-        @apply  button bg-button-neutral hover:bg-button-neutral-hover focus:bg-button-neutral-active ;
+        @apply  button bg-button-neutral hover:bg-button-neutral-hover focus:bg-button-neutral-active disabled:bg-button-neutral-disabled transition-all duration-300;
     }  
      
     @utility button-primary { 
-        @apply  button  text-white bg-button-primary hover:bg-button-primary-hover focus:bg-button-primary-active ;
+        @apply  button  text-white bg-button-primary hover:bg-button-primary-hover focus:bg-button-primary-active transition-all duration-300 ;
+    }  
+
+    @utility button-primary-inverse { 
+        @apply  button  bg-blue-light text-blue hover:bg-button-primary hover:text-white focus:bg-button-primary-active  transition-all duration-300;
     }  
 
     @utility button-destructive { 
-        @apply  button bg-button-destructive hover:bg-button-destructive-hover focus:bg-button-destructive-active ;
+        @apply  button bg-button-destructive hover:bg-button-destructive-hover focus:bg-button-destructive-active  transition-all duration-300;
     }  
 
+    @utility select {
+        @apply control;
+        /* background-image:
+        linear-gradient(45deg, white 50%, transparent 50%),
+        linear-gradient(135deg, transparent 50%, white 50%),
+        radial-gradient(gray 70%, transparent 72%);
+      background-position:
+        calc(100% - 15px) 1em,
+        calc(100% - 20px) 1em,
+        calc(100% - .5em) .5em;
+      background-size:
+        5px 5px,
+        5px 5px,
+        1.5em 1.5em;
+      background-repeat: no-repeat;
+      border-color: green; */
+     
+    }
 
+
+   
  
 
 

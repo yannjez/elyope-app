@@ -1,18 +1,18 @@
 import React from 'react';
 import { cn } from '../utils/cn';
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'neutral' | 'primary' | 'destructive';
-};
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-function Button({
-  children,
-  className,
-  variant = 'neutral',
-  ...props
-}: ButtonProps) {
+function Button({ children, className, ...props }: ButtonProps) {
   return (
-    <button className={cn(`button-${variant}`, className)} {...props}>
+    <button
+      className={cn(
+        'button px-2 py-1 rounded-4 disabled:opacity-50',
+
+        className
+      )}
+      {...props}
+    >
       {children}
     </button>
   );
