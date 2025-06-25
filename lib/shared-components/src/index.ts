@@ -3,6 +3,7 @@ export * from './lib/shared-components';
 /* Commons */
 export { default as PageHeader } from './lib/commons/PageHeader';
 export { MenuCard } from './lib/commons/MenuCard';
+export { default as Sidemenu } from './lib/commons/Sidemenu';
 
 /* Icons */
 export { default as ExamensIcon } from './lib/icons/Examens';

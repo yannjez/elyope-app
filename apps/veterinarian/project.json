@@ -25,7 +25,8 @@
             ],
             "options": {
                 "buildTarget": "veterinarian:build",
-                "dev": true
+                "dev": true,
+                "turbo": true
             }
         },
         "start": {

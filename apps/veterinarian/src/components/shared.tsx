@@ -11,6 +11,7 @@ import {
   AnimauxIcon,
   MenuCard,
   DataGrid,
+  Sidemenu,
 } from '@app-test2/shared-components';
 
 export {
@@ -24,4 +25,5 @@ export {
   ProfileIcon,
   AnimauxIcon,
   DataGrid,
+  Sidemenu,
 };

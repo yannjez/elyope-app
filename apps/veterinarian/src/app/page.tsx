@@ -19,7 +19,7 @@ export default function Index() {
             support@elyope.com
           </a>
         </div>
-        <AppTest2SharedComponents />
+       
       </div>
     </div>
   );
