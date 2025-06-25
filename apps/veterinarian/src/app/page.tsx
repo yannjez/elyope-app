@@ -7,10 +7,10 @@ export default function Index() {
       <div className=" mx-auto  flex flex-col gap-5">
         <div className="flex flex-col gap-2.5 text-center">
           <h1 className="text-17/[90%] font-bold ">Bonjour John,</h1>
-          <p className=" text-gray-dark">Heureux de vous voir ici!</p>
+          <p className=" text-grey-500">Heureux de vous voir ici!</p>
         </div>
         <MenuBlock />
-        <div className="flex justify-center text-12/[90%] items-center text-gray-dark">
+        <div className="flex justify-center text-12/[90%] items-center text-grey-500">
           Un problème ? Contactez notre support:{' '}
           <a
             href="mailto:support@elyope.com"

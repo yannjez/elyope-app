@@ -6,17 +6,13 @@ import { cn } from '../../../../../../lib/shared-components/src/lib/utils/cn';
 // Example status badge component
 const StatusBadge = ({ status }: { status: ExamenStatus }) => {
   const className: Record<ExamenStatus, string> = {
-    pending: 'bg-status-pending-light text-status-pending',
-    processing: 'bg-status-processing-light text-status-processing',
-    completed: 'bg-status-completed-light text-status-completed',
-    archived: 'bg-status-archived-light text-status-archived',
+    pending: 'bg-blue-400 text-blue-600',
+    processing: 'bg-yellow-300 text-yellow-500',
+    completed: 'bg-green-300 text-green-500',
+    archived: 'bg-grey-400 text-grey-600',
   };
   return (
-    <span
-      className={
-        className[status] && 'bg-status-processing-light text-status-processing'
-      }
-    >
+    <span className={className[status] && 'bg-yellow-300 text-yellow-500'}>
       {status}
     </span>
   );
@@ -42,10 +38,10 @@ export default function ExamenList() {
   ];
 
   const className: Record<ExamenStatus, [string, string]> = {
-    pending: ['bg-status-pending-light ', 'bg-status-pending'],
-    processing: ['bg-status-processing-light', 'bg-status-processing'],
-    completed: ['bg-status-completed-light ', 'bg-status-completed'],
-    archived: ['bg-status-archived-light ', 'bg-status-archived'],
+    pending: ['bg-blue-400 ', 'bg-blue-400'],
+    processing: ['bg-yellow-300', 'bg-yellow-500'],
+    completed: ['bg-green-300 ', 'bg-green-500'],
+    archived: ['bg-grey-400 ', 'bg-grey-600'],
   };
   return (
     <DataGrid

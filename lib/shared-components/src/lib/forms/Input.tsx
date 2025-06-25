@@ -17,7 +17,7 @@ export default function Input({
         type="text"
         id="input"
         className={cn(
-          'px-2 py-1 outline-none ring-0 text-14 w-full border border-body rounded-4 control',
+          'px-2 py-1 outline-none ring-0 text-14 w-full border border-grey-200 rounded-4 control',
           {
             'pl-8': icon && iconPosition === 'left',
             'pr-8': icon && iconPosition === 'right',
@@ -27,7 +27,7 @@ export default function Input({
       />
       {icon && (
         <div
-          className={cn('absolute top-1/2 -translate-y-1/2 text-body ', {
+          className={cn('absolute top-1/2 -translate-y-1/2 text-grey-200 ', {
             'left-2': iconPosition === 'left',
             'right-2': iconPosition === 'right',
           })}

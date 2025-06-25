@@ -27,7 +27,7 @@ export function MenuCard({
     <a
       href={href}
       className={cn(
-        ' bg-body-light  group flex flex-col gap-2 rounded-4 p-5 min-w-[350px] h-[132px] hover:shadow-hover transition-all duration-600',
+        ' bg-grey-100  group flex flex-col gap-2 rounded-4 p-5 min-w-[350px] h-[132px] hover:shadow-hover transition-all duration-600',
         className
       )}
     >
@@ -36,11 +36,11 @@ export function MenuCard({
           {icon}
           <h3 className="text-34/[90%] font-bold ">{title}</h3>
         </div>
-        <div className="text-gray-light group-hover:text-blue  ">
+        <div className="text-grey-200 group-hover:text-blue-500  ">
           <ArrowleftIcon className="transition-all duration-600" />
         </div>
       </div>
-      <p className="  text-14 text-gray-dark">{description}</p>
+      <p className="  text-14 text-grey-500">{description}</p>
       {action && (
         <div className="">
           <Button

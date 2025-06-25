@@ -14,7 +14,7 @@ export default function MenuBlock() {
       <div className="flex flex-wrap gap-3 ">
         <MenuCard
           href="/examens"
-          icon={<ExamensIcon className="w-8 h-8 text-blue" />}
+          icon={<ExamensIcon className="w-8 h-8 text-blue-500" />}
           title="Examens"
           description="Retrouvez ici toutes vos fiches d'examens."
           action={{
@@ -24,7 +24,7 @@ export default function MenuBlock() {
         />
         <MenuCard
           href="#"
-          icon={<AnimauxIcon className="w-8 h-8 text-blue" />}
+          icon={<AnimauxIcon className="w-8 h-8 text-blue-500" />}
           title="Animaux"
           description="Accéder à la liste des animaux."
           action={{
@@ -36,13 +36,13 @@ export default function MenuBlock() {
       <div className="flex flex-wrap gap-3 justify-center items-center">
         <MenuCard
           href="#"
-          icon={<ProfileIcon className="w-8 h-8 text-blue" />}
+          icon={<ProfileIcon className="w-8 h-8 text-blue-500" />}
           title="Mon profil"
           description="Modifiez vos informations de profil."
         />
         <MenuCard
           href="#"
-          icon={<MessagerieIcon className="w-8 h-8 text-blue" />}
+          icon={<MessagerieIcon className="w-8 h-8 text-blue-500" />}
           title="Messagerie"
           description="Consulter et répondre à vos messages."
         />

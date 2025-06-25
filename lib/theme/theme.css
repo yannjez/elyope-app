@@ -4,7 +4,7 @@
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     
-    --color-blue:#34BBEB;
+    /* --color-blue:#34BBEB;
     --color-blue-light:#DAF3FB;
     --color-blue-dark:#2AB1E1;
     --color-gray:#E3E3E3;
@@ -17,12 +17,12 @@
     --color-destructive-light:#FFBDBD;
     --color-destructive:#FFA6A6;
     --color-body:#EEEEEE; 
-    --color-body-light:#FCFCFC;
-    --radius-4:4px;
+    --color-body-light:#FCFCFC; */
+   
 
 
     /* Buttons */
-    --color-button-neutral:#CFCFCF;
+    /* --color-button-neutral:#CFCFCF;
     --color-button-neutral-hover:#E3E3E3;
     --color-button-neutral-active:#D9D9D9; 
     --color-button-neutral-disabled:#F2F2F2;
@@ -34,7 +34,7 @@
 
     --color-button-destructive:#FFA6A6;
     --color-button-destructive-hover:#E3E3E3;
-    --color-button-destructive-active:#FFBDBD;
+    --color-button-destructive-active:#FFBDBD; */
 
     /* States */
     --color-status-pending:#34B4EB;
@@ -47,11 +47,9 @@
     --color-status-completed-light:#C8FFBD;
     --color-status-archived-light:#B8B8B8;
 
-
- 
-
+    /* Others */
     --shadow-hover: 0px 5px 20px 0px #0000000D;
-
+    --radius-4:4px;
 
     /* Text */
     --text-12:12px;
@@ -60,12 +58,31 @@
     --text-24:24px;
     --text-34:34px;
 
+    --grey-800: #253031;
+    --grey-600: #4A4A4E;
+    --grey-500: #797A80;
+    --grey-400: #B8B8B8;
+    --grey-300: #D9D9D9;
+    --grey-200: #EEEEEE;
+    --grey-100: #F7F7F7;
+    --blue-600: #2AB1E1;
+    --blue-500: #34BBEB;
+    --blue-400: #BDE9FF;
+    --blue-200: #DAF3FB;
+    --green-500: #49EB34;
+    --green-300: #C8FFBD;
+    --red-500: #FF4242;
+    --red-200: #FFBDBD;
+    --orange-800: #EB5F34;
+    --yellow-500: #EBAB34;
+    --yellow-300: #FFEB8D;
+    --component-frame-color: #9747FF;
 }
  
 
   
 @utility control {
-    @apply  border border-transparent   outline-none ring-0 focus:!border-gray-dark border;
+    @apply  border border-transparent   outline-none ring-0 focus:!border-gray-800 border;
 }
 
 @utility button {
@@ -73,25 +90,23 @@
 }  
 
 @utility button-neutral { 
-    @apply  button bg-button-neutral hover:bg-button-neutral-hover focus:bg-button-neutral-active disabled:bg-button-neutral-disabled transition-all duration-300;
+    @apply  button bg-[var(--grey-200)]  focus:bg-[var(--grey-300)] disabled:text-[var(--grey-400)] transition-all duration-300;
 }  
     
 @utility button-primary { 
-    @apply  button  text-white bg-button-primary hover:bg-button-primary-hover focus:bg-button-primary-active transition-all duration-300 ;
+    @apply  button  text-white  bg-[var(--blue-500)]  focus:bg-[var(--blue-600)] transition-all duration-300 ;
 }  
 
 @utility button-primary-inverse { 
-    @apply  button  bg-blue-light text-blue hover:bg-button-primary hover:text-white focus:bg-button-primary-active  transition-all duration-300;
+    @apply   button  text-[var(--grey-100)]  bg-[var(--blue-600)]  hover:text-[var(--blue-500)] hover:bg-[var(--blue-200)] focus:bg-[var(--blue-500)] transition-all duration-300;
 }  
 
 @utility button-destructive { 
-    @apply  button bg-button-destructive hover:bg-button-destructive-hover focus:bg-button-destructive-active  transition-all duration-300;
+    @apply  button bg-[var(--red-500)] hover:bg-[var(--red-200)] focus:bg-[var(--grey-200)]  transition-all duration-300;
 }  
 
 @utility select {
-    @apply control text-14 px-2 py-1 border-body rounded-4 cursor-pointer  disabled:cursor-not-allowed;
-    
-    
+    @apply control text-14 px-2 py-1 border-[var(--grey-200)] rounded-4 cursor-pointer  disabled:cursor-not-allowed;
 }
 
 @source inline("bg-status-pending-light");

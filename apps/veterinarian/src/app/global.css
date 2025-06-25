@@ -5,17 +5,10 @@
  
  
 /* Add the sared lib path */  
+@source "../../**";
 @source "../../../../lib/shared-components/src/lib/**";
 
-/* Style for status */ 
-@source inline("bg-status-pending-light");
-@source inline("bg-status-processing-light");
-@source inline("bg-status-completed-light");
-@source inline("bg-status-archived-light");
-@source inline("text-status-pending");
-@source inline("text-status-processing");
-@source inline("text-status-completed");
-@source inline("text-status-archived");  
+
 
 
 

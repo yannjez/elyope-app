@@ -70,7 +70,7 @@ export function DataGrid<T extends object>({
                 }
               >
                 <div className=" flex items-center gap-1">
-                  <span className=" text-12 text-gray-dark">{col.header}</span>
+                  <span className=" text-12 text-grey-500">{col.header}</span>
                   {col.isSortable && (
                     <span className="ml-1 text-button-neutral-active">
                       <CarretIcon
@@ -78,8 +78,8 @@ export function DataGrid<T extends object>({
                           'transition-transform duration-300',
                           sortField === col.field
                             ? sortDirection === 'desc'
-                              ? 'rotate-180 text-gray-dark'
-                              : 'text-gray-dark'
+                              ? 'rotate-180 text-grey-500'
+                              : 'text-grey-500'
                             : 'opacity-70'
                         )}
                       />
@@ -97,7 +97,7 @@ export function DataGrid<T extends object>({
                 <td
                   key={colIdx}
                   className={cn(
-                    'mx-2 my-1 py-2 px-3 bg-body-light rounded-4 text-14',
+                    'mx-2 my-1 py-2 px-3 bg-grey-100 rounded-4 text-14',
                     col.className
                   )}
                 >

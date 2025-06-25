@@ -11,7 +11,7 @@ export function AppTest2SharedComponents() {
         <Button className="button-primary">Primary</Button>
         <Button className="button-destructive">Destructive</Button>
       </div>
-      <div className="flex gap-4 p-4 bg-body-light ">
+      <div className="flex gap-4 p-4 bg-grey-100 ">
         <span>Input</span>
         <Input placeholder="Input" />
 
