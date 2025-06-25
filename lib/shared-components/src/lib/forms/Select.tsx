@@ -76,7 +76,9 @@ export default function Select({
          
         `}
       >
-        <span className={selectedOption ? 'text-gray-900' : 'text-el-grey-500'}>
+        <span
+          className={selectedOption ? 'text-el-grey-800' : 'text-el-grey-500'}
+        >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <span
@@ -95,14 +97,18 @@ export default function Select({
 
       {/* Dropdown Options */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1  border border-el-grey-600 rounded-4 max-h-60 overflow-auto bg-grey-100">
+        <div className="absolute z-50 w-full mt-1  border border-el-grey-600 rounded-4 max-h-60 overflow-auto bg-el-grey-100">
           {options.map((option) => (
             <div
               key={option.value}
               onClick={() => handleOptionClick(option)}
               className={`
-                px-2 py-1 cursor-pointer text-14 hover:bg-grey-100 whitespace-nowrap
-                ${option.value === value ? 'bg-grey-100 text-el-grey-500' : ''}
+                px-2 py-1 cursor-pointer text-14  whitespace-nowrap
+                ${
+                  option.value === value
+                    ? 'bg-el-grey-200 '
+                    : 'bg-el-grey-100 hover:bg-el-grey-200 transition-all duration-300'
+                }
               `}
             >
               {option.label}

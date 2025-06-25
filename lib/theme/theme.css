@@ -4,37 +4,25 @@
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     
-    /* --color-blue:#34BBEB;
-    --color-blue-light:#DAF3FB;
-    --color-blue-dark:#2AB1E1;
-    --color-gray:#E3E3E3;
-    --color-gray2:#A4A4A8;
-    --color-gray-hover:#F7F7F7;
-    --color-gray-light:#EDEDED;
-    --color-gray-dark:#797A80;
-    --color-dark:#253031;
-    --color-tonic:#EB5F34;
-    --color-destructive-light:#FFBDBD;
-    --color-destructive:#FFA6A6;
-    --color-body:#EEEEEE; 
-    --color-body-light:#FCFCFC; */
-   
-
-
-    /* Buttons */
-    /* --color-button-neutral:#CFCFCF;
-    --color-button-neutral-hover:#E3E3E3;
-    --color-button-neutral-active:#D9D9D9; 
-    --color-button-neutral-disabled:#F2F2F2;
-   
-
-    --color-button-primary:#3EC5F5;
-    --color-button-primary-hover:#2AB1E1;
-    --color-button-primary-active:#34BBEB;
-
-    --color-button-destructive:#FFA6A6;
-    --color-button-destructive-hover:#E3E3E3;
-    --color-button-destructive-active:#FFBDBD; */
+    /* Colors */
+    --color-el-grey-800: #253031;
+    --color-el-grey-600: #4A4A4E;
+    --color-el-grey-500: #797A80;
+    --color-el-grey-400: #B8B8B8;
+    --color-el-grey-300: #D9D9D9;
+    --color-el-grey-200: #EEEEEE;
+    --color-el-grey-100: #F7F7F7;
+    --color-el-blue-600: #2AB1E1;
+    --color-el-blue-500: #34BBEB;
+    --color-el-blue-400: #BDE9FF;
+    --color-el-blue-200: #DAF3FB;
+    --color-el-green-500: #49EB34;
+    --color-el-green-300: #C8FFBD;
+    --color-el-red-500: #FF4242;
+    --color-el-red-200: #FFBDBD;
+    --color-el-orange-800: #EB5F34;
+    --color-el-yellow-500: #EBAB34;
+    --color-el-yellow-300: #FFEB8D;
 
     /* States */
     --color-status-pending:#34B4EB;
@@ -57,32 +45,12 @@
     --text-17:17px;
     --text-24:24px;
     --text-34:34px;
-
-    --el-grey-800: #253031;
-    --el-grey-600: #4A4A4E;
-    --el-grey-500: #797A80;
-    --el-grey-400: #B8B8B8;
-    --el-grey-300: #D9D9D9;
-    --el-grey-200: #EEEEEE;
-    --el-grey-100: #F7F7F7;
-    --el-blue-600: #2AB1E1;
-    --el-blue-500: #34BBEB;
-    --el-blue-400: #BDE9FF;
-    --el-blue-200: #DAF3FB;
-    --el-green-500: #49EB34;
-    --el-green-300: #C8FFBD;
-    --el-red-500: #FF4242;
-    --el-red-200: #FFBDBD;
-    --el-orange-800: #EB5F34;
-    --yellow-500: #EBAB34;
-    --yellow-300: #FFEB8D;
-    --component-frame-color: #9747FF;
 }
  
 
   
 @utility control {
-    @apply  border border-transparent   outline-none ring-0 focus:!border-gray-800 border;
+    @apply  border border-transparent  outline-none ring-0 focus:!border-el-grey-800 border;
 }
 
 @utility button {
@@ -90,23 +58,23 @@
 }  
 
 @utility button-neutral { 
-    @apply  button bg-[var(--el-grey-200)]  focus:bg-[var(--el-grey-300)] disabled:text-[var(--el-grey-400)] transition-all duration-300;
+    @apply  button bg-el-grey-200  focus:bg-el-grey-300 disabled:text-el-grey-400 transition-all duration-300;
 }  
     
 @utility button-primary { 
-    @apply  button  text-white  bg-[var(--el-blue-500)]  focus:bg-[var(--el-blue-600)] transition-all duration-300 ;
+    @apply  button  text-white  bg-el-blue-500  focus:bg-el-blue-600 transition-all duration-300 ;
 }  
 
 @utility button-primary-inverse { 
-    @apply   button  text-[var(--el-grey-100)]  bg-[var(--el-blue-600)]  hover:text-[var(--el-blue-500)] hover:bg-[var(--el-blue-200)] focus:bg-[var(--el-blue-500)] transition-all duration-300;
+    @apply   button  text-el-grey-100  bg-el-blue-600  hover:text-el-blue-500 hover:bg-el-blue-200 focus:bg-el-blue-500 transition-all duration-300;
 }  
 
 @utility button-destructive { 
-    @apply  button bg-[var(--el-red-500)] hover:bg-[var(--el-red-200)] focus:bg-[var(--el-grey-200)]  transition-all duration-300;
+    @apply  button bg-el-red-500 hover:bg-el-red-200 focus:bg-el-grey-200  transition-all duration-300;
 }  
 
 @utility select {
-    @apply control text-14 px-2 py-1 border-[var(--el-grey-200)] rounded-4 cursor-pointer  disabled:cursor-not-allowed;
+    @apply control text-14 px-2 py-1 border-el-grey-200 rounded-4 cursor-pointer  disabled:cursor-not-allowed;
 }
 
 @source inline("bg-status-pending-light");

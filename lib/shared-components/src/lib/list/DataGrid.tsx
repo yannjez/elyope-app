@@ -74,7 +74,7 @@ export function DataGrid<T extends object>({
                     {col.header}
                   </span>
                   {col.isSortable && (
-                    <span className="ml-1 text-button-neutral-active">
+                    <span className="ml-1 text-el-grey-300">
                       <CarretIcon
                         className={cn(
                           'transition-transform duration-300',
@@ -99,7 +99,7 @@ export function DataGrid<T extends object>({
                 <td
                   key={colIdx}
                   className={cn(
-                    'mx-2 my-1 py-2 px-3 bg-grey-100 rounded-4 text-14',
+                    'mx-2 my-1 py-2 px-3 bg-el-grey-100 rounded-4 text-14',
                     col.className
                   )}
                 >

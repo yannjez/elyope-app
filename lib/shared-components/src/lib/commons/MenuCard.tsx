@@ -27,7 +27,7 @@ export function MenuCard({
     <a
       href={href}
       className={cn(
-        ' bg-grey-100  group flex flex-col gap-2 rounded-4 p-5 min-w-[350px] h-[132px] hover:shadow-hover transition-all duration-600',
+        ' bg-el-grey-100  group flex flex-col gap-2 rounded-4 p-5 min-w-[350px] h-[132px] hover:shadow-hover transition-all duration-600',
         className
       )}
     >
