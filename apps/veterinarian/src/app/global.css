@@ -5,7 +5,6 @@
  
  
 /* Add the sared lib path */  
-@source "../../**";
 @source "../../../../lib/shared-components/src/lib/**";
 
 

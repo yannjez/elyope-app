@@ -36,11 +36,11 @@ export function MenuCard({
           {icon}
           <h3 className="text-34/[90%] font-bold ">{title}</h3>
         </div>
-        <div className="text-grey-200 group-hover:text-blue-500  ">
+        <div className="text-grey-200 group-hover:text-el-blue-500  ">
           <ArrowleftIcon className="transition-all duration-600" />
         </div>
       </div>
-      <p className="  text-14 text-grey-500">{description}</p>
+      <p className="  text-14 text-el-grey-500">{description}</p>
       {action && (
         <div className="">
           <Button

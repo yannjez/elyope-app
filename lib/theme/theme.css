@@ -58,22 +58,22 @@
     --text-24:24px;
     --text-34:34px;
 
-    --grey-800: #253031;
-    --grey-600: #4A4A4E;
-    --grey-500: #797A80;
-    --grey-400: #B8B8B8;
-    --grey-300: #D9D9D9;
-    --grey-200: #EEEEEE;
-    --grey-100: #F7F7F7;
-    --blue-600: #2AB1E1;
-    --blue-500: #34BBEB;
-    --blue-400: #BDE9FF;
-    --blue-200: #DAF3FB;
-    --green-500: #49EB34;
-    --green-300: #C8FFBD;
-    --red-500: #FF4242;
-    --red-200: #FFBDBD;
-    --orange-800: #EB5F34;
+    --el-grey-800: #253031;
+    --el-grey-600: #4A4A4E;
+    --el-grey-500: #797A80;
+    --el-grey-400: #B8B8B8;
+    --el-grey-300: #D9D9D9;
+    --el-grey-200: #EEEEEE;
+    --el-grey-100: #F7F7F7;
+    --el-blue-600: #2AB1E1;
+    --el-blue-500: #34BBEB;
+    --el-blue-400: #BDE9FF;
+    --el-blue-200: #DAF3FB;
+    --el-green-500: #49EB34;
+    --el-green-300: #C8FFBD;
+    --el-red-500: #FF4242;
+    --el-red-200: #FFBDBD;
+    --el-orange-800: #EB5F34;
     --yellow-500: #EBAB34;
     --yellow-300: #FFEB8D;
     --component-frame-color: #9747FF;
@@ -90,23 +90,23 @@
 }  
 
 @utility button-neutral { 
-    @apply  button bg-[var(--grey-200)]  focus:bg-[var(--grey-300)] disabled:text-[var(--grey-400)] transition-all duration-300;
+    @apply  button bg-[var(--el-grey-200)]  focus:bg-[var(--el-grey-300)] disabled:text-[var(--el-grey-400)] transition-all duration-300;
 }  
     
 @utility button-primary { 
-    @apply  button  text-white  bg-[var(--blue-500)]  focus:bg-[var(--blue-600)] transition-all duration-300 ;
+    @apply  button  text-white  bg-[var(--el-blue-500)]  focus:bg-[var(--el-blue-600)] transition-all duration-300 ;
 }  
 
 @utility button-primary-inverse { 
-    @apply   button  text-[var(--grey-100)]  bg-[var(--blue-600)]  hover:text-[var(--blue-500)] hover:bg-[var(--blue-200)] focus:bg-[var(--blue-500)] transition-all duration-300;
+    @apply   button  text-[var(--el-grey-100)]  bg-[var(--el-blue-600)]  hover:text-[var(--el-blue-500)] hover:bg-[var(--el-blue-200)] focus:bg-[var(--el-blue-500)] transition-all duration-300;
 }  
 
 @utility button-destructive { 
-    @apply  button bg-[var(--red-500)] hover:bg-[var(--red-200)] focus:bg-[var(--grey-200)]  transition-all duration-300;
+    @apply  button bg-[var(--el-red-500)] hover:bg-[var(--el-red-200)] focus:bg-[var(--el-grey-200)]  transition-all duration-300;
 }  
 
 @utility select {
-    @apply control text-14 px-2 py-1 border-[var(--grey-200)] rounded-4 cursor-pointer  disabled:cursor-not-allowed;
+    @apply control text-14 px-2 py-1 border-[var(--el-grey-200)] rounded-4 cursor-pointer  disabled:cursor-not-allowed;
 }
 
 @source inline("bg-status-pending-light");
