@@ -12,6 +12,8 @@ import {
   MenuCard,
   DataGrid,
   Sidemenu,
+  Select,
+  ListFilter,
 } from '@app-test2/shared-components';
 
 export {
@@ -26,4 +28,6 @@ export {
   AnimauxIcon,
   DataGrid,
   Sidemenu,
+  Select,
+  ListFilter,
 };

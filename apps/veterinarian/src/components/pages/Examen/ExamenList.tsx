@@ -1,22 +1,9 @@
-// ...StatusBadge and rows as above
+'use client';
 
-import { DataGrid, type ExamenStatus } from '@app-test2/shared-components';
+import { type ExamenStatus } from '@app-test2/shared-components';
+import { DataGrid } from '@/components/shared';
+
 import { cn } from '../../../../../../lib/shared-components/src/lib/utils/cn';
-
-// Example status badge component
-const StatusBadge = ({ status }: { status: ExamenStatus }) => {
-  const className: Record<ExamenStatus, string> = {
-    pending: 'bg-el-blue-400 text-el-blue-600',
-    processing: 'bg-yellow-300 text-yellow-500',
-    completed: 'bg-el-green-300 text-el-green-500',
-    archived: 'bg-el-grey-400 text-el-grey-600',
-  };
-  return (
-    <span className={className[status] && 'bg-yellow-300 text-yellow-500'}>
-      {status}
-    </span>
-  );
-};
 
 export default function ExamenList() {
   const rows = [

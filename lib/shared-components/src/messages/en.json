@@ -1,0 +1,20 @@
+{
+    "Data": {
+        "Examen": {
+            "name": "Examen",
+            "columns": {
+                "date": "Date",
+                "animal": "Animal",
+                "status": "Status",
+                "comment": "Comment",
+                "interpreter": "Interpreter"
+            },
+            "status": {
+                "pending": "Pending",
+                "processing": "Processing",
+                "completed": "Completed",
+                "archived": "Archived"
+            }
+        }
+    }
+}

@@ -1,3 +1,5 @@
+'use client';
+
 import CarretIcon from '../icons/Carret';
 import { Option } from '../types/Base';
 import { useState, useRef, useEffect, useMemo } from 'react';

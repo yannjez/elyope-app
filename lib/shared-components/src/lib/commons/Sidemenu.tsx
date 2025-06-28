@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Logo from '../assets/Logo';
 import { cn } from '../utils/cn';
-import { ProfileIcon } from '../..';
 
 type MenuItem = {
   href: string;

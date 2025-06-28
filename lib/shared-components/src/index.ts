@@ -25,3 +25,7 @@ export { DataGrid } from './lib/list/DataGrid';
 /* Types */
 export type { ExamenFilter, ExamenStatus } from './lib/types/Examens';
 export type { AppUser } from './lib/types/Base';
+
+// /* Messages */
+// export { default as enMessages } from './messages/en.json';
+// export { default as frMessages } from './messages/fr.json';

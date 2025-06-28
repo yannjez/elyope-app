@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { type BaseFilter } from '../types/Base';
 import Input from '../forms/Input';

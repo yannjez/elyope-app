@@ -1,9 +1,9 @@
-import {
-  type ExamenFilter,
-  ExamenStatus,
-  ListFilter,
-  Select,
-} from '@app-test2/shared-components';
+'use client';
+
+import { type ExamenFilter, ExamenStatus } from '@app-test2/shared-components';
+
+import { Select, ListFilter } from '@/components/shared';
+
 import { useExamenControllerContext } from './ExamenContext';
 
 type ExamenFilterProps = {
