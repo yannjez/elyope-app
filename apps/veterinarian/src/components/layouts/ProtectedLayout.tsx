@@ -50,7 +50,10 @@ export default async function ProtectedLayout({
       }}
     >
       <div className="flex gap-1">
-        <Sidemenu menuItems={menuItems} profileButton={<ProfilButton />} />
+        <Sidemenu
+          menuItems={menuItems}
+          profileButton={<ProfilButton label="Mon profil" />}
+        />
         <main className="w-full">{children}</main>
       </div>
     </AppProvider>

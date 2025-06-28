@@ -2,7 +2,12 @@
 
 import { UserButton } from '@clerk/nextjs';
 
-export default function ProfilButton() {
+type ProfilButtonProps = {
+  className?: string;
+  label?: string;
+};
+
+export default function ProfilButton({ className, label }: ProfilButtonProps) {
   return (
     <>
       <div
@@ -28,7 +33,7 @@ export default function ProfilButton() {
             },
           }}
         ></UserButton>
-        <span>Mon profil</span>
+        <span>{label}</span>
       </div>
       {/* <UserProfile
         appearance={{
