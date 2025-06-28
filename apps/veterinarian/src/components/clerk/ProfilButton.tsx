@@ -1,6 +1,6 @@
 'use client';
 
-import { UserButton, UserProfile } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
 
 export default function ProfilButton() {
   return (

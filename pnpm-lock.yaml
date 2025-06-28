@@ -177,6 +177,9 @@ importers:
       '@app-test2/shared-components':
         specifier: '*'
         version: link:../../lib/shared-components
+      '@clerk/localizations':
+        specifier: ^3.17.1
+        version: 3.17.1
       '@clerk/nextjs':
         specifier: ^6.23.1
         version: 6.23.1(next@15.2.5)(react-dom@19.0.0)(react@19.0.0)
@@ -1474,6 +1477,13 @@ packages:
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       tslib: 2.8.1
+    dev: false
+
+  /@clerk/localizations@3.17.1:
+    resolution: {integrity: sha512-ngES306mXsEduDSO7iazB8FHlthf405eFiXRCnIQPfO03tNHytYmIUhkFi9sbhN5Ljy1YWXjIubvfnjbZyWA+A==}
+    engines: {node: '>=18.17.0'}
+    dependencies:
+      '@clerk/types': 4.62.0
     dev: false
 
   /@clerk/nextjs@6.23.1(next@15.2.5)(react-dom@19.0.0)(react@19.0.0):

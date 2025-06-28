@@ -1,5 +1,6 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import './global.css';
+import { frFR, enUS } from '@clerk/localizations';
 
 export const metadata = {
   title: 'Welcome to veterinarian',
@@ -12,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={frFR}>
       <html lang="en">
         <body className="bg-el-grey-200 text-el-grey-800 text-14">
           {children}

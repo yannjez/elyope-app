@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@app-test2/shared-components": "*",
+    "@clerk/localizations": "^3.17.1",
     "@clerk/nextjs": "^6.23.1",
     "@elyope/db": "*",
     "next": "~15.2.4",
