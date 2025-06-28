@@ -1,0 +1,38 @@
+{
+    "name": "db",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "lib/db/src",
+    "projectType": "library",
+    "buildable": false,
+    "targets": {
+        "generate": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma generate",
+                "cwd": "lib/db"
+            }
+        },
+        "migrate": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma migrate dev",
+                "cwd": "lib/db"
+            }
+        },
+        "studio": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma studio",
+                "cwd": "lib/db"
+            }
+        },
+        "db-push": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx prisma db push",
+                "cwd": "lib/db"
+            }
+        }
+    },
+    "tags": []
+}

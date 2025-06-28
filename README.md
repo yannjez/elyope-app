@@ -1,109 +1,157 @@
-# AppTest2
+# Elyope APP
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A comprehensive veterinary management application built with NX monorepo architecture.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Description
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+Elyope is a modern veterinary application that provides comprehensive tools for managing veterinary practices, including patient records, examinations, and administrative tasks. Built with Next.js, TypeScript, and Tailwind CSS in an NX monorepo structure.
 
-## Generate a library
+## Apps
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
+### Veterinarian App
+
+The main veterinary management application providing the core functionality for veterinary practices.
+
+**Features:**
+
+- Patient management
+- Examination tracking
+- Appointment scheduling
+- Administrative dashboard
+
+**Commands:**
+
+```bash
+# Start development server
+npx nx serve veterinarian
+
+# Build for production
+npx nx build veterinarian
+
+# Run tests
+npx nx test veterinarian
+
+# Lint code
+npx nx lint veterinarian
 ```
 
-## Run tasks
+## Libraries
 
-To build the library use:
+### Shared Components
 
-```sh
-npx nx build pkg1
+A comprehensive component library providing reusable UI components across the application.
+
+**Features:**
+
+- Form components (Button, Input, Select)
+- Navigation components (MenuCard, Sidemenu)
+- Data display components (DataGrid, ListFilter)
+- Icon library
+- Common utilities
+
+**Commands:**
+
+```bash
+# Build shared components
+npx nx build shared-components
+
+# Test shared components
+npx nx test shared-components
+
+# Lint shared components
+npx nx lint shared-components
 ```
 
-To run any task with Nx use:
+### Database Library
 
-```sh
-npx nx <target> <project-name>
+Database management and Prisma schema configuration for the application.
+
+**Features:**
+
+- Prisma ORM integration
+- Database schema management
+- Database utilities and helpers
+
+**Commands:**
+
+```bash
+# Generate Prisma client
+npx nx run db:generate
+
+# Run database migrations
+npx nx run db:migrate
+
+# Reset database
+npx nx run db:reset
+
+# Build database library
+npx nx build db
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### Theme
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Base theme configuration and styling system.
 
-## Versioning and releasing
+**Features:**
 
-To version and release the library use
+- Global CSS variables
+- Tailwind CSS configuration
+- Design system foundation
+
+**Location:** `lib/theme/theme.css`
+
+**Usage:**
+The theme file serves as the base styling foundation for the entire application, providing consistent design tokens and CSS custom properties.
+
+## Development
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- pnpm package manager
+- NX CLI
+
+### Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server
+npx nx serve veterinarian
+
+# Run all tests
+npx nx run-many --target=test --all
+
+# Build all projects
+npx nx run-many --target=build --all
+```
+
+### Project Structure
 
 ```
-npx nx release
+app-test2/
+├── apps/
+│   └── veterinarian/          # Main veterinary application
+├── lib/
+│   ├── db/                   # Database management
+│   ├── shared-components/    # Reusable UI components
+│   └── theme/               # Base theme configuration
+└── packages/                # Additional packages
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+## Useful Commands
 
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```bash
+# View project graph
+npx nx graph
 
-## Keep TypeScript project references up to date
+# Run affected commands
+npx nx affected:build
 
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
-```
-
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
-
-```sh
+# Check TypeScript project references
 npx nx sync:check
+
+# Generate new components
+npx nx g @nx/react:component --project=shared-components
 ```
-
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)

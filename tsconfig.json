@@ -8,6 +8,9 @@
     },
     {
       "path": "./lib/shared-components"
+    },
+    {
+      "path": "./lib/db"
     }
   ]
 }

@@ -50,6 +50,9 @@
   ],
   "references": [
     {
+      "path": "../../lib/db"
+    },
+    {
       "path": "../../lib/shared-components"
     }
   ]
