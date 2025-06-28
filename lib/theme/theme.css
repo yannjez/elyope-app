@@ -11,17 +11,22 @@
     --color-el-grey-300: #D9D9D9;
     --color-el-grey-200: #EEEEEE;
     --color-el-grey-100: #F7F7F7;
+
     --color-el-blue-600: #2AB1E1;
     --color-el-blue-500: #34BBEB;
     --color-el-blue-400: #BDE9FF;
     --color-el-blue-200: #DAF3FB;
+
     --color-el-green-500: #49EB34;
     --color-el-green-300: #C8FFBD; 
+
     --color-el-red-500: #FF4242;
     --color-el-red-200: #FFBDBD;
+
     --color-el-orange-800: #EB5F34;
+
     --color-el-yellow-500: #EBAB34;
-    --color-el-yellow-300: #FFEB8D;
+    --color-el-yellow-300: #FFE8BD;
 
     /* Others */
     --shadow-hover: 0px 5px 20px 0px #0000000D;

@@ -1,3 +1,5 @@
+'use client';
+
 type PageHeaderProps = {
   icon?: React.ReactNode;
   title: string;

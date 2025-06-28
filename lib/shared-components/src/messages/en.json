@@ -1,5 +1,11 @@
 {
     "Data": {
+        "Common": {
+            "filter": "Filter your data",
+            "search": "Search",
+            "reset": "Reset search",
+            "all": "All"
+        },
         "Examen": {
             "name": "Examen",
             "columns": {
@@ -7,6 +13,11 @@
                 "animal": "Animal",
                 "status": "Status",
                 "comment": "Comment",
+                "interpreter": "Interpreter"
+            },
+            "filter": {
+                "label": "Status",
+                "animal": "Animal",
                 "interpreter": "Interpreter"
             },
             "status": {

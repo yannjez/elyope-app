@@ -15,6 +15,7 @@ type BaseFilterProps<T extends BaseFilter> = {
   isSearching?: boolean;
   debounceMs?: number;
   isFilterEmpty?: boolean;
+  t: (key: string) => string;
 };
 
 export function ListFilter<T extends BaseFilter>({
@@ -26,8 +27,11 @@ export function ListFilter<T extends BaseFilter>({
   children,
   isSearching,
   debounceMs = 300,
+  t,
 }: BaseFilterProps<T>) {
   const [localKeyword, setLocalKeyword] = useState(filter.keyword || '');
+
+  t = t || ((key: string) => key);
 
   // Debounce effect for keyword changes
   useEffect(() => {
@@ -52,10 +56,10 @@ export function ListFilter<T extends BaseFilter>({
   return (
     <div className="flex items-center gap-4  w-full justify-between">
       <div className="flex items-center gap-4">
-        <span className="text-sm text-gray-600">Filtrez votre recherche :</span>
+        <span className="text-sm text-gray-600">{t('filter')}</span>
         <div className="flex items-center gap-2">
           <Input
-            placeholder="Rechercher..."
+            placeholder={`${t('search')}...`}
             icon={<SearchIcon className="h-4 w-4" />}
             iconPosition="right"
             value={localKeyword}
@@ -71,14 +75,14 @@ export function ListFilter<T extends BaseFilter>({
           disabled={isFilterEmpty ?? false}
           onClick={onReset}
         >
-          Effacer les filtres
+          {t('reset')}
         </Button>
         <Button
           className="button-neutral"
           onClick={onSearch}
           disabled={isSearching}
         >
-          Rechercher
+          {t('search')}
         </Button>
       </div>
     </div>

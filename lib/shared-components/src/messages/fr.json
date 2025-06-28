@@ -1,5 +1,11 @@
 {
     "Data": {
+        "Common": {
+            "filter": "Filtrer vos données",
+            "search": "Rechercher",
+            "reset": "Effacer les filtres",
+            "all": "Tous"
+        },
         "Examen": {
             "name": "Examen",
             "columns": {

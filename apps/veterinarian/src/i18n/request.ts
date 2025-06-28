@@ -1,6 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
-//import { enMessages, frMessages } from '@app-test2/shared-components';
+import { enMessages, frMessages } from '@app-test2/shared-components';
 
 export default getRequestConfig(async () => {
   // Provide a static locale, fetch a user setting,
@@ -13,7 +13,7 @@ export default getRequestConfig(async () => {
     locale,
     messages: {
       ...(await import(`../../messages/${locale}.json`)).default,
-      //   ...(locale === 'fr' ? frMessages : enMessages),
+      ...(locale === 'fr' ? frMessages : enMessages),
     },
   };
 });

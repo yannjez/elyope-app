@@ -1,3 +1,4 @@
+'use client';
 import Button from './forms/Button';
 import Input from './forms/Input';
 import Select from './forms/Select';

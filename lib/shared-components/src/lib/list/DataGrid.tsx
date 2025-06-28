@@ -14,7 +14,7 @@ export type DataGridColumn<T> = {
 
 export type DataGridProps<T> = {
   columns: DataGridColumn<T>[];
-  data: T[];
+  data: (T & { rowClass?: string })[];
   className?: string;
 };
 
@@ -96,12 +96,15 @@ export function DataGrid<T extends object>({
         </thead>
         <tbody>
           {displayedData.map((row, rowIdx) => (
-            <tr key={rowIdx} className="">
+            <tr
+              key={rowIdx}
+              className={cn(' bg-white ', row.rowClass ?? '')}
+            >
               {columns.map((col, colIdx) => (
                 <td
                   key={colIdx}
                   className={cn(
-                    'mx-2 my-1 py-2 px-3 bg-el-grey-100 rounded-4 text-14',
+                    'mx-2 my-1 py-2 px-3 rounded-4 text-14',
                     col.className
                   )}
                 >

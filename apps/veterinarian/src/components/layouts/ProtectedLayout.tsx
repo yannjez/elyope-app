@@ -1,5 +1,5 @@
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
-import { Sidemenu } from '@/components/shared';
+import { Sidemenu } from '@app-test2/shared-components';
 import { notFound } from 'next/navigation';
 import { AppProvider } from './AppContext';
 
