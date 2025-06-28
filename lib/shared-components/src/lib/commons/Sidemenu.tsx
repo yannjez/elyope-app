@@ -13,15 +13,12 @@ type MenuItem = {
 type SidemenuProps = {
   className?: string;
   menuItems?: MenuItem[];
-  profileLink?: {
-    href: string;
-    label: string;
-  };
   languageSelector?: React.ReactNode;
   footer?: {
     copyright: string;
     version: string;
   };
+  profileButton?: React.ReactNode;
 };
 
 function MenuLink({
@@ -49,9 +46,10 @@ function MenuLink({
 export default function Sidemenu({
   className,
   menuItems,
-  profileLink = { href: '#', label: 'Mon profil' },
+
   languageSelector = <div>FR | EN</div>,
   footer = { copyright: '©2025 Elyope', version: 'Elyope App V1.0.0' },
+  profileButton,
 }: SidemenuProps) {
   return (
     <div
@@ -82,17 +80,7 @@ export default function Sidemenu({
         </nav>
       </div>
       <div className="flex  gap-2 justify-between mt-auto items-center">
-        <MenuLink
-          href={profileLink.href}
-          className="bg-white w-auto grow-1 hover:!bg-el-blue-200"
-        >
-          <div className="flex items-center gap-2">
-            <span>
-              <ProfileIcon className="rounded-full" />
-            </span>
-            <span>{profileLink.label}</span>
-          </div>
-        </MenuLink>
+        {profileButton}
         {languageSelector}
       </div>
       <div className="text-10 text-el-grey-500 flex gap-1 justify-between border-t border-el-grey-300 pt-2 ">

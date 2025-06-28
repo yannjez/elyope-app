@@ -1,4 +1,4 @@
-import ExamenContent from '@/components/page/ExamenContent';
+import ExamenContent from '@/components/pages/ExamenContent';
 
 export default function Index() {
   return (

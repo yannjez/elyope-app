@@ -1,12 +1,18 @@
-import MenuBlock from '@/components/MenuBlock';
-import { AppTest2SharedComponents } from '@/components/shared';
+'use client';
+
+import MenuBlock from '@/components/commons/MenuBlock';
+import { useAppContext } from '@/components/layouts/AppContext';
 
 export default function Index() {
+  const { connected } = useAppContext();
+
   return (
     <div className="min-h-screen  flex content-center items-center">
       <div className=" mx-auto  flex flex-col gap-5">
         <div className="flex flex-col gap-2.5 text-center">
-          <h1 className="text-17/[90%] font-bold ">Bonjour John,</h1>
+          <h1 className="text-17/[90%] font-bold ">
+            Bonjour {connected?.emailAddress},
+          </h1>
           <p className=" text-el-grey-500">Heureux de vous voir ici!</p>
         </div>
         <MenuBlock />
@@ -19,7 +25,6 @@ export default function Index() {
             support@elyope.com
           </a>
         </div>
-       
       </div>
     </div>
   );
