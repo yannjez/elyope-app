@@ -7,28 +7,31 @@ import {
   MessagerieIcon,
   ProfileIcon,
 } from '@app-test2/shared-components';
+import { useTranslations } from 'next-intl';
 
 export default function MenuBlock() {
+  const t = useTranslations('HomePage.MenuBlock');
+
   return (
     <div className="flex flex-col gap-3 justify-center items-center">
       <div className="flex flex-wrap gap-3 ">
         <MenuCard
           href="/examens"
           icon={<ExamensIcon className="w-8 h-8 text-el-blue-500" />}
-          title="Examens"
-          description="Retrouvez ici toutes vos fiches d'examens."
+          title={t('examens.title')}
+          description={t('examens.description')}
           action={{
-            text: 'Créer un nouvel examen',
+            text: t('examens.action'),
             onClick: () => console.log('new examen'),
           }}
         />
         <MenuCard
           href="#"
           icon={<AnimauxIcon className="w-8 h-8 text-el-blue-500" />}
-          title="Animaux"
-          description="Accéder à la liste des animaux."
+          title={t('animaux.title')}
+          description={t('animaux.description')}
           action={{
-            text: 'Créer une nouvelle fiche animal',
+            text: t('animaux.action'),
             onClick: () => console.log('new animal'),
           }}
         />
@@ -37,14 +40,14 @@ export default function MenuBlock() {
         <MenuCard
           href="#"
           icon={<ProfileIcon className="w-8 h-8 text-el-blue-500" />}
-          title="Mon profil"
-          description="Modifiez vos informations de profil."
+          title={t('profile.title')}
+          description={t('profile.description')}
         />
         <MenuCard
           href="#"
           icon={<MessagerieIcon className="w-8 h-8 text-el-blue-500" />}
-          title="Messagerie"
-          description="Consulter et répondre à vos messages."
+          title={t('messagerie.title')}
+          description={t('messagerie.description')}
         />
       </div>
     </div>

@@ -1,17 +1,7 @@
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
-import { Sidemenu } from '@app-test2/shared-components';
 import { notFound } from 'next/navigation';
 import { AppProvider } from './AppContext';
-
-import ProfilButton from '../clerk/ProfilButton';
-
-const menuItems = [
-  { href: '/', label: 'Accueil' },
-  { href: '/examens', label: 'Examens' },
-  { href: '#', label: 'Animaux' },
-  { href: '#', label: 'Messagerie', badge: 1 },
-  { href: '/design', label: 'Design' },
-];
+import { SidemenuWrapper } from '../commons/SidemenuWrapper';
 
 export default async function ProtectedLayout({
   children,
@@ -50,10 +40,7 @@ export default async function ProtectedLayout({
       }}
     >
       <div className="flex gap-1">
-        <Sidemenu
-          menuItems={menuItems}
-          profileButton={<ProfilButton label="Mon profil" />}
-        />
+        <SidemenuWrapper />
         <main className="w-full">{children}</main>
       </div>
     </AppProvider>

@@ -4,6 +4,7 @@ export * from './lib/shared-components';
 export { default as PageHeader } from './lib/commons/PageHeader';
 export { MenuCard } from './lib/commons/MenuCard';
 export { default as Sidemenu } from './lib/commons/Sidemenu';
+export { LanguageSwitcher } from './lib/commons/LanguageSwitcher';
 
 /* Icons */
 export { default as ExamensIcon } from './lib/icons/Examens';
@@ -12,6 +13,8 @@ export { default as SearchIcon } from './lib/icons/search';
 export { default as MessagerieIcon } from './lib/icons/Messagerie';
 export { default as ProfileIcon } from './lib/icons/Profile';
 export { default as AnimauxIcon } from './lib/icons/Animaux';
+export { BriefCaseIcon } from './lib/icons/BriefCase';
+export { UserIcon } from './lib/icons/UserIcon';
 
 /* Forms */
 export { default as Button } from './lib/forms/Button';

@@ -7,12 +7,12 @@ export default getRequestConfig(async () => {
   // read from `cookies()`, `headers()`, etc.
   //read from cookies
   const lang_cookies = await cookies();
-  const locale = lang_cookies.get('locale')?.value || 'fr';
+  const locale = lang_cookies.get('NEXT_LOCALE')?.value || 'fr';
 
   return {
     locale,
     messages: {
-      ...(await import(`../../messages/${locale}.json`)).default,
+      ...(await import(`./messages/${locale}.json`)).default,
       ...(locale === 'fr' ? frMessages : enMessages),
     },
   };

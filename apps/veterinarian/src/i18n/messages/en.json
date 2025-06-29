@@ -1,0 +1,36 @@
+{
+  "HomePage": {
+    "hello": "Hello",
+    "welcome": "Happy to see you here!",
+    "support": "If you have any issues, please contact our support:",
+    "support_email": "support@elyope.com",
+    "MenuBlock": {
+      "examens": {
+        "title": "Exams",
+        "description": "Find all your exam records here.",
+        "action": "Create a new exam"
+      },
+      "animaux": {
+        "title": "Animals",
+        "description": "Access the list of animals.",
+        "action": "Create a new animal record"
+      },
+      "profile": {
+        "title": "My Profile",
+        "description": "Modify your profile information."
+      },
+      "messagerie": {
+        "title": "Messages",
+        "description": "View and respond to your messages."
+      }
+    }
+  },
+  "Navigation": {
+    "home": "Home",
+    "exams": "Exams",
+    "animals": "Animals",
+    "messages": "Messages",
+    "design": "Design",
+    "profile": "My Profile"
+  }
+}
