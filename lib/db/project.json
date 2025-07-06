@@ -10,6 +10,9 @@
             "outputs": [
                 "{options.outputPath}"
             ],
+            "dependsOn": [
+                "generate"
+            ],
             "options": {
                 "outputPath": "dist/lib/db",
                 "main": "lib/db/src/index.ts",
