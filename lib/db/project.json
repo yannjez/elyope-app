@@ -3,8 +3,22 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "lib/db/src",
     "projectType": "library",
-    "buildable": false,
+    "buildable": true,
     "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/lib/db",
+                "main": "lib/db/src/index.ts",
+                "tsConfig": "lib/db/tsconfig.lib.json",
+                "assets": [
+                    "lib/db/*.md"
+                ]
+            }
+        },
         "generate": {
             "executor": "nx:run-commands",
             "options": {
@@ -29,7 +43,7 @@
         "db-push": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma db push",
+                "command": "npx prisma db push --accept-data-loss",
                 "cwd": "lib/db"
             }
         }

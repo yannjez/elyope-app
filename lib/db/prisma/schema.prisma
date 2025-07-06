@@ -14,8 +14,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
+enum UserType {
+  VETERINARIAN
+  ADMIN
+  INTERPRETER
+}
+
 model User {
   id    String @id @default(uuid())
   email String @unique
   name  String
+  externalId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role UserType @default(VETERINARIAN)
+  Interpreters Structure[] @relation("interpreter")
+  Members StructureUser[] @relation("members")
+ 
 }
+
+model Structure {
+  id String @id @default(uuid())
+  name String
+  externalId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Interpreter User? @relation("interpreter", fields: [interpreterId], references: [id])
+  interpreterId String?
+  Members StructureUser[] @relation("members")
+  
+
+}
+
+model StructureUser {
+  id String @id @default(uuid())
+  structureId String
+  structure Structure @relation("members" , fields: [structureId], references: [id])
+  userId String
+  user User @relation("members", fields: [userId], references: [id])
+}
+

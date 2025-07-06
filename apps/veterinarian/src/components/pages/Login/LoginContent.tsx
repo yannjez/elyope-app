@@ -1,6 +1,6 @@
 'use client';
 
-import { SignIn } from '@clerk/nextjs';
+import LoginForm from '@/components/clerk/LoginForm';
 import Link from 'next/link';
 
 export default function LoginContent() {
@@ -13,16 +13,7 @@ export default function LoginContent() {
             Accédez à votre espace vétérinaire
           </p>
         </div>
-        <SignIn
-          appearance={{
-            elements: {
-              formButtonPrimary: 'bg-blue-600 hover:bg-blue-700 text-white',
-              card: 'shadow-none',
-              headerTitle: 'hidden',
-              headerSubtitle: 'hidden',
-            },
-          }}
-        />
+        <LoginForm />
         <div className="text-center mt-6">
           <p className="text-el-grey-600">
             Pas encore de compte ?{' '}

@@ -10,8 +10,6 @@ export default async function ProtectedLayout({
 }) {
   const { userId } = await auth();
 
-  // const user = (await clerkClient()).users.getUser(userId)
-
   if (!userId) {
     return notFound();
   }
