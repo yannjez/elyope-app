@@ -13,16 +13,14 @@
             "options": {
                 "outputPath": "dist/lib/db",
                 "main": "lib/db/src/index.ts",
-                "tsConfig": "lib/db/tsconfig.lib.json",
-                "assets": [
-                    "lib/db/*.md"
-                ]
+                "tsConfig": "lib/db/tsconfig.lib.json"
             }
         },
         "generate": {
             "executor": "nx:run-commands",
             "options": {
                 "command": "npx prisma generate",
+                "output": "../../node_modules/.prisma/client",
                 "cwd": "lib/db"
             }
         },

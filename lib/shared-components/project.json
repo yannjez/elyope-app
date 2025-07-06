@@ -10,7 +10,8 @@
                 "{options.outputPath}"
             ],
             "options": {
-                "outputPath": "dist/lib/shared-components"
+                "outputPath": "dist/lib/shared-components",
+                "main": "lib/shared-components/src/index.ts"
             }
         },
         "dev": {
