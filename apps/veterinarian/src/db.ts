@@ -1,11 +1,11 @@
 // libs/db/src/db.ts
-import { PrismaClient } from '../../node_modules/.prisma/client/index.js';
+import { PrismaClient } from '../../../node_modules/.prisma/client/index.js';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const prisma =
+export const prisma: PrismaClient =
   globalForPrisma.prisma ??
   new PrismaClient({
     log: ['query', 'error', 'warn'],
