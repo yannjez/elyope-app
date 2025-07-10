@@ -23,7 +23,7 @@ The main veterinary management application providing the core functionality for 
 
 ```bash
 # Start development server
-npx nx serve veterinarian
+npx nx dev veterinarian
 
 # Build for production
 npx nx build veterinarian
@@ -86,7 +86,12 @@ npx nx run db:reset
 
 # Build database library
 npx nx build db
+
+# Push model to database l
+npx nx run db:db-push
 ```
+
+
 
 ### Theme
 

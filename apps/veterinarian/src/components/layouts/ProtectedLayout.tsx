@@ -2,6 +2,9 @@ import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
 import { AppProvider } from './AppContext';
 import { SidemenuWrapper } from '../commons/SidemenuWrapper';
+// Removed invalid import of UserService from @elyope/db
+import { prisma } from '@/db';
+import { UserService } from '@elyope/db/lib/userService';
 
 export default async function ProtectedLayout({
   children,
@@ -9,10 +12,23 @@ export default async function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const { userId } = await auth();
-
   if (!userId) {
     return notFound();
   }
+
+  // const clerkUser = await currentUser();
+
+  // const userService = new UserService(prisma);
+  // const appUser = await userService.createUpdateUser(
+  //   {
+  //     id: userId,
+  //     email: clerkUser?.emailAddresses?.[0]?.emailAddress || '',
+  //     name: clerkUser?.fullName || '',
+  //   },
+  //   'VETERINARIAN'
+  // );
+  // console.log(appUser);
+
   const memberships = await (
     await clerkClient()
   ).users.getOrganizationMembershipList({

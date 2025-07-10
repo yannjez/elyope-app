@@ -29,7 +29,7 @@ model User {
   externalId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  role UserType @default(VETERINARIAN)
+  roles UserType[] @default([])
   Interpreters Structure[] @relation("interpreter")
   Members StructureUser[] @relation("members")
  
@@ -41,11 +41,27 @@ model Structure {
   externalId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Cabinet details
+  address1 String?
+  address2 String?
+  zipcode String?
+  town String?
+  phone String?
+  mobile String?
+  
+  // Account details
+  account_lastname String?
+  account_firstname String?
+  account_email String?
+  
+  // Status
+  is_structure_active Boolean @default(true)
+  
+  // Relations
   Interpreter User? @relation("interpreter", fields: [interpreterId], references: [id])
   interpreterId String?
   Members StructureUser[] @relation("members")
-  
-
 }
 
 model StructureUser {
