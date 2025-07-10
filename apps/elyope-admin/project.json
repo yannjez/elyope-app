@@ -1,0 +1,46 @@
+{
+    "name": "elyope-admin",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/elyope-admin/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nx/next:build",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "defaultConfiguration": "production",
+            "dependsOn": [
+                "^build"
+            ],
+            "options": {
+                "outputPath": "dist/apps/elyope-admin"
+            }
+        },
+        "dev": {
+            "executor": "@nx/next:server",
+            "defaultConfiguration": "development",
+            "dependsOn": [
+                "^build"
+            ],
+            "options": {
+                "buildTarget": "elyope-admin:build",
+                "dev": true,
+                "turbo": true,
+                "verbose": true
+            }
+        },
+        "start": {
+            "executor": "@nx/next:server",
+            "defaultConfiguration": "production",
+            "options": {
+                "buildTarget": "elyope-admin:build",
+                "dev": false
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        }
+    },
+    "tags": []
+}

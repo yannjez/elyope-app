@@ -159,4 +159,8 @@ npx nx sync:check
 
 # Generate new components
 npx nx g @nx/react:component --project=shared-components
+
+npx nx g @nx/next:app apps/{appName}
 ```
+
+
