@@ -48,4 +48,12 @@ export class UserService extends BaseService {
       });
     }
   };
+
+  getUserByExternalId = async (externalId: string) => {
+    return await this.prisma.user.findUnique({
+      where: {
+        externalId,
+      },
+    });
+  };
 }

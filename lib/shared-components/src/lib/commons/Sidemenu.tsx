@@ -47,9 +47,11 @@ function MenuLink({
 export default function Sidemenu({
   className,
   menuItems,
-
-  languageSelector = <div>FR | EN</div>,
-  footer = { copyright: '©2025 Elyope', version: 'Elyope App V1.0.0' },
+  languageSelector,
+  footer = {
+    copyright: `©${new Date().getFullYear()} Elyope`,
+    version: 'Elyope App V1.0.0',
+  },
   profileButton,
 }: SidemenuProps) {
   return (
@@ -61,7 +63,12 @@ export default function Sidemenu({
     >
       <div className="flex  flex-col  gap-5">
         <div className="min-h-10 flex flex-col gap-2">
-          <Logo className="w-full" />
+          <div className="flex items-start justify-center gap-0">
+            <Logo className="w-full" />
+            <div className="bg-el-blue-500 rounded-[33px] text-[9px] tracking-[0] text-white px-[4.5px] py-[3px]">
+              APP
+            </div>
+          </div>
           <hr className="mt-auto w-full border-el-grey-300" />
         </div>
         <nav className="flex flex-col gap-2">

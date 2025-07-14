@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation';
 import { AppProvider } from './AppContext';
 import { SidemenuWrapper } from '../commons/SidemenuWrapper';
 // Removed invalid import of UserService from @elyope/db
-import { prisma } from '@/db';
-import { UserService } from '@elyope/db/lib/userService';
+
 
 export default async function ProtectedLayout({
   children,

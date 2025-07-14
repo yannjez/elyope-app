@@ -5,6 +5,7 @@ export { default as PageHeader } from './lib/commons/PageHeader';
 export { MenuCard } from './lib/commons/MenuCard';
 export { default as Sidemenu } from './lib/commons/Sidemenu';
 export { LanguageSwitcher } from './lib/commons/LanguageSwitcher';
+export { default as SideLogin } from './lib/commons/SideLogin';
 
 /* Icons */
 export { default as ExamensIcon } from './lib/icons/Examens';
@@ -28,6 +29,11 @@ export { DataGrid } from './lib/list/DataGrid';
 /* Types */
 export type { ExamenFilter, ExamenStatus } from './lib/types/Examens';
 export type { AppUser } from './lib/types/Base';
+
+/* Clerk */
+export { default as ClerkLoginForm } from './lib/clerk/LoginForm';
+export { default as ClerkProfilButton } from './lib/clerk/ProfilButton';
+export { default as ClerkProfilePageContent } from './lib/clerk/ProfilePageContent';
 
 // /* Messages */
 export { default as enMessages } from './messages/en.json';
