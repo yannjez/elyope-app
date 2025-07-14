@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import { ExternalUSer, UserType } from '../type/index.js';
 
@@ -53,6 +53,38 @@ export class UserService extends BaseService {
     return await this.prisma.user.findUnique({
       where: {
         externalId,
+      },
+    });
+  };
+
+  getUserCount = async () => {
+    return await this.prisma.user.count();
+  };
+
+  getUsers = async (
+    page: number,
+    limit: number,
+    sort: string,
+    sortDirection: string,
+    search: string
+  ) => {
+    // pagination
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const where =  search ? {
+      OR: [
+        { name: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ],
+    } : {};
+
+    return await this.prisma.user.findMany({
+      skip,
+      take,
+      where,
+      orderBy: {
+        [sort]: sortDirection,
       },
     });
   };

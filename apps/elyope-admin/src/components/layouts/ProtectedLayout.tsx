@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 // Removed invalid import of UserService from @elyope/db
 import { prisma } from '@/db';
 import { UserService } from '@elyope/db';
+import { SidemenuWrapper } from '../commons/SidemenuWrapper';
 
 export default async function ProtectedLayout({
   children,
@@ -19,7 +20,7 @@ export default async function ProtectedLayout({
   const userService = new UserService(prisma);
   const adminUser = await userService.getUserByExternalId(userId);
 
-  if (!adminUser || !adminUser.roles?.includes('  ADMIN')) {
+  if (!adminUser || !adminUser.roles?.includes('ADMIN')) {
     return redirect('/notAllowed');
   }
 
@@ -34,7 +35,7 @@ export default async function ProtectedLayout({
     //   }}
     // >
     <div className="flex gap-1">
-      {/* <SidemenuWrapper /> */}
+      <SidemenuWrapper />
       <main className="w-full">{children}</main>
     </div>
     // </AppProvider>

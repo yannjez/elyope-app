@@ -27,5 +27,13 @@
                 "archived": "Archived"
             }
         }
+    },
+    "NotAllowedPage": {
+        "title": "Access Denied",
+        "message": "You don't have permission to access this application.",
+        "contact_message": "If you believe this is an error, please contact us:",
+        "contact_email": "contact@elyope.com",
+        "disconnect_button": "Disconnect",
+        "try_different_user": "Try a different user account"
     }
 }

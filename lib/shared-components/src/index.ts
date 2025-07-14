@@ -6,6 +6,7 @@ export { MenuCard } from './lib/commons/MenuCard';
 export { default as Sidemenu } from './lib/commons/Sidemenu';
 export { LanguageSwitcher } from './lib/commons/LanguageSwitcher';
 export { default as SideLogin } from './lib/commons/SideLogin';
+export { default as SideEmpty } from './lib/commons/SideEmpty';
 
 /* Icons */
 export { default as ExamensIcon } from './lib/icons/Examens';

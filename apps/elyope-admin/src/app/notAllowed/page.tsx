@@ -1,3 +1,5 @@
+import NotAllowedContent from '@/components/pages/NotAllowed/NotAllowedContent';
+
 export default function NotAllowedPage() {
-  return <div>NotAllowedPage</div>;
+  return <NotAllowedContent />;
 }

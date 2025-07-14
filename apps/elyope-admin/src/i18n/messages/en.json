@@ -26,11 +26,9 @@
     }
   },
   "Navigation": {
-    "home": "Home",
-    "exams": "Exams",
-    "animals": "Animals",
-    "messages": "Messages",
-    "design": "Design",
+    "users": "Users",
+    "structures": "Structures",
+    "tools": "Tools",
     "profile": "My Profile"
   }
 }

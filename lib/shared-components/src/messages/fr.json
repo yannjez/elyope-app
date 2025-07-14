@@ -22,5 +22,13 @@
                 "archived": "Archivé"
             }
         }
+    },
+    "NotAllowedPage": {
+        "title": "Accès Refusé",
+        "message": "Vous n'avez pas l'autorisation d'accéder à cette application.",
+        "contact_message": "Si vous pensez qu'il s'agit d'une erreur, contactez-nous :",
+        "contact_email": "contact@elyope.com",
+        "disconnect_button": "Se déconnecter",
+        "try_different_user": "Essayer un autre compte utilisateur"
     }
 }
