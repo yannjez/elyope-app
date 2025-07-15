@@ -95,11 +95,8 @@ export function DataGrid<T extends object>({
           </tr>
         </thead>
         <tbody>
-          {displayedData.map((row, rowIdx) => (
-            <tr
-              key={rowIdx}
-              className={cn(' bg-white ', row.rowClass ?? '')}
-            >
+          {displayedData?.map((row, rowIdx) => (
+            <tr key={rowIdx} className={cn(' bg-white ', row.rowClass ?? '')}>
               {columns.map((col, colIdx) => (
                 <td
                   key={colIdx}

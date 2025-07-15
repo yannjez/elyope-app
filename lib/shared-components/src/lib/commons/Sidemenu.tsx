@@ -20,6 +20,7 @@ type SidemenuProps = {
     version: string;
   };
   profileButton?: React.ReactNode;
+  qualifier?: string;
 };
 
 function MenuLink({
@@ -53,6 +54,7 @@ export default function Sidemenu({
     version: 'Elyope App V1.0.0',
   },
   profileButton,
+  qualifier = 'APP',
 }: SidemenuProps) {
   return (
     <div
@@ -66,7 +68,7 @@ export default function Sidemenu({
           <div className="flex items-start justify-center gap-0">
             <Logo className="w-full" />
             <div className="bg-el-blue-500 rounded-[33px] text-[9px] tracking-[0] text-white px-[4.5px] py-[3px]">
-              APP
+              {qualifier}
             </div>
           </div>
           <hr className="mt-auto w-full border-el-grey-300" />

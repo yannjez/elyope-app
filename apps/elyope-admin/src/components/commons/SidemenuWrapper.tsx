@@ -19,6 +19,7 @@ export function SidemenuWrapper() {
       menuItems={menuItems}
       profileButton={<ClerkProfilButton label={t('profile')} />}
       languageSelector={<LanguageSwitch />}
+      qualifier="ADMIN"
     />
   );
 }
