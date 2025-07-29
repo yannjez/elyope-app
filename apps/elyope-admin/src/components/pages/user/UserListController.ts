@@ -1,6 +1,6 @@
 'use server';
 
-import { UserService } from '@elyope/db';
+import { UserService, ExternalUSer } from '@elyope/db';
 import { prisma } from '@/db';
 import { ListRequestType } from '@elyope/db';
 
@@ -26,9 +26,15 @@ export const getUserList = async (listRequest?: ListRequestType) => {
     sortDirection,
     search
   );
+  const { data } = response;
 
   return {
-    data: response,
+    data,
     pagination,
   };
+};
+
+export const createUser = async (user: ExternalUSer) => {
+  const userService = new UserService(prisma);
+  return await userService.createUser(user, 'VETERINARIAN');
 };

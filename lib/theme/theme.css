@@ -42,7 +42,9 @@
     --text-34:34px;
 }
  
-
+@utility main-container {
+    @apply max-w-7xl pr-0;
+}
   
 @utility control {
     @apply  border border-transparent  outline-none ring-0 focus:!border-el-grey-800 border;

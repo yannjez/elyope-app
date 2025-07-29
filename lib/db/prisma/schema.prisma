@@ -24,8 +24,6 @@ enum UserType {
 
 model User {
   id    String @id @default(uuid())
-  email String @unique
-  name  String
   externalId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

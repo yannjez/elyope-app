@@ -1,6 +1,7 @@
 'use client';
 
-import { ClerkLoginForm, SideLogin } from '@app-test2/shared-components';
+import { SideLogin } from '@app-test2/shared-components';
+import LoginForm from '../../../components/clerk/LoginForm';
 
 export default function LoginContent() {
   return (
@@ -9,7 +10,7 @@ export default function LoginContent() {
 
       <div className="w-full grow bg-[url('/bg-login.webp')] bg-size-[150%] bg-bottom-left  ">
         <div className="min-h-screen flex items-center justify-center  ">
-          <ClerkLoginForm />
+          <LoginForm />
         </div>
       </div>
     </div>

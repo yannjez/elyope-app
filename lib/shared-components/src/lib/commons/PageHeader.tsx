@@ -14,8 +14,8 @@ export default function PageHeader({
   action,
 }: PageHeaderProps) {
   return (
-    <div className="bg-el-grey-100 rounded-4 p-3  min-h-15 w-full mb-1 ">
-      <div className="max-w-7xl flex flex-col content-center justify-center gap-2  ">
+    <div className="bg-el-grey-100 rounded-4   min-h-15 w-full mb-1 ">
+      <div className=" main-container p-3 flex flex-col content-center justify-center gap-2  ">
         <div className="flex  justify-between items-center ">
           <h1 className="flex items-center gap-1">
             <span className="text-el-blue-500 w-4.5 h-auto">

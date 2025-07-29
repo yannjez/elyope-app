@@ -105,7 +105,7 @@ export default function Select({
   return (
     <div
       ref={selectRef}
-      className={`relative min-w-40 ${className} border border-el-grey-400 rounded-4`}
+      className={`relative min-w-40  min-w-[400px] ${className} border border-el-grey-400 rounded-4`}
       {...props}
     >
       {/* Select Button */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { User, PaginationInfo } from '@elyope/db';
+import { User, PaginationInfo, FullUser } from '@elyope/db';
 import {
   PageHeader,
   UserIcon,
@@ -9,8 +9,8 @@ import {
   ListFilter,
 } from '@app-test2/shared-components';
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { getUserList } from './UserListController';
+import Link from 'next/link';
 
 type UserFilter = {
   keyword?: string;
@@ -20,10 +20,10 @@ export default function UserListContent({
   _data,
   _pagination,
 }: {
-  _data: User[];
+  _data: FullUser[];
   _pagination: PaginationInfo;
 }) {
-  const [data, setData] = useState<User[]>(_data);
+  const [data, setData] = useState<FullUser[]>(_data);
   const [pagination, setPagination] = useState<PaginationInfo>(_pagination);
   const [filter, setFilter] = useState<UserFilter>({ keyword: '' });
   const [isSearching, setIsSearching] = useState(false);
@@ -65,7 +65,7 @@ export default function UserListContent({
   const columns = [
     {
       header: 'Name',
-      field: 'name' as keyof User,
+      field: 'fullName' as keyof FullUser,
       isSortable: true,
       className: 'font-medium',
     },
@@ -139,7 +139,9 @@ export default function UserListContent({
         title="Users"
         icon={<UserIcon className="w-full" />}
         action={
-          <Button className="button-primary min-w-40">+ Create User</Button>
+          <Link href="/create-user" className="button-primary min-w-40">
+            + Create User
+          </Link>
         }
         filters={
           <ListFilter

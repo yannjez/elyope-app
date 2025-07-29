@@ -2,8 +2,9 @@
 
 import { Sidemenu } from '@app-test2/shared-components';
 import { useTranslations } from 'next-intl';
-import ProfilButton from '../clerk/ProfilButton';
+
 import { LanguageSwitch } from './LanguageSwitch';
+import ProfilButton from '../clerk/ProfilButton';
 
 export function SidemenuWrapper() {
   const t = useTranslations('Navigation');

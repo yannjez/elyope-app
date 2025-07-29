@@ -3,11 +3,10 @@
 import { UserButton } from '@clerk/nextjs';
 
 type ProfilButtonProps = {
-  className?: string;
   label?: string;
 };
 
-export default function ProfilButton({ className, label }: ProfilButtonProps) {
+export default function ProfilButton({ label }: ProfilButtonProps) {
   return (
     <>
       <div

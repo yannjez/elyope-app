@@ -1,13 +1,20 @@
 import { PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
-import { ExternalUSer, User, UserType } from '../type/index.js';
+import {
+  ClerkUser,
+  ExternalUSer,
+  FullUser,
+  User,
+  UserType,
+} from '../type/index.js';
+import { ClerkService } from './clerkService.js';
 
 export class UserService extends BaseService {
   constructor(prisma: PrismaClient) {
     super(prisma);
   }
 
-  createUpdateUser = async (user: ExternalUSer, userRoleType: UserType) => {
+  createUpdateUser = async (user: ClerkUser, userRoleType: UserType) => {
     // First, try to find the existing user
     const existingUser = await this.prisma.user.findUnique({
       where: {
@@ -40,9 +47,7 @@ export class UserService extends BaseService {
       // User doesn't exist, create new user
       return await this.prisma.user.create({
         data: {
-          email: user.email,
           externalId: user.id,
-          name: user.email.split('@')[0], // Use email prefix as default name
           roles: [userRoleType],
         },
       });
@@ -50,11 +55,14 @@ export class UserService extends BaseService {
   };
 
   getUserByExternalId = async (externalId: string) => {
-    return (await this.prisma.user.findUnique({
+    const user = (await this.prisma.user.findUnique({
       where: {
         externalId,
       },
     })) as User;
+    const clerkService = new ClerkService();
+    const clerkUser = await clerkService.getUserByID(externalId);
+    return this.mergeClerkData(user, clerkUser) as FullUser;
   };
 
   getUserCount = async () => {
@@ -83,11 +91,77 @@ export class UserService extends BaseService {
 
     const orderBy = sort ? { [sort]: sortDirection } : {};
 
-    return (await this.prisma.user.findMany({
+    const users = (await this.prisma.user.findMany({
       skip,
       take,
       where,
       orderBy,
     })) as User[];
+
+    if (users.length === 0) {
+      return { data: [] };
+    }
+
+    // Get the clerk Data
+
+    const clerkService = new ClerkService();
+    const clerkUsers = await clerkService.getUsersByIDs(
+      users.map((user) => user.externalId)
+    );
+
+    const data = users.map((user) => {
+      const clerkUser = clerkUsers.find(
+        (clerkUser) => clerkUser.id === user.externalId
+      );
+      return this.mergeClerkData(user, clerkUser) as FullUser;
+    });
+
+    return {
+      data,
+      pagination: {
+        total: users.length,
+        page,
+        limit,
+        totalPages: Math.ceil(users.length / limit),
+      },
+    };
+  };
+
+  mergeClerkData = (user: User, clerkUser?: ClerkUser) => {
+    return {
+      ...user,
+      ...clerkUser,
+      fullName: clerkUser?.first_name + ' ' + clerkUser?.last_name,
+      email: clerkUser?.email_addresses?.at(0)?.email_address || '',
+    } as FullUser;
+  };
+
+  createUser = async (user: ExternalUSer, userRoleType: UserType) => {
+    // check if clerk user already exist
+    const clerkService = new ClerkService();
+    const existingClerkUser = await clerkService.getUserByEmail(user.email);
+
+    try {
+      let createdClerkUser: ClerkUser | null = null;
+      if (!existingClerkUser) {
+        createdClerkUser = await clerkService.createUser(user);
+      }
+      // create the user or update it's role
+      const userf = await this.createUpdateUser(
+        existingClerkUser || createdClerkUser,
+        userRoleType
+      );
+
+      // if (createdClerkUser) {
+      //   const response = await clerkService.inviteUser(user.email);
+      //   console.log('response', response);
+      // }
+      return userf;
+
+      // return await this.createUpdateUser(createdClerkUser, userRoleType);
+    } catch (error) {
+      console.error('Error creating user', error);
+      return null;
+    }
   };
 }

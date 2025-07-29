@@ -2,8 +2,9 @@
 
 import { Sidemenu } from '@app-test2/shared-components';
 import { useTranslations } from 'next-intl';
-import { ClerkProfilButton } from '@app-test2/shared-components';
+
 import { LanguageSwitch } from './LanguageSwitch';
+import ProfilButton from '../clerk/ProfilButton';
 
 export function SidemenuWrapper() {
   const t = useTranslations('Navigation');
@@ -17,7 +18,7 @@ export function SidemenuWrapper() {
   return (
     <Sidemenu
       menuItems={menuItems}
-      profileButton={<ClerkProfilButton label={t('profile')} />}
+      profileButton={<ProfilButton label={t('profile')} />}
       languageSelector={<LanguageSwitch />}
       qualifier="ADMIN"
     />
