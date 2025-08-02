@@ -29,6 +29,7 @@ export default function SelectMultiButtonsExample() {
       <div>
         <h3 className="text-md font-medium mb-2">Basic Multi-Select</h3>
         <SelectMultiButtons
+          name="basic-multi-select"
           options={exampleOptions}
           value={selectedValues}
           onChange={setSelectedValues}
@@ -45,6 +46,7 @@ export default function SelectMultiButtonsExample() {
           With Maximum Selections (3)
         </h3>
         <SelectMultiButtons
+          name="max-selections"
           options={exampleOptions}
           value={selectedValuesWithMax}
           onChange={setSelectedValuesWithMax}
@@ -62,6 +64,7 @@ export default function SelectMultiButtonsExample() {
           With Minimum Selections (2)
         </h3>
         <SelectMultiButtons
+          name="min-selections"
           options={exampleOptions}
           value={selectedValuesWithMin}
           onChange={setSelectedValuesWithMin}
@@ -77,6 +80,7 @@ export default function SelectMultiButtonsExample() {
       <div>
         <h3 className="text-md font-medium mb-2">Disabled State</h3>
         <SelectMultiButtons
+          name="disabled-example"
           options={exampleOptions}
           value={['option1']}
           onChange={() => {}}

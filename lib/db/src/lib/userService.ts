@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../../../dist/.prisma/client/index.js';
 import { BaseService } from './_baseService.js';
 import {
   ClerkUser,
@@ -49,12 +49,14 @@ export class UserService extends BaseService {
           },
         });
       }
+      // User already has the role, return the existing user
+      return existingUser;
     } else {
       // User doesn't exist, create new user
       return await this.prisma.user.create({
         data: {
           externalId: user.id,
-          roles: [userRoleType],
+          roles: [userRoleType as UserType],
         },
       });
     }
@@ -103,14 +105,16 @@ export class UserService extends BaseService {
       const users = await this.prisma.user.findMany({
         where: {
           roles: {
-            has: role,
+            has: role as UserType,
           },
         },
         select: {
           externalId: true,
         },
       });
-      externalIds = users.map((user: User) => user.externalId);
+      externalIds = users.map(
+        (user: { externalId: string }) => user.externalId
+      );
 
       if (externalIds.length === 0) {
         return {
