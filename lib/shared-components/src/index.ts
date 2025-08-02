@@ -17,6 +17,8 @@ export { default as ProfileIcon } from './lib/icons/Profile';
 export { default as AnimauxIcon } from './lib/icons/Animaux';
 export { BriefCaseIcon } from './lib/icons/BriefCase';
 export { UserIcon } from './lib/icons/UserIcon';
+export { default as NoDataIcon } from './lib/icons/NoData';
+export { default as LoadingSpinner } from './lib/icons/LoadingSpinner';
 export { default as ExclamationCircleIcon } from './lib/icons/ExclamationCircle';
 
 /* Forms */

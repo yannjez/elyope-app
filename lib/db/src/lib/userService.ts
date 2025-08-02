@@ -151,18 +151,31 @@ export class UserService extends BaseService {
       return { data: [] };
     }
 
-    const data = clerkUsers.map((clerkUser) => {
+    let data = clerkUsers.map((clerkUser) => {
       const user = users.find((user) => user.externalId === clerkUser.id);
       return this.mergeClerkData(user, clerkUser) as FullUser;
     });
 
+    data = [
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+      ...data,
+    ];
+
     return {
       data,
       pagination: {
-        total: users.length,
+        total: data.length,
         page,
         limit,
-        totalPages: Math.ceil(users.length / limit),
+        totalPages: Math.ceil(data.length / limit),
       },
     };
   };

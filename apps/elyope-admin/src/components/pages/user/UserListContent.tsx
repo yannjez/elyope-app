@@ -198,11 +198,10 @@ export default function UserListContent({
           data={data}
           className="rounded-4 "
           onSort={handleSort}
+          noDataMessage="No users found"
+          isLoading={isSearching}
+          loadingRows={5}
         />
-        <div className="mt-4 p-4 bg-gray-100 rounded-4">
-          <h3 className="font-medium mb-2">Current Filter State:</h3>
-          <pre className="text-sm">{JSON.stringify(filter, null, 2)}</pre>
-        </div>
 
         {pagination?.totalPages > 1 && (
           <div className="mt-4 flex justify-center items-center gap-2">
