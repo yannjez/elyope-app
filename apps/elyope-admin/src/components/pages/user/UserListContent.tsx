@@ -6,14 +6,15 @@ import {
   UserIcon,
   Button,
   DataGrid,
-  ListFilter,
 } from '@app-test2/shared-components';
 import { useState, useCallback } from 'react';
 import { getUserList } from './UserListController';
+import { UserListFilter } from './UserListFilter';
 import Link from 'next/link';
 
 type UserFilter = {
   keyword?: string;
+  role?: string;
 };
 
 export default function UserListContent({
@@ -25,25 +26,46 @@ export default function UserListContent({
 }) {
   const [data, setData] = useState<FullUser[]>(_data);
   const [pagination, setPagination] = useState<PaginationInfo>(_pagination);
-  const [filter, setFilter] = useState<UserFilter>({ keyword: '' });
+  const [filter, setFilter] = useState<UserFilter>({ keyword: '', role: '' });
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleKeywordChange = useCallback((value: string) => {
-    setFilter((prev) => ({ ...prev, keyword: value }));
-    setIsSearching(true);
-    getUserList({
-      search: value || '',
-    }).then(({ data, pagination }) => {
-      setData(data);
-      setPagination(pagination);
-      setIsSearching(false);
-    });
-  }, []);
+  const handleKeywordChange = useCallback(
+    (value: string) => {
+      setFilter((prev) => ({ ...prev, keyword: value }));
+      setIsSearching(true);
+      getUserList({
+        search: value || '',
+        role: filter.role || '',
+      }).then(({ data, pagination }) => {
+        setData(data);
+        setPagination(pagination);
+        setIsSearching(false);
+      });
+    },
+    [filter.role]
+  );
+
+  const handleRoleChange = useCallback(
+    (role: string) => {
+      setFilter((prev) => ({ ...prev, role }));
+      setIsSearching(true);
+      getUserList({
+        search: filter.keyword || '',
+        role: role,
+      }).then(({ data, pagination }) => {
+        setData(data);
+        setPagination(pagination);
+        setIsSearching(false);
+      });
+    },
+    [filter.keyword]
+  );
 
   const handleSearch = async () => {
     setIsSearching(true);
     getUserList({
       search: filter.keyword || '',
+      role: filter.role || '',
     }).then(({ data, pagination }) => {
       setData(data);
       setPagination(pagination);
@@ -51,9 +73,10 @@ export default function UserListContent({
     });
   };
 
-  const handleSort = (field: keyof FullUser, direction: 'asc' | 'desc') => {
+  const handleSort = (field: string, direction: 'asc' | 'desc') => {
     getUserList({
       search: filter.keyword || '',
+      role: filter.role || '',
       sort: field,
       sortDirection: direction,
     }).then(({ data, pagination }) => {
@@ -64,7 +87,7 @@ export default function UserListContent({
   };
 
   const handleReset = useCallback(() => {
-    setFilter({ keyword: '' });
+    setFilter({ keyword: '', role: '' });
     getUserList({}).then(({ data, pagination }) => {
       setData(data);
       setPagination(pagination);
@@ -72,7 +95,7 @@ export default function UserListContent({
     });
   }, []);
 
-  const isFilterEmpty = !filter.keyword;
+  const isFilterEmpty = !filter.keyword && (!filter.role || filter.role === '');
 
   const columns = [
     {
@@ -156,9 +179,10 @@ export default function UserListContent({
           </Link>
         }
         filters={
-          <ListFilter
+          <UserListFilter
             filter={filter}
             onKeywordChange={handleKeywordChange}
+            onRoleChange={handleRoleChange}
             onSearch={handleSearch}
             onReset={handleReset}
             isSearching={isSearching}
@@ -175,7 +199,10 @@ export default function UserListContent({
           className="rounded-4 "
           onSort={handleSort}
         />
-        <div>{JSON.stringify(filter)}</div>
+        <div className="mt-4 p-4 bg-gray-100 rounded-4">
+          <h3 className="font-medium mb-2">Current Filter State:</h3>
+          <pre className="text-sm">{JSON.stringify(filter, null, 2)}</pre>
+        </div>
 
         {pagination?.totalPages > 1 && (
           <div className="mt-4 flex justify-center items-center gap-2">

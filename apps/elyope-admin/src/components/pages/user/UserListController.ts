@@ -5,12 +5,13 @@ import { prisma } from '@/db';
 import { ListRequestType } from '@elyope/db';
 
 export const getUserList = async (listRequest?: ListRequestType) => {
+  console.log('listRequest', listRequest);
   const userService = new UserService(prisma);
 
   const userCount = await userService.getUserCount();
   const pagination = userService.getPaginationInfo(userCount);
 
-  const { page, sort, sortDirection, search } = listRequest || {};
+  const { page, sort, sortDirection, search, role } = listRequest || {};
 
   if (page && page > pagination.totalPages) {
     return {
@@ -24,7 +25,8 @@ export const getUserList = async (listRequest?: ListRequestType) => {
     userService.listLimit,
     sort,
     sortDirection,
-    search
+    search,
+    role
   );
   const { data } = response;
 

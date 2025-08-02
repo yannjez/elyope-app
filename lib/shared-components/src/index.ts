@@ -40,6 +40,7 @@ export * from './lib/forms/schemas';
 /* List */
 export { ListFilter } from './lib/list/ListFilter';
 export { DataGrid } from './lib/list/DataGrid';
+export type { BaseFilter } from './lib/types/Base';
 
 /* Types */
 export type { ExamenFilter, ExamenStatus } from './lib/types/Examens';

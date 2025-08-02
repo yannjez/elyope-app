@@ -31,7 +31,8 @@ export class ClerkService {
     limit: number = 10,
     offset: number = 0,
     sortField?: ClerkSortField,
-    keyword?: string
+    keyword?: string,
+    userIds?: string[]
   ): Promise<ClerkUser[]> => {
     const url = new URL(`${this.baseURl}/users`);
     url.searchParams.set('limit', limit.toString());
@@ -42,6 +43,12 @@ export class ClerkService {
     if (keyword) {
       url.searchParams.set('query', keyword);
     }
+
+    if (userIds && userIds.length > 0) {
+      url.searchParams.set('user_id', userIds.join(','));
+    }
+    console.log('url', url.searchParams.toString());
+
     return this.baseFetch<ClerkUser[]>('/users?' + url.searchParams.toString());
   };
 
@@ -141,6 +148,7 @@ export class ClerkService {
     options: RequestInit = {}
   ): Promise<T> {
     const url = new URL(`${this.baseURl}${endpoint}`);
+    console.log('url', url.toString());
 
     const defaultOptions: RequestInit = {
       headers: {

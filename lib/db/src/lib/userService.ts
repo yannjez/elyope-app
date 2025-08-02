@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import {
   ClerkUser,
@@ -78,9 +78,10 @@ export class UserService extends BaseService {
   getUsers = async (
     page: number,
     limit: number,
-    sort?: keyof FullUser,
-    sortDirection?: 'asc' | 'desc',
-    search?: string
+    sort?: string,
+    sortDirection?: string,
+    search?: string,
+    role?: string
   ) => {
     // pagination
     const offset = (page - 1) * limit;
@@ -96,9 +97,34 @@ export class UserService extends BaseService {
       last_name: 'last_name',
     };
 
+    // if a role is provide , we first have to find the external id of the users with that role
+    let externalIds: string[] = [];
+    if (role && role !== '') {
+      const users = await this.prisma.user.findMany({
+        where: {
+          roles: {
+            has: role,
+          },
+        },
+        select: {
+          externalId: true,
+        },
+      });
+      externalIds = users.map((user: User) => user.externalId);
+
+      if (externalIds.length === 0) {
+        return {
+          data: [],
+          pagination: { total: 0, page, limit, totalPages: 0 },
+        };
+      }
+    }
+
+    console.log('externalIds', role, externalIds);
+
     // map full user to clerk sort field
     const clerkSortField = !sort
-      ? 'created_at'
+      ? '-created_at'
       : (`${sortDirection === 'asc' ? '+' : '-'}${
           sortMapping[sort]
         }` as ClerkSortField);
@@ -107,10 +133,11 @@ export class UserService extends BaseService {
       limit,
       offset,
       clerkSortField,
-      search
+      search,
+      externalIds
     );
 
-    const where = {
+    const where: any = {
       externalId: {
         in: clerkUsers.map((user) => user.id),
       },
