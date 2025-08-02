@@ -51,6 +51,18 @@ export default function UserListContent({
     });
   };
 
+  const handleSort = (field: keyof FullUser, direction: 'asc' | 'desc') => {
+    getUserList({
+      search: filter.keyword || '',
+      sort: field,
+      sortDirection: direction,
+    }).then(({ data, pagination }) => {
+      setData(data);
+      setPagination(pagination);
+      setIsSearching(false);
+    });
+  };
+
   const handleReset = useCallback(() => {
     setFilter({ keyword: '' });
     getUserList({}).then(({ data, pagination }) => {
@@ -71,19 +83,19 @@ export default function UserListContent({
     },
     {
       header: 'Email',
-      field: 'email' as keyof User,
+      field: 'email' as keyof FullUser,
       isSortable: true,
     },
     {
       header: 'Roles',
-      field: 'roles' as keyof User,
+      field: 'roles' as keyof FullUser,
       isSortable: false,
-      displayCell: (user: User) => (
+      displayCell: (user: FullUser) => (
         <div className="flex gap-1">
           {user.roles.map((role, index) => (
             <span
               key={index}
-              className=" text-xs rounded-4 py-1 px-2 bg-el-blue-400 text-el-blue-500"
+              className=" text-xs rounded-4 p-1  bg-el-blue-600 text-white"
             >
               {role}
             </span>
@@ -157,7 +169,12 @@ export default function UserListContent({
       />
 
       <div className="mt-4">
-        <DataGrid columns={columns} data={data} className="rounded-4 " />
+        <DataGrid
+          columns={columns}
+          data={data}
+          className="rounded-4 "
+          onSort={handleSort}
+        />
         <div>{JSON.stringify(filter)}</div>
 
         {pagination?.totalPages > 1 && (

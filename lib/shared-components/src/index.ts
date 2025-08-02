@@ -29,7 +29,7 @@ export { FormSeparator } from './lib/forms/FormSeparator';
 export { Form } from './lib/forms/Form';
 export { ZodForm } from './lib/forms/ZodForm';
 export { z, zodResolver } from './lib/forms/ZodForm';
-export { ExampleRegistrationForm } from './lib/forms/ExampleForm';
+export { default as SelectMultiButtons } from './lib/forms/SelectMultiButtons';
 
 /* Form Hooks */
 export * from './lib/forms/hooks';

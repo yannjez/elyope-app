@@ -14,7 +14,11 @@ export type User = {
   roles: UserType[];
 };
 
-export type FullUser = User & ClerkUser & { fullName: string };
+export type FullUser = User &
+  ClerkUser & {
+    fullName: string;
+    email: string;
+  };
 
 export type ClerkEmailAddress = {
   id: string;

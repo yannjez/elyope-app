@@ -5,10 +5,17 @@ This library provides a complete form solution using React Hook Form and Zod for
 ## Components
 
 ### ZodForm
+
 A form component that automatically integrates Zod validation with React Hook Form.
 
 ```tsx
-import { ZodForm, FormField, Input, Button, userRegistrationSchema } from '@app-test2/shared-components';
+import {
+  ZodForm,
+  FormField,
+  Input,
+  Button,
+  userRegistrationSchema,
+} from '@app-test2/shared-components';
 
 function MyForm() {
   return (
@@ -26,6 +33,7 @@ function MyForm() {
 ```
 
 ### FormField
+
 A field wrapper that automatically handles form registration and error display.
 
 ```tsx
@@ -33,6 +41,48 @@ A field wrapper that automatically handles form registration and error display.
   <Input type="email" placeholder="Enter your email" />
 </FormField>
 ```
+
+### SelectMultiButtons
+
+A multi-select component that uses buttons for selection instead of a dropdown.
+
+```tsx
+import { SelectMultiButtons } from '@app-test2/shared-components';
+
+const options = [
+  { label: 'Option 1', value: 'option1' },
+  { label: 'Option 2', value: 'option2' },
+  { label: 'Option 3', value: 'option3' },
+];
+
+function MyMultiSelect() {
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+
+  return (
+    <SelectMultiButtons
+      options={options}
+      value={selectedValues}
+      onChange={setSelectedValues}
+      placeholder="Select multiple options"
+      maxSelections={3}
+      minSelections={1}
+    />
+  );
+}
+```
+
+**Props:**
+
+- `options: Option[]` - Array of options to select from
+- `value: string[]` - Currently selected values
+- `onChange: (value: string[]) => void` - Callback when selection changes
+- `placeholder?: string` - Placeholder text when no options are selected
+- `disabled?: boolean` - Whether the component is disabled
+- `maxSelections?: number` - Maximum number of selections allowed
+- `minSelections?: number` - Minimum number of selections required
+- `className?: string` - Additional CSS classes
+- `aria-label?: string` - Accessibility label
+- `aria-describedby?: string` - Accessibility description
 
 ## Available Schemas
 
@@ -48,7 +98,11 @@ A field wrapper that automatically handles form registration and error display.
 All React Hook Form hooks are available:
 
 ```tsx
-import { useForm, useFormContext, useWatch } from '@app-test2/shared-components';
+import {
+  useForm,
+  useFormContext,
+  useWatch,
+} from '@app-test2/shared-components';
 ```
 
 ## Custom Schemas
@@ -75,4 +129,4 @@ function CustomForm() {
     </ZodForm>
   );
 }
-``` 
+```
