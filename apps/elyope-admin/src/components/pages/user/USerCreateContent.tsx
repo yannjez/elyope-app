@@ -7,6 +7,8 @@ import {
   FormSeparator,
   Input,
   PageHeader,
+  Select,
+  SelectMultiButtons,
   UserIcon,
   UserRegistrationData,
   userRegistrationSchema,
@@ -14,8 +16,16 @@ import {
 } from '@app-test2/shared-components';
 import Link from 'next/link';
 import { createUser } from './UserListController';
+import { useState } from 'react';
 
 export default function UserCreateContent() {
+  const [data, setData] = useState<UserRegistrationData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    roles: [],
+  });
+
   const handleSubmit = (data: UserRegistrationData) => {
     createUser(data).then((res) => {
       console.log(res);
@@ -51,13 +61,18 @@ export default function UserCreateContent() {
             <Input type="email" placeholder="Enter your email" />
           </FormField>
 
-          <FormField name="password" label="Password">
-            <Input type="password" placeholder="Enter your password" />
+          <FormField name="roles" label="Roles">
+            <SelectMultiButtons
+              name="roles"
+              options={[
+                { label: 'Veterinarian', value: 'VETERINARIAN' },
+                { label: 'Interpreter', value: 'INTERPRETER' },
+                { label: 'Admin', value: 'ADMIN' },
+              ]}
+              value={data.roles}
+            />
           </FormField>
 
-          <FormField name="confirmPassword" label="Confirm Password">
-            <Input type="password" placeholder="Confirm your password" />
-          </FormField>
           <FormSeparator className="w-full my-4" />
           <Button type="submit" className="button-primary min-w-40">
             ↓ Sauvegarder

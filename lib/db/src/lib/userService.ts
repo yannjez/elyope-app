@@ -7,14 +7,20 @@ import {
   User,
   UserType,
 } from '../type/index.js';
-import { ClerkService } from './clerkService.js';
+import { ClerkService, ClerkSortField } from './clerkService.js';
 
 export class UserService extends BaseService {
+  clerkService: ClerkService;
+
   constructor(prisma: PrismaClient) {
     super(prisma);
+    this.clerkService = new ClerkService();
   }
 
-  createUpdateUser = async (user: ClerkUser, userRoleType: UserType) => {
+  createUpdateUser = async (user?: ClerkUser, userRoleType?: UserType) => {
+    if (!user) {
+      return null;
+    }
     // First, try to find the existing user
     const existingUser = await this.prisma.user.findUnique({
       where: {
@@ -62,7 +68,7 @@ export class UserService extends BaseService {
     })) as User;
     const clerkService = new ClerkService();
     const clerkUser = await clerkService.getUserByID(externalId);
-    return this.mergeClerkData(user, clerkUser) as FullUser;
+    return this.mergeClerkData(user, clerkUser || undefined) as FullUser;
   };
 
   getUserCount = async () => {
@@ -72,47 +78,54 @@ export class UserService extends BaseService {
   getUsers = async (
     page: number,
     limit: number,
-    sort?: string,
-    sortDirection?: string,
+    sort?: keyof FullUser,
+    sortDirection?: 'asc' | 'desc',
     search?: string
   ) => {
     // pagination
-    const skip = (page - 1) * limit;
-    const take = limit;
+    const offset = (page - 1) * limit;
 
-    const where = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+    const sortMapping: Record<string, ClerkSortField> = {
+      fullName: 'first_name',
+      // email_address: 'email_address',
+      email: 'email_address',
+      username: 'username',
+      createdAt: '-created_at',
+      updatedAt: '-updated_at',
+      first_name: 'first_name',
+      last_name: 'last_name',
+    };
 
-    const orderBy = sort ? { [sort]: sortDirection } : {};
+    // map full user to clerk sort field
+    const clerkSortField = !sort
+      ? 'created_at'
+      : (`${sortDirection === 'asc' ? '+' : '-'}${
+          sortMapping[sort]
+        }` as ClerkSortField);
+
+    const clerkUsers = await this.clerkService.getUsers(
+      limit,
+      offset,
+      clerkSortField,
+      search
+    );
+
+    const where = {
+      externalId: {
+        in: clerkUsers.map((user) => user.id),
+      },
+    };
 
     const users = (await this.prisma.user.findMany({
-      skip,
-      take,
       where,
-      orderBy,
     })) as User[];
 
     if (users.length === 0) {
       return { data: [] };
     }
 
-    // Get the clerk Data
-
-    const clerkService = new ClerkService();
-    const clerkUsers = await clerkService.getUsersByIDs(
-      users.map((user) => user.externalId)
-    );
-
-    const data = users.map((user) => {
-      const clerkUser = clerkUsers.find(
-        (clerkUser) => clerkUser.id === user.externalId
-      );
+    const data = clerkUsers.map((clerkUser) => {
+      const user = users.find((user) => user.externalId === clerkUser.id);
       return this.mergeClerkData(user, clerkUser) as FullUser;
     });
 
@@ -127,7 +140,7 @@ export class UserService extends BaseService {
     };
   };
 
-  mergeClerkData = (user: User, clerkUser?: ClerkUser) => {
+  mergeClerkData = (user?: User, clerkUser?: ClerkUser) => {
     return {
       ...user,
       ...clerkUser,
@@ -148,20 +161,15 @@ export class UserService extends BaseService {
       }
       // create the user or update it's role
       const userf = await this.createUpdateUser(
-        existingClerkUser || createdClerkUser,
+        existingClerkUser || createdClerkUser || undefined,
         userRoleType
       );
 
-      // if (createdClerkUser) {
-      //   const response = await clerkService.inviteUser(user.email);
-      //   console.log('response', response);
-      // }
       return userf;
 
       // return await this.createUpdateUser(createdClerkUser, userRoleType);
     } catch (error) {
-      console.error('Error creating user', error);
-      return null;
+      throw error;
     }
   };
 }

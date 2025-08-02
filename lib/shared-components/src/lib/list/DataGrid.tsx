@@ -16,6 +16,7 @@ export type DataGridProps<T> = {
   columns: DataGridColumn<T>[];
   data: (T & { rowClass?: string })[];
   className?: string;
+  onSort?: (field: keyof T, direction: 'asc' | 'desc') => void;
 };
 
 function sortData<T>(data: T[], field: keyof T, direction: 'asc' | 'desc') {
@@ -37,21 +38,24 @@ export function DataGrid<T extends object>({
   columns,
   data,
   className,
+  onSort,
 }: DataGridProps<T>) {
   const [sortField, setSortField] = useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const handleSort = (field: keyof T) => {
-    if (sortField === field) {
-      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
+    const newSortDirection =
+      sortField === field ? (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
+
+    setSortDirection(newSortDirection);
+    if (sortField !== field) {
       setSortField(field);
-      setSortDirection('asc');
     }
+    onSort?.(field, newSortDirection);
   };
 
   let displayedData = data;
-  if (sortField) {
+  if (sortField && !onSort) {
     displayedData = sortData(data, sortField, sortDirection);
   }
 
