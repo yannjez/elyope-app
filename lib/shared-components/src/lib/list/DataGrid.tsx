@@ -1,9 +1,10 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useMemo } from 'react';
 import { cn } from '../utils/cn';
 import CarretIcon from '../icons/Carret';
 import NoDataIcon from '../icons/NoData';
+import Pagination from './Pagination';
 
 export type DataGridColumn<T> = {
   header: string | ReactNode;
@@ -21,16 +22,25 @@ export type DataGridProps<T> = {
   noDataMessage?: string | ReactNode;
   isLoading?: boolean;
   loadingRows?: number;
+  // Pagination props
+  pagination?: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    onPageChange: (page: number) => void;
+    showPagination?: boolean;
+  };
 };
 
 /**
- * DataGrid component with sorting, no data state, and loading state support
+ * DataGrid component with sorting, no data state, loading state, and pagination support
  *
  * Features:
  * - Sortable columns with visual indicators
  * - Loading state with skeleton rows
  * - Built-in no data state with cross-in-circle icon
  * - Customizable no data message
+ * - Pagination with configurable page size and navigation
  *
  * @example
  * ```tsx
@@ -47,6 +57,20 @@ export type DataGridProps<T> = {
  *   data={users}
  *   isLoading={true}
  *   loadingRows={5}
+ * />
+ *
+ * // With pagination
+ * <DataGrid
+ *   columns={columns}
+ *   data={currentPageData}
+ *   onSort={handleSort}
+ *   pagination={{
+ *     currentPage: 1,
+ *     pageSize: 10,
+ *     totalItems: 100,
+ *     onPageChange: handlePageChange,
+ *     showPagination: true,
+ *   }}
  * />
  *
  * // With custom no data message
@@ -110,6 +134,7 @@ export function DataGrid<T extends object>({
   noDataMessage = 'No data available',
   isLoading = false,
   loadingRows = 5,
+  pagination,
 }: DataGridProps<T>) {
   const [sortField, setSortField] = useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
@@ -129,6 +154,24 @@ export function DataGrid<T extends object>({
   if (sortField && !onSort) {
     displayedData = sortData(data, sortField, sortDirection);
   }
+
+  // Calculate pagination values
+  const paginationData = useMemo(() => {
+    if (!pagination) return null;
+
+    const { currentPage, pageSize, totalItems } = pagination;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, totalItems);
+
+    return {
+      totalPages,
+      startIndex,
+      endIndex,
+      hasNextPage: currentPage < totalPages,
+      hasPrevPage: currentPage > 1,
+    };
+  }, [pagination]);
 
   // Loading state
   if (isLoading) {
@@ -177,6 +220,18 @@ export function DataGrid<T extends object>({
             ))}
           </tbody>
         </table>
+
+        {/* Pagination in loading state */}
+        {pagination &&
+          paginationData &&
+          pagination.showPagination !== false && (
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={paginationData.totalPages}
+              onPageChange={pagination.onPageChange}
+              className="mt-4"
+            />
+          )}
       </div>
     );
   }
@@ -239,6 +294,18 @@ export function DataGrid<T extends object>({
             )}
           </div>
         </div>
+
+        {/* Pagination in no data state */}
+        {pagination &&
+          paginationData &&
+          pagination.showPagination !== false && (
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={paginationData.totalPages}
+              onPageChange={pagination.onPageChange}
+              className="mt-4"
+            />
+          )}
       </div>
     );
   }
@@ -302,6 +369,16 @@ export function DataGrid<T extends object>({
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      {pagination && paginationData && pagination.showPagination !== false && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={paginationData.totalPages}
+          onPageChange={pagination.onPageChange}
+          className="mt-4"
+        />
+      )}
     </div>
   );
 }

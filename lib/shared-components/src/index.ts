@@ -42,6 +42,7 @@ export * from './lib/forms/schemas';
 /* List */
 export { ListFilter } from './lib/list/ListFilter';
 export { DataGrid } from './lib/list/DataGrid';
+export { Pagination } from './lib/list/Pagination';
 export type { BaseFilter } from './lib/types/Base';
 
 /* Types */
