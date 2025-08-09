@@ -4,20 +4,22 @@ import { User, FullUser } from '@elyope/db';
 import {
   PageHeader,
   UserIcon,
-  Button,
   DataGrid,
   Pagination,
   TrashIcon,
   PencilIcon,
-  DuplicateIcon,
+  DialogConfirm,
 } from '@app-test2/shared-components';
 
 import Link from 'next/link';
 import { useUserListControllerContext } from './UserListContext';
 import { UserListFilter } from './UserListFilter';
+import { useState } from 'react';
 // sort state type is defined in context
 
 export default function UserListContent() {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const {
     data,
     pagination,
@@ -31,6 +33,7 @@ export default function UserListContent() {
     handleSearch,
     handleSort,
     handleReset,
+    deleteUser,
   } = useUserListControllerContext();
 
   const isFilterEmpty = !filter.keyword && (!filter.role || filter.role === '');
@@ -131,11 +134,6 @@ export default function UserListContent() {
           loadingRows={5}
           rowActions={[
             {
-              name: 'Download',
-              icon: <DuplicateIcon className="w-full h-full" />,
-              onClick: (id) => {},
-            },
-            {
               name: 'Edit',
               icon: <PencilIcon className="w-full h-full" />,
               onClick: (id) => {},
@@ -144,9 +142,30 @@ export default function UserListContent() {
               className: 'hover:text-el-red-500',
               name: 'Delete',
               icon: <TrashIcon className="w-full h-full" />,
-              onClick: (id) => {},
+              onClick: (id) => {
+                setSelectedUserId(String(id));
+                setConfirmOpen(true);
+              },
             },
           ]}
+        />
+        <DialogConfirm
+          open={confirmOpen}
+          title="Delete user"
+          message="Are you sure you want to delete this user? This action cannot be undone."
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          onCancel={() => {
+            setConfirmOpen(false);
+            setSelectedUserId(null);
+          }}
+          onConfirm={async () => {
+            if (selectedUserId) {
+              await deleteUser(selectedUserId);
+            }
+            setConfirmOpen(false);
+            setSelectedUserId(null);
+          }}
         />
       </div>
     </>

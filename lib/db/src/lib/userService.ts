@@ -283,4 +283,24 @@ export class UserService extends BaseService {
       throw error;
     }
   };
+
+  deleteUser = async (id: string) => {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        externalId: id,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+    await this.clerkService.deleteUserByID(id);
+    await this.prisma.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
+
+    return user;
+  };
 }

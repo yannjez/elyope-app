@@ -7,6 +7,7 @@ export { default as Sidemenu } from './lib/commons/Sidemenu';
 export { LanguageSwitcher } from './lib/commons/LanguageSwitcher';
 export { default as SideLogin } from './lib/commons/SideLogin';
 export { default as SideEmpty } from './lib/commons/SideEmpty';
+export { default as DialogConfirm } from './lib/commons/DialogConfirm';
 
 /* Icons */
 export {

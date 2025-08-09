@@ -137,6 +137,12 @@ export class ClerkService {
     });
   };
 
+  deleteUserByID = async (id: string): Promise<any> => {
+    return this.baseFetch<any>(`/users/${id}`, {
+      method: 'DELETE',
+    });
+  };
+
   /**
    * Base fetch function for making API calls to Clerk
    * @param endpoint - The API endpoint (without base URL)

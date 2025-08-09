@@ -7,8 +7,8 @@ import {
   useState,
   useCallback,
 } from 'react';
-import { FullUser, PaginationInfo } from '@elyope/db';
-import { getUserList } from './UserListController';
+import { FullUser, PaginationInfo, ListRequestType } from '@elyope/db';
+import { deleteUser, getUserList } from './UserListController';
 
 export type UserFilter = {
   keyword?: string;
@@ -43,6 +43,7 @@ type UserListControllerContextValues = {
   handleSearch: () => Promise<void>;
   handleSort: (field: string, direction: SortDirection) => void;
   handleReset: () => void;
+  deleteUser: (id: string) => Promise<void>;
 };
 
 export const UserListControllerContext = createContext<
@@ -61,111 +62,96 @@ export const UserListProvider = ({
   const [sortState, setSortState] = useState<SortState>({});
   const [isSearching, setIsSearching] = useState(false);
 
-  const handlePageChange = useCallback(
-    (page: number) => {
-      setCurrentPage(page);
+  const fetchUsers = useCallback(
+    async (overrides?: Partial<ListRequestType>) => {
       setIsSearching(true);
-      getUserList({
-        page,
+      const baseParams: ListRequestType = {
+        page: currentPage,
         search: filter.keyword || '',
         role: filter.role || '',
         sort: sortState.field,
         sortDirection: sortState.direction,
-      }).then(({ data, pagination }) => {
-        setData(data);
-        setPagination(pagination);
-        setIsSearching(false);
-      });
+      };
+
+      const params: ListRequestType = {
+        ...baseParams,
+        ...(overrides || {}),
+      };
+
+      const { data, pagination } = await getUserList(params);
+      setData(data);
+      setPagination(pagination);
+      setIsSearching(false);
     },
-    [filter.keyword, filter.role, sortState.field, sortState.direction]
+    [
+      currentPage,
+      filter.keyword,
+      filter.role,
+      sortState.field,
+      sortState.direction,
+    ]
+  );
+
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      fetchUsers({ page });
+    },
+    [fetchUsers]
   );
 
   const handleKeywordChange = useCallback(
     (value: string) => {
       setFilter((prev) => ({ ...prev, keyword: value }));
       setCurrentPage(1);
-      setIsSearching(true);
-      getUserList({
-        page: 1,
-        search: value || '',
-        role: filter.role || '',
-        sort: sortState.field,
-        sortDirection: sortState.direction,
-      }).then(({ data, pagination }) => {
-        setData(data);
-        setPagination(pagination);
-        setIsSearching(false);
-      });
+      fetchUsers({ page: 1, search: value || '' });
     },
-    [filter.role, sortState.field, sortState.direction]
+    [fetchUsers]
   );
 
   const handleRoleChange = useCallback(
     (role: string) => {
       setFilter((prev) => ({ ...prev, role }));
       setCurrentPage(1);
-      setIsSearching(true);
-      getUserList({
-        page: 1,
-        search: filter.keyword || '',
-        role: role,
-        sort: sortState.field,
-        sortDirection: sortState.direction,
-      }).then(({ data, pagination }) => {
-        setData(data);
-        setPagination(pagination);
-        setIsSearching(false);
-      });
+      fetchUsers({ page: 1, role });
     },
-    [filter.keyword, sortState.field, sortState.direction]
+    [fetchUsers]
   );
 
   const handleSearch = useCallback(async () => {
     setCurrentPage(1);
-    setIsSearching(true);
-    getUserList({
-      page: 1,
-      search: filter.keyword || '',
-      role: filter.role || '',
-      sort: sortState.field,
-      sortDirection: sortState.direction,
-    }).then(({ data, pagination }) => {
-      setData(data);
-      setPagination(pagination);
-      setIsSearching(false);
-    });
-  }, [filter.keyword, filter.role, sortState.field, sortState.direction]);
+    await fetchUsers({ page: 1 });
+  }, [fetchUsers]);
 
   const handleSort = useCallback(
     (field: string, direction: SortDirection) => {
       setSortState({ field, direction });
-      setIsSearching(true);
-      getUserList({
-        page: currentPage,
-        search: filter.keyword || '',
-        role: filter.role || '',
-        sort: field,
-        sortDirection: direction,
-      }).then(({ data, pagination }) => {
-        setData(data);
-        setPagination(pagination);
-        setIsSearching(false);
-      });
+      fetchUsers({ sort: field, sortDirection: direction });
     },
-    [currentPage, filter.keyword, filter.role]
+    [fetchUsers]
   );
 
   const handleReset = useCallback(() => {
     setFilter({ keyword: '', role: '' });
     setSortState({});
     setCurrentPage(1);
-    setIsSearching(true);
-    getUserList({ page: 1 }).then(({ data, pagination }) => {
-      setData(data);
-      setPagination(pagination);
-      setIsSearching(false);
+    fetchUsers({
+      page: 1,
+      search: '',
+      role: '',
+      sort: undefined,
+      sortDirection: undefined,
     });
   }, []);
+
+  const handleDeleteUser = useCallback(
+    async (id: string) => {
+      console.log('handleDeleteUser called with id:', id);
+      await deleteUser(id);
+      await fetchUsers({ page: currentPage });
+    },
+    [fetchUsers, currentPage]
+  );
 
   const contextValue: UserListControllerContextValues = {
     data,
@@ -180,6 +166,7 @@ export const UserListProvider = ({
     handleSearch,
     handleSort,
     handleReset,
+    deleteUser: handleDeleteUser,
   };
 
   return (

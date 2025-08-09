@@ -44,3 +44,8 @@ export const createUser = async (user: ExternalUSer) => {
   const userService = new UserService(prisma);
   return await userService.createUser(user, 'VETERINARIAN');
 };
+
+export const deleteUser = async (id: string) => {
+  const userService = new UserService(prisma);
+  return await userService.deleteUser(id);
+};
