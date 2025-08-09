@@ -8,10 +8,14 @@ export const getUserList = async (listRequest?: ListRequestType) => {
   console.log('listRequest', listRequest);
   const userService = new UserService(prisma);
 
-  const userCount = await userService.getUserCount();
-  const pagination = userService.getPaginationInfo(userCount);
-
   const { page, sort, sortDirection, search, role } = listRequest || {};
+
+  // Get filtered user count for proper pagination
+  const filteredUserCount = await userService.getFilteredUserCount(
+    search,
+    role
+  );
+  const pagination = userService.getPaginationInfo(filteredUserCount);
 
   if (page && page > pagination.totalPages) {
     return {
@@ -31,7 +35,7 @@ export const getUserList = async (listRequest?: ListRequestType) => {
   const { data } = response;
 
   return {
-    data,
+    data: data || [],
     pagination,
   };
 };

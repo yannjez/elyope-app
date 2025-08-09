@@ -77,6 +77,52 @@ export class UserService extends BaseService {
     return await this.prisma.user.count();
   };
 
+  getFilteredUserCount = async (search?: string, role?: string) => {
+    // If no filters, return total count
+    if (!search && !role) {
+      return await this.prisma.user.count();
+    }
+
+    // If role filter is applied, get users with that role
+    let externalIds: string[] = [];
+    if (role && role !== '') {
+      const users = await this.prisma.user.findMany({
+        where: {
+          roles: {
+            has: role as UserType,
+          },
+        },
+        select: {
+          externalId: true,
+        },
+      });
+      externalIds = users.map(
+        (user: { externalId: string }) => user.externalId
+      );
+
+      if (externalIds.length === 0) {
+        return 0;
+      }
+    }
+
+    // Get all users from Clerk with search filter
+    const allClerkUsers = await this.clerkService.getUsers(
+      500, // Get a large number to get all filtered users
+      0,
+      undefined,
+      search,
+      externalIds
+    );
+
+    // If we have role filter, filter by external IDs
+    if (externalIds.length > 0) {
+      return allClerkUsers.filter((user) => externalIds.includes(user.id))
+        .length;
+    }
+
+    return allClerkUsers.length;
+  };
+
   getUsers = async (
     page: number,
     limit: number,
@@ -85,6 +131,7 @@ export class UserService extends BaseService {
     search?: string,
     role?: string
   ) => {
+    // await this. createUSerWithClerk();
     // pagination
     const offset = (page - 1) * limit;
 
@@ -119,7 +166,6 @@ export class UserService extends BaseService {
       if (externalIds.length === 0) {
         return {
           data: [],
-          pagination: { total: 0, page, limit, totalPages: 0 },
         };
       }
     }
@@ -155,32 +201,53 @@ export class UserService extends BaseService {
       return { data: [] };
     }
 
-    let data = clerkUsers.map((clerkUser) => {
+    const data = clerkUsers.map((clerkUser) => {
       const user = users.find((user) => user.externalId === clerkUser.id);
       return this.mergeClerkData(user, clerkUser) as FullUser;
     });
 
-    data = [
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-      ...data,
-    ];
-
     return {
       data,
-      pagination: {
-        total: data.length,
-        page,
-        limit,
-        totalPages: Math.ceil(data.length / limit),
+    };
+  };
+
+  createUSerWithClerk = async () => {
+    const clerkService = new ClerkService();
+    const existingClerkUser = await clerkService.getUsers(
+      100,
+      0,
+      '-created_at',
+      ''
+    );
+
+    const prismaUsers = await this.prisma.user.findMany({
+      where: {
+        externalId: {
+          in: existingClerkUser.map((user) => user.id),
+        },
       },
+    });
+
+    // get not created user
+    const notCreatedUsers = existingClerkUser.filter(
+      (user) =>
+        !prismaUsers.some((prismaUser) => prismaUser.externalId === user.id)
+    );
+
+    if (notCreatedUsers.length > 0) {
+      // create the user or update it's role
+      await Promise.all(
+        notCreatedUsers.map(async (user) => {
+          return await this.createUpdateUser(user, 'VETERINARIAN');
+        })
+      );
+      return {
+        message: 'Users created',
+      };
+    }
+
+    return {
+      message: 'No users to create',
     };
   };
 

@@ -9,17 +9,21 @@ export { default as SideLogin } from './lib/commons/SideLogin';
 export { default as SideEmpty } from './lib/commons/SideEmpty';
 
 /* Icons */
-export { default as ExamensIcon } from './lib/icons/Examens';
-export { default as ArrowLeftIcon } from './lib/icons/ArrowLeft';
-export { default as SearchIcon } from './lib/icons/search';
-export { default as MessagerieIcon } from './lib/icons/Messagerie';
-export { default as ProfileIcon } from './lib/icons/Profile';
-export { default as AnimauxIcon } from './lib/icons/Animaux';
-export { BriefCaseIcon } from './lib/icons/BriefCase';
-export { UserIcon } from './lib/icons/UserIcon';
-export { default as NoDataIcon } from './lib/icons/NoData';
-export { default as LoadingSpinner } from './lib/icons/LoadingSpinner';
-export { default as ExclamationCircleIcon } from './lib/icons/ExclamationCircle';
+export {
+  TrashIcon,
+  PencilIcon,
+  DuplicateIcon,
+  ArrowLeftIcon,
+  SearchIcon,
+  MessagerieIcon,
+  ProfileIcon,
+  AnimauxIcon,
+  BriefCaseIcon,
+  UserIcon,
+  NoDataIcon,
+  LoadingSpinner,
+  ExclamationCircleIcon,
+} from './lib/icons';
 
 /* Forms */
 export { default as Button } from './lib/forms/Button';

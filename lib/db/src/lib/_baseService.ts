@@ -3,7 +3,7 @@ import { PaginationInfo } from '../type/index.js';
 
 export class BaseService {
   public prisma: PrismaClient;
-  public listLimit = 20;
+  public listLimit = 10;
 
   constructor(protected readonly _prisma: PrismaClient) {
     this.prisma = _prisma;

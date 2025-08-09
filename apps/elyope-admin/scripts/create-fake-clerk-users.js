@@ -1,34 +1,48 @@
-const axios = require('axios');
+// Using node's built-in fetch (available since Node.js 18)
+// const axios = require('axios');
 
 // CONFIGURATION
-const CLERK_API_KEY = 'sk_test_xxx'; // <-- PUT your Clerk secret key here
+const CLERK_API_KEY = 'sk_test_X0IAsusXTzywmx9r75vWis8uWOLHMVWeNxcOaLjQYB'; // <-- PUT your Clerk secret key here
 const COUNT = 10; // <-- Number of users to create (replace 10 by {x})
-const EMAIL_DOMAIN = 'test-users.fake'; // Or any non-existing/controlled domain
+const EMAIL_DOMAIN = 'example.com'; // Changed to a more standard domain
 
 const CLERK_API_URL = 'https://api.clerk.com/v1/users';
 
 async function createTestUser(index) {
-  const email = `testuser${Date.now()}_${index}@${EMAIL_DOMAIN}`;
+  const timestamp = Date.now();
+  const email = `testuser${timestamp}_${index}@${EMAIL_DOMAIN}`;
+  const username = `testuser${timestamp}_${index}`;
+
   const body = {
     email_address: [email],
     first_name: 'Test',
     last_name: `User${index}`,
-    username: `testuser${Date.now()}_${index}`,
+    username: username,
+    password: `TestPassword${timestamp}_${index}!`, // Adding required password
   };
 
   try {
-    const res = await axios.post(CLERK_API_URL, body, {
+    const res = await fetch(CLERK_API_URL, {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${CLERK_API_KEY}`,
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(body),
     });
-    console.log(`✅ Created: ${email} (id: ${res.data.id})`);
+
+    if (!res.ok) {
+      const errorData = await res.text();
+      console.error(`❌ HTTP ${res.status} for user ${email}:`);
+      console.error(`Request body:`, JSON.stringify(body, null, 2));
+      console.error(`Response:`, errorData);
+      throw new Error(`HTTP error! status: ${res.status} - ${errorData}`);
+    }
+
+    const data = await res.json();
+    console.log(`✅ Created: ${email} (id: ${data.id})`);
   } catch (err) {
-    console.error(
-      `❌ Error creating user ${email}:`,
-      err.response?.data || err.message
-    );
+    console.error(`❌ Error creating user ${email}:`, err.message);
   }
 }
 

@@ -1,99 +1,37 @@
 'use client';
 
-import { User, PaginationInfo, FullUser } from '@elyope/db';
+import { User, FullUser } from '@elyope/db';
 import {
   PageHeader,
   UserIcon,
   Button,
   DataGrid,
+  Pagination,
+  TrashIcon,
+  PencilIcon,
+  DuplicateIcon,
 } from '@app-test2/shared-components';
-import { useState, useCallback } from 'react';
-import { getUserList } from './UserListController';
-import { UserListFilter } from './UserListFilter';
+
 import Link from 'next/link';
+import { useUserListControllerContext } from './UserListContext';
+import { UserListFilter } from './UserListFilter';
+// sort state type is defined in context
 
-type UserFilter = {
-  keyword?: string;
-  role?: string;
-};
-
-export default function UserListContent({
-  _data,
-  _pagination,
-}: {
-  _data: FullUser[];
-  _pagination: PaginationInfo;
-}) {
-  const [data, setData] = useState<FullUser[]>(_data);
-  const [pagination, setPagination] = useState<PaginationInfo>(_pagination);
-  const [filter, setFilter] = useState<UserFilter>({ keyword: '', role: '' });
-  const [isSearching, setIsSearching] = useState(false);
-
-  const handleKeywordChange = useCallback(
-    (value: string) => {
-      setFilter((prev) => ({ ...prev, keyword: value }));
-      setIsSearching(true);
-      getUserList({
-        search: value || '',
-        role: filter.role || '',
-      }).then(({ data, pagination }) => {
-        setData(data);
-        setPagination(pagination);
-        setIsSearching(false);
-      });
-    },
-    [filter.role]
-  );
-
-  const handleRoleChange = useCallback(
-    (role: string) => {
-      setFilter((prev) => ({ ...prev, role }));
-      setIsSearching(true);
-      getUserList({
-        search: filter.keyword || '',
-        role: role,
-      }).then(({ data, pagination }) => {
-        setData(data);
-        setPagination(pagination);
-        setIsSearching(false);
-      });
-    },
-    [filter.keyword]
-  );
-
-  const handleSearch = async () => {
-    setIsSearching(true);
-    getUserList({
-      search: filter.keyword || '',
-      role: filter.role || '',
-    }).then(({ data, pagination }) => {
-      setData(data);
-      setPagination(pagination);
-      setIsSearching(false);
-    });
-  };
-
-  const handleSort = (field: string, direction: 'asc' | 'desc') => {
-    getUserList({
-      search: filter.keyword || '',
-      role: filter.role || '',
-      sort: field,
-      sortDirection: direction,
-    }).then(({ data, pagination }) => {
-      setData(data);
-      setPagination(pagination);
-      setIsSearching(false);
-    });
-  };
-
-  const handleReset = useCallback(() => {
-    setFilter({ keyword: '', role: '' });
-    getUserList({}).then(({ data, pagination }) => {
-      setData(data);
-      setPagination(pagination);
-      setIsSearching(false);
-    });
-  }, []);
+export default function UserListContent() {
+  const {
+    data,
+    pagination,
+    currentPage,
+    filter,
+    sortState,
+    isSearching,
+    handlePageChange,
+    handleKeywordChange,
+    handleRoleChange,
+    handleSearch,
+    handleSort,
+    handleReset,
+  } = useUserListControllerContext();
 
   const isFilterEmpty = !filter.keyword && (!filter.role || filter.role === '');
 
@@ -136,27 +74,6 @@ export default function UserListContent({
         </span>
       ),
     },
-    {
-      header: 'Actions',
-      field: 'id' as keyof User,
-      isSortable: false,
-      displayCell: (user: User) => (
-        <div className="flex gap-2">
-          <Button
-            className="button-primary-inverse text-xs px-2 py-1"
-            onClick={() => console.log('Edit user:', user.id)}
-          >
-            Edit
-          </Button>
-          <Button
-            className="button-destructive text-xs px-2 py-1"
-            onClick={() => console.log('Delete user:', user.id)}
-          >
-            Delete
-          </Button>
-        </div>
-      ),
-    },
   ];
 
   const t = (key: string) => {
@@ -192,25 +109,45 @@ export default function UserListContent({
         }
       />
 
-      <div className="mt-4">
+      <div className="flex justify-end mt-4">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
+
+      <div className="">
         <DataGrid
           columns={columns}
           data={data}
-          className="rounded-4 "
+          className="rounded-4  w-full"
+          skeletonRowClass="!p-3"
           onSort={handleSort}
+          sortField={sortState.field as keyof FullUser}
+          sortDirection={sortState.direction}
           noDataMessage="No users found"
           isLoading={isSearching}
           loadingRows={5}
+          rowActions={[
+            {
+              name: 'Download',
+              icon: <DuplicateIcon className="w-full h-full" />,
+              onClick: (id) => {},
+            },
+            {
+              name: 'Edit',
+              icon: <PencilIcon className="w-full h-full" />,
+              onClick: (id) => {},
+            },
+            {
+              className: 'hover:text-el-red-500',
+              name: 'Delete',
+              icon: <TrashIcon className="w-full h-full" />,
+              onClick: (id) => {},
+            },
+          ]}
         />
-
-        {pagination?.totalPages > 1 && (
-          <div className="mt-4 flex justify-center items-center gap-2">
-            <span className="text-sm text-el-grey-500">
-              Page 1 of {pagination.totalPages}
-            </span>
-            {/* TODO: Add pagination controls */}
-          </div>
-        )}
       </div>
     </>
   );

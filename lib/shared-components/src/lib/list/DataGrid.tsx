@@ -18,10 +18,14 @@ export type DataGridProps<T> = {
   columns: DataGridColumn<T>[];
   data: (T & { rowClass?: string })[];
   className?: string;
+  skeletonRowClass?: string;
   onSort?: (field: keyof T, direction: 'asc' | 'desc') => void;
   noDataMessage?: string | ReactNode;
   isLoading?: boolean;
   loadingRows?: number;
+  // Controlled sort state
+  sortField?: keyof T | null;
+  sortDirection?: 'asc' | 'desc';
   // Pagination props
   pagination?: {
     currentPage: number;
@@ -30,6 +34,20 @@ export type DataGridProps<T> = {
     onPageChange: (page: number) => void;
     showPagination?: boolean;
   };
+  /**
+   * Row actions displayed at the end of each row.
+   * - name: Accessible name used for aria-label
+   * - icon: ReactNode rendered inside the button
+   * - propertyKey: Row property to pass to handler (defaults to 'id')
+   * - onClick: Handler invoked with the property value
+   */
+  rowActions?: Array<{
+    name: string;
+    icon: ReactNode;
+    propertyKey?: keyof T;
+    onClick: (value: unknown) => void;
+    className?: string;
+  }>;
 };
 
 /**
@@ -111,17 +129,21 @@ function sortData<T>(data: T[], field: keyof T, direction: 'asc' | 'desc') {
 }
 
 // Skeleton row component for loading state
-function SkeletonRow({ columns }: { columns: DataGridColumn<any>[] }) {
+function SkeletonRow({
+  columns,
+  className,
+}: {
+  columns: DataGridColumn<any>[];
+  className?: string;
+}) {
   return (
     <tr className="bg-white">
-      {columns.map((col, colIdx) => (
-        <td
-          key={colIdx}
-          className={cn('mx-2 my-1 py-2 px-3 rounded-4 text-14', col.className)}
-        >
-          <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-        </td>
-      ))}
+      <td
+        colSpan={columns.length}
+        className={cn('mx-2 my-1 py-2 px-3 rounded-4 text-14', className)}
+      >
+        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+      </td>
     </tr>
   );
 }
@@ -130,22 +152,41 @@ export function DataGrid<T extends object>({
   columns,
   data,
   className,
+  skeletonRowClass,
   onSort,
   noDataMessage = 'No data available',
   isLoading = false,
   loadingRows = 5,
+  sortField: externalSortField,
+  sortDirection: externalSortDirection,
   pagination,
+  rowActions = [],
 }: DataGridProps<T>) {
-  const [sortField, setSortField] = useState<keyof T | null>(null);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [internalSortField, setInternalSortField] = useState<keyof T | null>(
+    null
+  );
+  const [internalSortDirection, setInternalSortDirection] = useState<
+    'asc' | 'desc'
+  >('asc');
+
+  // Use external sort state if provided, otherwise use internal state
+  const sortField =
+    externalSortField !== undefined ? externalSortField : internalSortField;
+  const sortDirection =
+    externalSortDirection !== undefined
+      ? externalSortDirection
+      : internalSortDirection;
 
   const handleSort = (field: keyof T) => {
     const newSortDirection =
       sortField === field ? (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
 
-    setSortDirection(newSortDirection);
-    if (sortField !== field) {
-      setSortField(field);
+    // Update internal state if not using external state
+    if (externalSortField === undefined) {
+      setInternalSortDirection(newSortDirection);
+      if (sortField !== field) {
+        setInternalSortField(field);
+      }
     }
     onSort?.(field, newSortDirection);
   };
@@ -176,8 +217,8 @@ export function DataGrid<T extends object>({
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn('overflow-x-auto max-w-[1080px]', className)}>
-        <table className="w-full border-separate">
+      <div className={cn('overflow-x-auto table-fixed', className)}>
+        <table className="w-full border-separate ">
           <thead>
             <tr>
               {columns.map((col, idx) => (
@@ -212,11 +253,24 @@ export function DataGrid<T extends object>({
                   </div>
                 </th>
               ))}
+              {rowActions.map((_, idx) => (
+                <th key={`action-h-${idx}`} className="px-2 py-1 text-left" />
+              ))}
             </tr>
           </thead>
           <tbody>
             {Array.from({ length: loadingRows }).map((_, rowIdx) => (
-              <SkeletonRow key={rowIdx} columns={columns} />
+              <SkeletonRow
+                key={rowIdx}
+                columns={[
+                  ...columns,
+                  ...rowActions.map(() => ({
+                    header: '',
+                    field: '' as unknown as keyof T,
+                  })),
+                ]}
+                className={skeletonRowClass}
+              />
             ))}
           </tbody>
         </table>
@@ -239,8 +293,8 @@ export function DataGrid<T extends object>({
   // No data state
   if (!displayedData || displayedData.length === 0) {
     return (
-      <div className={cn('overflow-x-auto max-w-[1080px]', className)}>
-        <table className="w-full border-separate">
+      <div className={cn('overflow-x-auto  ', className)}>
+        <table className="w-full border-separate  ">
           <thead>
             <tr>
               {columns.map((col, idx) => (
@@ -274,6 +328,12 @@ export function DataGrid<T extends object>({
                     )}
                   </div>
                 </th>
+              ))}
+              {rowActions.map((_, idx) => (
+                <th
+                  key={`action-h-empty-${idx}`}
+                  className="px-2 py-1 text-left"
+                />
               ))}
             </tr>
           </thead>
@@ -311,8 +371,8 @@ export function DataGrid<T extends object>({
   }
 
   return (
-    <div className={cn('overflow-x-auto max-w-[1080px]', className)}>
-      <table className="w-full border-separate">
+    <div className={cn('overflow-x-auto', className)}>
+      <table className="w-full border-separate border-spacing-[4px]">
         <thead>
           <tr>
             {columns.map((col, idx) => (
@@ -347,6 +407,12 @@ export function DataGrid<T extends object>({
                 </div>
               </th>
             ))}
+            {rowActions.map((_, idx) => (
+              <th
+                key={`action-h-main-${idx}`}
+                className="px-2 py-1 text-left"
+              />
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -365,6 +431,30 @@ export function DataGrid<T extends object>({
                     : String(row[col.field] ?? '')}
                 </td>
               ))}
+              {rowActions.map((action, actionIdx) => {
+                const keyToUse = action.propertyKey ?? ('id' as keyof T);
+                const actionValue = (row as T)[keyToUse];
+
+                return (
+                  <td key={`action-${actionIdx}`} className="rounded-4">
+                    <div className=" flex items-center justify-center   ">
+                      <button
+                        type="button"
+                        aria-label={action.name}
+                        className={cn(
+                          ' h-[28px] w-auto cursor-pointer   flex items-center justify-center rounded-4 bg-white text-el-grey-300 hover:text-el-blue-500 transition-colors duration-300',
+                          action.className
+                        )}
+                        onClick={() =>
+                          actionValue && action.onClick(actionValue)
+                        }
+                      >
+                        {action.icon}
+                      </button>
+                    </div>
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
