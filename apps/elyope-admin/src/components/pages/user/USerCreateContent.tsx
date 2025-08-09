@@ -7,7 +7,6 @@ import {
   FormSeparator,
   Input,
   PageHeader,
-  Select,
   SelectMultiButtons,
   UserIcon,
   UserRegistrationData,
@@ -16,20 +15,10 @@ import {
 } from '@app-test2/shared-components';
 import Link from 'next/link';
 import { createUser } from './UserListController';
-import { useState } from 'react';
 
 export default function UserCreateContent() {
-  const [data, setData] = useState<UserRegistrationData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    roles: [],
-  });
-
   const handleSubmit = (data: UserRegistrationData) => {
-    createUser(data).then((res) => {
-      console.log(res);
-    });
+    createUser(data).then((res) => {});
   };
   return (
     <>
@@ -47,6 +36,7 @@ export default function UserCreateContent() {
         <ZodForm
           schema={userRegistrationSchema}
           onSubmit={handleSubmit}
+          defaultValues={{ firstName: '', lastName: '', email: '', roles: [] }}
           className="space-y-2 "
         >
           <FormField name="firstName" label="First Name">
@@ -63,13 +53,14 @@ export default function UserCreateContent() {
 
           <FormField name="roles" label="Roles">
             <SelectMultiButtons
+              minSelections={1}
+              maxSelections={3}
               name="roles"
               options={[
                 { label: 'Veterinarian', value: 'VETERINARIAN' },
                 { label: 'Interpreter', value: 'INTERPRETER' },
                 { label: 'Admin', value: 'ADMIN' },
               ]}
-              value={data.roles}
             />
           </FormField>
 

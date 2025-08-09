@@ -59,7 +59,7 @@ export default function UserListContent() {
           {user.roles.map((role, index) => (
             <span
               key={index}
-              className=" text-xs rounded-4 p-1  bg-el-blue-600 text-white"
+              className=" text-xs rounded-4 py-1 px-2 text-12  bg-el-blue-400 text-el-gray-500"
             >
               {role}
             </span>
@@ -111,63 +111,64 @@ export default function UserListContent() {
           />
         }
       />
+      <main className="main-container">
+        <div className="flex justify-end mt-4 ">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
 
-      <div className="flex justify-end mt-4">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={pagination.totalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
-
-      <div className="">
-        <DataGrid
-          columns={columns}
-          data={data}
-          className="rounded-4  w-full"
-          skeletonRowClass="!p-3"
-          onSort={handleSort}
-          sortField={sortState.field as keyof FullUser}
-          sortDirection={sortState.direction}
-          noDataMessage="No users found"
-          isLoading={isSearching}
-          loadingRows={5}
-          rowActions={[
-            {
-              name: 'Edit',
-              icon: <PencilIcon className="w-full h-full" />,
-              onClick: (id) => {},
-            },
-            {
-              className: 'hover:text-el-red-500',
-              name: 'Delete',
-              icon: <TrashIcon className="w-full h-full" />,
-              onClick: (id) => {
-                setSelectedUserId(String(id));
-                setConfirmOpen(true);
+        <div className="">
+          <DataGrid
+            columns={columns}
+            data={data}
+            className="rounded-4  w-full"
+            skeletonRowClass="!p-3"
+            onSort={handleSort}
+            sortField={sortState.field as keyof FullUser}
+            sortDirection={sortState.direction}
+            noDataMessage="No users found"
+            isLoading={isSearching}
+            loadingRows={5}
+            rowActions={[
+              {
+                name: 'Edit',
+                icon: <PencilIcon className="w-full h-full" />,
+                onClick: (id) => {},
               },
-            },
-          ]}
-        />
-        <DialogConfirm
-          open={confirmOpen}
-          title="Delete user"
-          message="Are you sure you want to delete this user? This action cannot be undone."
-          confirmLabel="Delete"
-          cancelLabel="Cancel"
-          onCancel={() => {
-            setConfirmOpen(false);
-            setSelectedUserId(null);
-          }}
-          onConfirm={async () => {
-            if (selectedUserId) {
-              await deleteUser(selectedUserId);
-            }
-            setConfirmOpen(false);
-            setSelectedUserId(null);
-          }}
-        />
-      </div>
+              {
+                className: 'hover:text-el-red-500',
+                name: 'Delete',
+                icon: <TrashIcon className="w-full h-full" />,
+                onClick: (id) => {
+                  setSelectedUserId(String(id));
+                  setConfirmOpen(true);
+                },
+              },
+            ]}
+          />
+          <DialogConfirm
+            open={confirmOpen}
+            title="Delete user"
+            message="Are you sure you want to delete this user? This action cannot be undone."
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
+            onCancel={() => {
+              setConfirmOpen(false);
+              setSelectedUserId(null);
+            }}
+            onConfirm={async () => {
+              if (selectedUserId) {
+                await deleteUser(selectedUserId);
+              }
+              setConfirmOpen(false);
+              setSelectedUserId(null);
+            }}
+          />
+        </div>
+      </main>
     </>
   );
 }

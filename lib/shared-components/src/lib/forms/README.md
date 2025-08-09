@@ -62,7 +62,7 @@ function MyMultiSelect() {
     <SelectMultiButtons
       options={options}
       value={selectedValues}
-      onChange={setSelectedValues}
+      onValuesChange={setSelectedValues}
       placeholder="Select multiple options"
       maxSelections={3}
       minSelections={1}
@@ -75,7 +75,7 @@ function MyMultiSelect() {
 
 - `options: Option[]` - Array of options to select from
 - `value: string[]` - Currently selected values
-- `onChange: (value: string[]) => void` - Callback when selection changes
+- `onValuesChange: (value: string[]) => void` - Callback when selection changes (use this in controlled mode). When used within `FormField`, `name` and hidden checkboxes ensure values are registered correctly.
 - `placeholder?: string` - Placeholder text when no options are selected
 - `disabled?: boolean` - Whether the component is disabled
 - `maxSelections?: number` - Maximum number of selections allowed

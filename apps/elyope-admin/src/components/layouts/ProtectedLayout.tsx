@@ -36,7 +36,7 @@ export default async function ProtectedLayout({
     // >
     <div className="flex gap-1">
       <SidemenuWrapper />
-      <main className="w-full main-container">{children}</main>
+      <main className="w-full">{children}</main>
     </div>
     // </AppProvider>
   );

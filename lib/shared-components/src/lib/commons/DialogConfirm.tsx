@@ -3,7 +3,6 @@
 import { ReactNode, useCallback } from 'react';
 import { cn } from '../utils/cn';
 import Button from '../forms/Button';
-import { ExclamationCircleIcon } from '../icons';
 
 export type DialogConfirmProps = {
   open: boolean;

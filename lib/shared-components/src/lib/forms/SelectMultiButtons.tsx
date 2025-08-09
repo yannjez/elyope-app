@@ -1,27 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Option } from '../types/Base';
 import { cn } from '../utils/cn';
 
 type SelectMultiButtonsProps = {
   options: Option[];
-  value: string[];
-  onChange?: (value: string[]) => void;
+  value?: string[];
+  onValuesChange?: (value: string[]) => void;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  name: string;
+  name?: string;
   'aria-label'?: string;
   'aria-describedby'?: string;
   maxSelections?: number;
   minSelections?: number;
-};
+} & React.HTMLAttributes<HTMLDivElement> & {
+    // react-hook-form register props forwarded by FormField
+    onBlur?: (event: any) => void;
+    onChange?: (event: any) => void;
+  };
 
 export default function SelectMultiButtons({
   options,
   value,
-  onChange,
+  onValuesChange,
   name,
   placeholder = 'Select options',
   disabled = false,
@@ -30,66 +34,78 @@ export default function SelectMultiButtons({
   'aria-describedby': ariaDescribedby,
   maxSelections,
   minSelections = 0,
-  ...props
+  onChange: fieldOnChange,
+  onBlur: fieldOnBlur,
+  ...rest
 }: SelectMultiButtonsProps) {
-  const [innerValues, setInnerValues] = useState<string[]>(value);
+  const [innerValues, setInnerValues] = useState<string[]>(value ?? []);
 
-  const handleOptionToggle = (optionValue: string) => {
-    if (disabled) return;
-
-    const newValue = value.includes(optionValue)
-      ? value.filter((v) => v !== optionValue)
-      : [...value, optionValue];
-
-    // Check max selections limit
-    if (maxSelections && newValue.length > maxSelections) {
-      return;
+  // Keep internal state in sync when a controlled value is provided
+  useEffect(() => {
+    if (Array.isArray(value)) {
+      setInnerValues(value);
     }
-    setInnerValues(newValue);
-    onChange?.(newValue);
-  };
+  }, [value]);
 
-  const isOptionSelected = (optionValue: string) => {
-    return innerValues.includes(optionValue);
-  };
+  const currentValues = useMemo(() => innerValues, [innerValues]);
+
+  const isOptionSelected = (optionValue: string) =>
+    currentValues.includes(optionValue);
 
   const isOptionDisabled = (optionValue: string) => {
     if (disabled) return true;
-
-    // If max selections reached and option is not selected, disable it
     if (
       maxSelections &&
-      value.length >= maxSelections &&
+      currentValues.length >= maxSelections &&
       !isOptionSelected(optionValue)
     ) {
       return true;
     }
-
     return false;
   };
 
+  const applySelectionChange = (
+    newValues: string[],
+    toggledValue: string,
+    checked: boolean
+  ) => {
+    // External consumer callback
+    onValuesChange?.(newValues);
+    // RHF register onChange expects a checkbox-like event
+    if (typeof fieldOnChange === 'function') {
+      fieldOnChange({
+        target: { name, type: 'checkbox', value: toggledValue, checked },
+      });
+    }
+  };
+
+  const handleOptionToggle = (optionValue: string) => {
+    if (disabled) return;
+    const alreadySelected = currentValues.includes(optionValue);
+    const tentative = alreadySelected
+      ? currentValues.filter((v) => v !== optionValue)
+      : [...currentValues, optionValue];
+    if (maxSelections && tentative.length > maxSelections) return;
+    setInnerValues(tentative);
+    applySelectionChange(tentative, optionValue, !alreadySelected);
+  };
+
   const getSelectionText = () => {
-    if (value.length === 0) {
-      return placeholder;
+    if (currentValues.length === 0) return placeholder;
+    if (currentValues.length === 1) {
+      const selectedOption = options.find((o) => o.value === currentValues[0]);
+      return selectedOption?.label || currentValues[0];
     }
-
-    if (value.length === 1) {
-      const selectedOption = options.find(
-        (option) => option.value === value[0]
-      );
-      return selectedOption?.label || value[0];
-    }
-
-    return `${value.length} selected`;
+    return `${currentValues.length} selected`;
   };
 
   return (
-    <div className={cn('flex flex-col gap-2', className)} {...props}>
-      {/* Selection Summary */}
+    <div className={cn('flex flex-col gap-2', className)} {...rest}>
+      {/* Selection Summary – align with Select */}
       <div
         className={cn(
-          'px-3 py-2 border border-el-grey-400 rounded-4',
-          'bg-el-grey-100 text-el-grey-800',
+          ' hidden relative w-full border border-el-grey-400 rounded-4',
+          'px-3 py-2 bg-el-grey-100 text-el-grey-800 text-14',
           disabled && 'opacity-50'
         )}
         aria-label={ariaLabel || 'Multi-select options'}
@@ -98,12 +114,12 @@ export default function SelectMultiButtons({
         <span className="text-14">{getSelectionText()}</span>
         {maxSelections && (
           <span className="text-12 text-el-grey-600 ml-2">
-            ({value.length}/{maxSelections})
+            ({currentValues.length}/{maxSelections})
           </span>
         )}
       </div>
 
-      {/* Option Buttons */}
+      {/* Hidden checkbox inputs (for RHF array registration) and visible labels */}
       <div
         className="flex flex-wrap gap-2"
         role="group"
@@ -112,45 +128,54 @@ export default function SelectMultiButtons({
         {options.map((option) => {
           const selected = isOptionSelected(option.value);
           const optionDisabled = isOptionDisabled(option.value);
+          const inputId = `${name ?? 'multi'}-${option.value}`;
 
           return (
-            <button
-              key={option.value}
-              role="checkbox"
-              name={`${name}-${option.value}`}
-              type="button"
-              onClick={() => handleOptionToggle(option.value)}
-              disabled={optionDisabled}
-              className={cn(
-                'px-3 py-2 rounded-4 text-14 font-medium transition-all duration-200',
-                'border border-el-grey-400',
-                'focus:outline-none focus:ring-2 focus:ring-el-grey-600 focus:ring-offset-1',
-                '[aria-pressed="true"]:bg-el-primary',
-                '[aria-pressed="true"]:text-white',
-                '[aria-pressed="true"]:border-el-primary',
+            <div key={option.value} className="inline-flex items-center">
+              {/* Hidden checkbox to integrate with RHF */}
+              <input
+                id={inputId}
+                type="checkbox"
+                name={name}
+                value={option.value}
+                checked={selected}
+                disabled={optionDisabled}
+                onChange={() => handleOptionToggle(option.value)}
+                onBlur={fieldOnBlur}
+                className="-p-sr-only hidden"
+              />
 
-                optionDisabled && 'opacity-50 cursor-not-allowed',
-                !optionDisabled && !selected && 'hover:border-el-grey-600'
-              )}
-              aria-pressed={selected ? 'true' : 'false'}
-              aria-disabled={optionDisabled}
-            >
-              {option.label} {selected ? '✅' : '❌'}
-            </button>
+              {/* Styled label acts as the toggle button */}
+              <label
+                htmlFor={inputId}
+                className={
+                  cn(
+                    'border cursor-pointer select-none text-12 px-3 py-1.5 rounded-4 font-normal transition-all duration-200',
+                    selected
+                      ? 'bg-el-grey-100 text-el-blue-500  '
+                      : 'bg-el-grey-100 text-el-grey-800 border-el-grey-400 hover:border-el-blue-500',
+                    optionDisabled && 'opacity-50 cursor-not-allowed'
+                  ) + ' text-12'
+                }
+                aria-disabled={optionDisabled}
+              >
+                {option.label}
+              </label>
+            </div>
           );
         })}
       </div>
 
       {/* Validation Messages */}
-      {minSelections > 0 && value.length < minSelections && (
-        <div className="text-12 text-red-600">
+      {minSelections > 0 && currentValues.length < minSelections && (
+        <div className="text-12 text-el-red-500">
           Please select at least {minSelections} option
           {minSelections > 1 ? 's' : ''}
         </div>
       )}
 
-      {maxSelections && value.length >= maxSelections && (
-        <div className="text-12 text-el-grey-600">
+      {maxSelections && currentValues.length > maxSelections && (
+        <div className="text-12 text-el-red-500">
           Maximum {maxSelections} selection{maxSelections > 1 ? 's' : ''}{' '}
           allowed
         </div>
