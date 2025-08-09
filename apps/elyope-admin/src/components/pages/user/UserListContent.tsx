@@ -1,6 +1,6 @@
 'use client';
 
-import { User, FullUser } from '@elyope/db';
+import { User, FullUser, UserType } from '@elyope/db';
 import {
   PageHeader,
   UserIcon,
@@ -9,6 +9,8 @@ import {
   TrashIcon,
   PencilIcon,
   DialogConfirm,
+  DialogModal,
+  SelectMultiButtons,
 } from '@app-test2/shared-components';
 
 import Link from 'next/link';
@@ -20,6 +22,9 @@ import { useState } from 'react';
 export default function UserListContent() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editUserId, setEditUserId] = useState<string | null>(null);
+  const [editRolesDraft, setEditRolesDraft] = useState<UserType[]>([]);
   const {
     data,
     pagination,
@@ -34,6 +39,7 @@ export default function UserListContent() {
     handleSort,
     handleReset,
     deleteUser,
+    updateRoles,
   } = useUserListControllerContext();
 
   const isFilterEmpty = !filter.keyword && (!filter.role || filter.role === '');
@@ -72,7 +78,7 @@ export default function UserListContent() {
       field: 'createdAt' as keyof User,
       isSortable: true,
       displayCell: (user: User) => (
-        <span className="text-sm text-el-grey-500">
+        <span className="text-sm text-el-gray-500">
           {new Date(user.createdAt).toLocaleDateString()}
         </span>
       ),
@@ -136,7 +142,14 @@ export default function UserListContent() {
               {
                 name: 'Edit',
                 icon: <PencilIcon className="w-full h-full" />,
-                onClick: (id) => {},
+                onClick: (id) => {
+                  const user = data.find((u) => String(u.id) === String(id));
+                  if (user) {
+                    setEditUserId(String(user.externalId || user.id));
+                    setEditRolesDraft([...(user.roles as UserType[])]);
+                    setEditOpen(true);
+                  }
+                },
               },
               {
                 className: 'hover:text-el-red-500',
@@ -149,6 +162,40 @@ export default function UserListContent() {
               },
             ]}
           />
+          <DialogModal
+            open={editOpen}
+            title="Update user roles"
+            confirmLabel="Save"
+            cancelLabel="Cancel"
+            onCancel={() => {
+              setEditOpen(false);
+              setEditUserId(null);
+              setEditRolesDraft([]);
+            }}
+            onConfirm={async () => {
+              if (editUserId) {
+                await updateRoles(editUserId, editRolesDraft);
+              }
+              setEditOpen(false);
+              setEditUserId(null);
+              setEditRolesDraft([]);
+            }}
+          >
+            <div className="mt-2">
+              <SelectMultiButtons
+                options={[
+                  { label: 'Veterinarian', value: 'VETERINARIAN' },
+                  { label: 'Interpreter', value: 'INTERPRETER' },
+                  { label: 'Admin', value: 'ADMIN' },
+                ]}
+                value={editRolesDraft}
+                onValuesChange={(vals) => setEditRolesDraft(vals as UserType[])}
+                minSelections={1}
+                maxSelections={3}
+                name="edit-roles"
+              />
+            </div>
+          </DialogModal>
           <DialogConfirm
             open={confirmOpen}
             title="Delete user"

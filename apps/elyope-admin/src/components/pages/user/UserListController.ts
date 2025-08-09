@@ -1,11 +1,11 @@
 'use server';
 
-import { UserService, ExternalUSer } from '@elyope/db';
+import { UserService, ExternalUSer, UserType } from '@elyope/db';
 import { prisma } from '@/db';
 import { ListRequestType } from '@elyope/db';
 
 export const getUserList = async (listRequest?: ListRequestType) => {
-  console.log('listRequest', listRequest);
+  console.log('getUserList', listRequest);
   const userService = new UserService(prisma);
 
   const { page, sort, sortDirection, search, role } = listRequest || {};
@@ -48,4 +48,9 @@ export const createUser = async (user: ExternalUSer) => {
 export const deleteUser = async (id: string) => {
   const userService = new UserService(prisma);
   return await userService.deleteUser(id);
+};
+
+export const updateUserRoles = async (id: string, roles: UserType[]) => {
+  const userService = new UserService(prisma);
+  return await userService.updateUserRoles(id, roles);
 };

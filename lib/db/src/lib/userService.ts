@@ -8,6 +8,7 @@ import {
   UserType,
 } from '../type/index.js';
 import { ClerkService, ClerkSortField } from './clerkService.js';
+import { cpSync } from 'fs';
 
 export class UserService extends BaseService {
   clerkService: ClerkService;
@@ -73,54 +74,36 @@ export class UserService extends BaseService {
     return this.mergeClerkData(user, clerkUser || undefined) as FullUser;
   };
 
-  getUserCount = async () => {
-    return await this.prisma.user.count();
-  };
-
   getFilteredUserCount = async (search?: string, role?: string) => {
     // If no filters, return total count
     if (!search && !role) {
-      return await this.prisma.user.count();
+      // Get all users from Clerk with search filter
+      const count = await this.clerkService.getUsersCount();
+      return count;
     }
 
-    // If role filter is applied, get users with that role
-    let externalIds: string[] = [];
+    let where = {};
     if (role && role !== '') {
-      const users = await this.prisma.user.findMany({
-        where: {
-          roles: {
-            has: role as UserType,
-          },
+      where = {
+        roles: {
+          has: role as UserType,
         },
-        select: {
-          externalId: true,
-        },
-      });
-      externalIds = users.map(
-        (user: { externalId: string }) => user.externalId
-      );
-
-      if (externalIds.length === 0) {
-        return 0;
-      }
+      };
     }
 
-    // Get all users from Clerk with search filter
-    const allClerkUsers = await this.clerkService.getUsers(
-      500, // Get a large number to get all filtered users
-      0,
-      undefined,
-      search,
-      externalIds
+    const users = await this.prisma.user.findMany({
+      where,
+    });
+
+    if (!users?.length) {
+      return 0;
+    }
+
+    const count = await this.clerkService.getUsersCount(
+      users.map((user) => user.externalId),
+      search
     );
-
-    // If we have role filter, filter by external IDs
-    if (externalIds.length > 0) {
-      return allClerkUsers.filter((user) => externalIds.includes(user.id))
-        .length;
-    }
-
-    return allClerkUsers.length;
+    return count;
   };
 
   getUsers = async (
@@ -147,7 +130,7 @@ export class UserService extends BaseService {
     };
 
     // if a role is provide , we first have to find the external id of the users with that role
-    let externalIds: string[] = [];
+    const externalIds: string[] = [];
     if (role && role !== '') {
       const users = await this.prisma.user.findMany({
         where: {
@@ -159,8 +142,9 @@ export class UserService extends BaseService {
           externalId: true,
         },
       });
-      externalIds = users.map(
-        (user: { externalId: string }) => user.externalId
+
+      users.map((user: { externalId: string }) =>
+        externalIds.push(user.externalId)
       );
 
       if (externalIds.length === 0) {
@@ -169,8 +153,6 @@ export class UserService extends BaseService {
         };
       }
     }
-
-    console.log('externalIds', role, externalIds);
 
     // map full user to clerk sort field
     const clerkSortField = !sort
@@ -302,5 +284,25 @@ export class UserService extends BaseService {
     });
 
     return user;
+  };
+
+  updateUserRoles = async (externalId: string, roles: UserType[]) => {
+    // Ensure user exists
+    const existing = await this.prisma.user.findUnique({
+      where: { externalId },
+      select: { id: true },
+    });
+    if (!existing) {
+      throw new Error('User not found');
+    }
+
+    const updated = await this.prisma.user.update({
+      where: { externalId },
+      data: {
+        // For scalar list fields Prisma supports `set` to replace the whole array
+        roles: { set: roles as any },
+      },
+    });
+    return updated;
   };
 }

@@ -8,7 +8,7 @@ import { userRegistrationSchema, type UserRegistrationData } from './schemas';
 
 export function ExampleRegistrationForm() {
   const handleSubmit = (data: UserRegistrationData) => {
-    console.log('Form submitted:', data);
+
     // Handle form submission here
   };
 

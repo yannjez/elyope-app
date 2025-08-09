@@ -7,8 +7,13 @@ import {
   useState,
   useCallback,
 } from 'react';
-import { FullUser, PaginationInfo, ListRequestType } from '@elyope/db';
-import { deleteUser, getUserList } from './UserListController';
+import {
+  FullUser,
+  PaginationInfo,
+  ListRequestType,
+  UserType,
+} from '@elyope/db';
+import { deleteUser, getUserList, updateUserRoles } from './UserListController';
 
 export type UserFilter = {
   keyword?: string;
@@ -44,6 +49,7 @@ type UserListControllerContextValues = {
   handleSort: (field: string, direction: SortDirection) => void;
   handleReset: () => void;
   deleteUser: (id: string) => Promise<void>;
+  updateRoles: (externalId: string, roles: UserType[]) => Promise<void>;
 };
 
 export const UserListControllerContext = createContext<
@@ -146,8 +152,15 @@ export const UserListProvider = ({
 
   const handleDeleteUser = useCallback(
     async (id: string) => {
-      console.log('handleDeleteUser called with id:', id);
       await deleteUser(id);
+      await fetchUsers({ page: currentPage });
+    },
+    [fetchUsers, currentPage]
+  );
+
+  const handleUpdateRoles = useCallback(
+    async (externalId: string, roles: UserType[]) => {
+      await updateUserRoles(externalId, roles);
       await fetchUsers({ page: currentPage });
     },
     [fetchUsers, currentPage]
@@ -167,6 +180,7 @@ export const UserListProvider = ({
     handleSort,
     handleReset,
     deleteUser: handleDeleteUser,
+    updateRoles: handleUpdateRoles,
   };
 
   return (

@@ -45,11 +45,34 @@ export class ClerkService {
     }
 
     if (userIds && userIds.length > 0) {
-      url.searchParams.set('user_id', userIds.join(','));
+      userIds.forEach((id) => {
+        url.searchParams.append('user_id', id);
+      });
     }
     console.log('url', url.searchParams.toString());
 
-    return this.baseFetch<ClerkUser[]>('/users?' + url.searchParams.toString());
+    const data = await this.baseFetch<ClerkUser[]>(
+      '/users?' + url.searchParams.toString()
+    );
+    console.log('data', data);
+    return data;
+  };
+
+  getUsersCount = async (ids?: string[], keyword?: string): Promise<number> => {
+    const url = new URL(`${this.baseURl}/users/count`);
+    if (ids && ids.length > 0) {
+      ids.forEach((id) => {
+        url.searchParams.append('user_id', id);
+      });
+    }
+    if (keyword) {
+      url.searchParams.set('query', keyword);
+    }
+    const count = await this.baseFetch<{ total_count: number }>(
+      '/users/count?' + url.searchParams.toString()
+    );
+
+    return count?.total_count || 0;
   };
 
   /**
@@ -65,7 +88,12 @@ export class ClerkService {
     const url = new URL(`${this.baseURl}/users`);
 
     if (ids.length > 0) {
-      url.searchParams.set('user_ids', ids.join(','));
+      ids.forEach((id) => {
+        url.searchParams.append('user_id', id);
+      });
+    }
+    if (keyword) {
+      url.searchParams.set('query', keyword);
     }
 
     return this.baseFetch<ClerkUser[]>('/users?' + url.searchParams.toString());
@@ -154,8 +182,6 @@ export class ClerkService {
     options: RequestInit = {}
   ): Promise<T> {
     const url = new URL(`${this.baseURl}${endpoint}`);
-    console.log('url', url.toString());
-
     const defaultOptions: RequestInit = {
       headers: {
         'Content-Type': 'application/json',

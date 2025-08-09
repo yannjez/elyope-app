@@ -8,6 +8,7 @@ export { LanguageSwitcher } from './lib/commons/LanguageSwitcher';
 export { default as SideLogin } from './lib/commons/SideLogin';
 export { default as SideEmpty } from './lib/commons/SideEmpty';
 export { default as DialogConfirm } from './lib/commons/DialogConfirm';
+export { default as DialogModal } from './lib/commons/DialogModal';
 
 /* Icons */
 export {
