@@ -17,8 +17,8 @@ import Link from 'next/link';
 import { createUser } from './UserListController';
 
 export default function UserCreateContent() {
-  const handleSubmit = (data: UserRegistrationData) => {
-    createUser(data).then((res) => {});
+  const handleSubmit = async (data: UserRegistrationData) => {
+    await createUser(data);
   };
   return (
     <>

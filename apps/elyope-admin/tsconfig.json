@@ -19,18 +19,25 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@app-test2/shared-components": [
+        "../../lib/shared-components/src/index.ts"
+      ],
+      "@app-test2/shared-components/*": ["../../lib/shared-components/src/*"],
+      "@elyope/db": ["../../lib/db/src/index.ts"],
+      "@elyope/db/*": ["../../lib/db/src/*"]
     },
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
+    ".next/types/**/*.ts",
     "next-env.d.ts",
     "src/**/*.js",
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    "../../dist/apps/elyope-admin/.next/types/**/*.ts"
   ],
   "exclude": [
     "out-tsc",

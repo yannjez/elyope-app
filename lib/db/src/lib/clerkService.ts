@@ -1,4 +1,4 @@
-import { ClerkUser, ExternalUSer } from 'src/type/userTypes.js';
+import { ClerkUser, ExternalUSer } from '../type/userTypes.js';
 
 export type ClerkSortField =
   | 'created_at'

@@ -168,7 +168,7 @@ export class UserService extends BaseService {
       externalIds
     );
 
-    const where: any = {
+    const where: { externalId: { in: string[] } } = {
       externalId: {
         in: clerkUsers.map((user) => user.id),
       },
@@ -182,8 +182,8 @@ export class UserService extends BaseService {
       return { data: [] };
     }
 
-    const data = clerkUsers.map((clerkUser) => {
-      const user = users.find((user) => user.externalId === clerkUser.id);
+    const data: FullUser[] = clerkUsers.map((clerkUser) => {
+      const user = users.find((u) => u.externalId === clerkUser.id) as User;
       return this.mergeClerkData(user, clerkUser) as FullUser;
     });
 

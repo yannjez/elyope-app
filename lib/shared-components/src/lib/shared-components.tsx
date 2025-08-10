@@ -22,13 +22,13 @@ export function AppTest2SharedComponents() {
 
         <Input placeholder="Input" icon={<SearchIcon />} />
         <Input placeholder="Input" icon={<SearchIcon />} iconPosition="left" />
-        <Select options={[]} value="" onChange={() => {}} />
+        <Select options={[]} value="" onChange={() => undefined} />
       </div>
       <div className="flex gap-4 items-center">
         <span>SelectEntity: </span>
         <SelectEntity
           value={null}
-          onChange={() => {}}
+          onChange={() => undefined}
           loadInitial={async () =>
             [
               { id: '1', name: 'Linked A' },

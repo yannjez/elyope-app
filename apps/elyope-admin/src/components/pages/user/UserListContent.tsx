@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { useUserListControllerContext } from './UserListContext';
 import { UserListFilter } from './UserListFilter';
 import { useState } from 'react';
-import { cn } from '../../../../../../lib/shared-components/src/lib/utils/cn';
+import { cn } from '@app-test2/shared-components';
 // sort state type is defined in context
 
 const rolesOptions: Array<Option & { color: string }> = [

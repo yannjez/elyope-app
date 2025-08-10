@@ -6,7 +6,7 @@ import {
   type ExamenStatus,
 } from '@app-test2/shared-components';
 
-import { cn } from '../../../../../../lib/shared-components/src/lib/utils/cn';
+import { cn } from '@app-test2/shared-components';
 import { useTranslations } from 'next-intl';
 
 export default function ExamenList() {

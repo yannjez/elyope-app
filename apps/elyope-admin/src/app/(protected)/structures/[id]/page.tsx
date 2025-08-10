@@ -1,9 +1,10 @@
 import { StructureEditContent } from '@/components/pages/structure/StructureEditContent';
 
-export default function StructureEditPage({
+export default async function StructureEditPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <StructureEditContent structureId={params.id} />;
+  const { id } = await params;
+  return <StructureEditContent structureId={id} />;
 }

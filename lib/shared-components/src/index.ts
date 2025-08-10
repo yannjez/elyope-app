@@ -22,6 +22,8 @@ export {
   MessagerieIcon,
   ProfileIcon,
   AnimauxIcon,
+  ExamensIcon,
+  Examens,
   BriefCaseIcon,
   UserIcon,
   NoDataIcon,
@@ -65,3 +67,5 @@ export { default as frMessages } from './messages/fr.json';
 
 /* Data */
 export { examenClassName } from './lib/data/examen';
+/* Utils */
+export { cn } from './lib/utils/cn';
