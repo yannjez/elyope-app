@@ -57,7 +57,7 @@ export type { BaseFilter } from './lib/types/Base';
 
 /* Types */
 export type { ExamenFilter, ExamenStatus } from './lib/types/Examens';
-export type { AppUser } from './lib/types/Base';
+export type { AppUser, Option } from './lib/types/Base';
 
 // /* Messages */
 export { default as enMessages } from './messages/en.json';

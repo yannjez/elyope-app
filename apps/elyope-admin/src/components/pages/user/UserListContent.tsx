@@ -12,13 +12,33 @@ import {
   DialogModal,
   SelectMultiButtons,
   PageMain,
+  type Option,
 } from '@app-test2/shared-components';
 
 import Link from 'next/link';
 import { useUserListControllerContext } from './UserListContext';
 import { UserListFilter } from './UserListFilter';
 import { useState } from 'react';
+import { cn } from '../../../../../../lib/shared-components/src/lib/utils/cn';
 // sort state type is defined in context
+
+const rolesOptions: Array<Option & { color: string }> = [
+  {
+    label: 'Veterinarian',
+    value: 'VETERINARIAN',
+    color: 'bg-el-blue-400',
+  },
+  {
+    label: 'Interpreter',
+    value: 'INTERPRETER',
+    color: 'bg-el-green-300',
+  },
+  {
+    label: 'Admin',
+    value: 'ADMIN',
+    color: 'bg-el-yellow-300',
+  },
+];
 
 export default function UserListContent() {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -63,10 +83,13 @@ export default function UserListContent() {
       isSortable: false,
       displayCell: (user: FullUser) => (
         <div className="flex gap-1">
-          {user.roles.map((role, index) => (
+          {user.roles.sort().map((role, index) => (
             <span
               key={index}
-              className=" text-xs rounded-4 py-1 px-2 text-12  bg-el-blue-400 text-el-gray-500"
+              className={cn(
+                ' text-xs rounded-4 py-1 px-2 text-12  ',
+                rolesOptions.find((r) => r.value === role)?.color
+              )}
             >
               {role}
             </span>
@@ -185,11 +208,7 @@ export default function UserListContent() {
           >
             <div className="mt-2">
               <SelectMultiButtons
-                options={[
-                  { label: 'Veterinarian', value: 'VETERINARIAN' },
-                  { label: 'Interpreter', value: 'INTERPRETER' },
-                  { label: 'Admin', value: 'ADMIN' },
-                ]}
+                options={rolesOptions}
                 value={editRolesDraft}
                 onValuesChange={(vals) => setEditRolesDraft(vals as UserType[])}
                 minSelections={1}
