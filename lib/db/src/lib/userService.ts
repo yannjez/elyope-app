@@ -8,7 +8,6 @@ import {
   UserType,
 } from '../type/index.js';
 import { ClerkService, ClerkSortField } from './clerkService.js';
-import { cpSync } from 'fs';
 
 export class UserService extends BaseService {
   clerkService: ClerkService;

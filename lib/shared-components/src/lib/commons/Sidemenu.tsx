@@ -9,6 +9,7 @@ type MenuItem = {
   label: string;
   badge?: number;
   icon?: React.ReactNode;
+  isCurrent?: boolean;
 };
 
 type SidemenuProps = {
@@ -36,7 +37,7 @@ function MenuLink({
     <Link
       href={href}
       className={cn(
-        'py-3.5 px-4 rounded-[44px] w-auto inline  hover:bg-white items-center gap-2 transition-all duration-300 hover:shadow-hover',
+        'py-3.5 px-4 rounded-[44px] w-auto inline  hover:bg-white items-center gap-2 transition-all duration-300 hover:shadow-hover ',
         className
       )}
     >
@@ -59,7 +60,7 @@ export default function Sidemenu({
   return (
     <div
       className={cn(
-        'bg-el-grey-100 transition-all duration-300 sticky top-0 min-h-screen min-w-[230px] py-5 px-3 flex flex-col gap-5',
+        'bg-el-grey-100 transition-all duration-300 sticky top-0 min-h-screen min-w-[230px] py-5 px-3 flex flex-col gap-5 hover:shadow-hover',
         className
       )}
     >
@@ -75,7 +76,11 @@ export default function Sidemenu({
         </div>
         <nav className="flex flex-col gap-2">
           {menuItems?.map((item, index) => (
-            <MenuLink key={index} href={item.href}>
+            <MenuLink
+              key={index}
+              href={item.href}
+              className={cn(item.isCurrent && 'bg-white')}
+            >
               <span className="flex items-center gap-2">
                 {item.icon && <span>{item.icon}</span>}
                 <span>{item.label}</span>

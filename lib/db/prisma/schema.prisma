@@ -36,7 +36,7 @@ model User {
 model Structure {
   id String @id @default(uuid())
   name String
-  externalId String @unique
+  description String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   

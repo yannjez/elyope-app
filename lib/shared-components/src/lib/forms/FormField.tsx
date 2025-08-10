@@ -11,6 +11,7 @@ export interface FormFieldProps<T extends FieldValues> {
   children: React.ReactElement;
   className?: string;
   error?: string;
+  isMandatory?: boolean;
 }
 
 export function FormField<T extends FieldValues>({
@@ -19,6 +20,7 @@ export function FormField<T extends FieldValues>({
   children,
   className = '',
   error,
+  isMandatory = false,
 }: FormFieldProps<T>) {
   const formContext = useFormContext<T>();
 
@@ -56,6 +58,7 @@ export function FormField<T extends FieldValues>({
             className="block min-w-[220px] text-12 text-el-grey-500"
           >
             {label}
+            {isMandatory && <span className="text-el-red-500">*</span>}
           </label>
         )}
         <div>

@@ -19,31 +19,38 @@
                 "tsConfig": "lib/db/tsconfig.lib.json"
             }
         },
+        "migrate-reset": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm dlx prisma migrate reset",
+                "cwd": "lib/db"
+            }
+        },
         "generate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma generate",
+                "command": "pnpm dlx prisma generate",
                 "cwd": "lib/db"
             }
         },
         "migrate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma migrate dev",
+                "command": "pnpm dlx prisma migrate dev",
                 "cwd": "lib/db"
             }
         },
         "studio": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma studio",
+                "command": "pnpm dlx prisma studio",
                 "cwd": "lib/db"
             }
         },
         "db-push": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma db push --accept-data-loss",
+                "command": "pnpm dlx prisma db push --accept-data-loss",
                 "cwd": "lib/db"
             }
         }

@@ -82,7 +82,7 @@ npx nx run db:generate
 npx nx run db:migrate
 
 # Reset database
-npx nx run db:reset
+npx nx run db:migrate-reset
 
 # Build database library
 npx nx build db

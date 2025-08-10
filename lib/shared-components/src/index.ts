@@ -38,6 +38,7 @@ export { Form } from './lib/forms/Form';
 export { ZodForm } from './lib/forms/ZodForm';
 export { z, zodResolver } from './lib/forms/ZodForm';
 export { default as SelectMultiButtons } from './lib/forms/SelectMultiButtons';
+export { default as Toggle } from './lib/forms/Toggle';
 
 /* Form Hooks */
 export * from './lib/forms/hooks';
