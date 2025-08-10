@@ -46,6 +46,29 @@ export default function StructureListContent() {
     { header: 'Town', field: 'town' as const, isSortable: true },
     { header: 'Zipcode', field: 'zipcode' as const, isSortable: true },
     {
+      header: 'State',
+      field: 'state' as const,
+      className: '!p-0',
+      displayCell: (row: any) => {
+        const stateKey = row.is_structure_active ? 'active' : 'inactive';
+        const stateClassName: Record<'active' | 'inactive', [string, string]> =
+          {
+            active: ['bg-el-green-300', 'bg-el-green-500'],
+            inactive: ['bg-el-red-200', 'bg-el-red-500'],
+          };
+        return (
+          <div className={`px-3 py-2 rounded-4 ${stateClassName[stateKey][0]}`}>
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-2.5 h-2.5 rounded-full ${stateClassName[stateKey][1]}`}
+              />
+              <span>{stateKey === 'active' ? 'Active' : 'Inactive'}</span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
       header: 'Created',
       field: 'createdAt' as const,
       isSortable: true,
