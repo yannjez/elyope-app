@@ -68,11 +68,11 @@ export default function Sidemenu({
         <div className="min-h-10 flex flex-col gap-2">
           <div className="flex items-start justify-center gap-0">
             <Logo className="w-full" />
-            <div className="bg-el-blue-500 rounded-[33px] text-[9px] tracking-[0] text-white px-[4.5px] py-[3px]">
+            <div className="bg-el-blue-500 rounded-[33px] text-[12px] tracking-[0] text-white px-[4.5px] py-[3px]">
               {qualifier}
             </div>
           </div>
-          <hr className="mt-auto w-full border-el-grey-300" />
+          <hr className=" w-full border-el-grey-300 mt-6 mb-0" />
         </div>
         <nav className="flex flex-col gap-2">
           {menuItems?.map((item, index) => (

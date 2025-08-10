@@ -45,7 +45,7 @@ export type DataGridProps<T> = {
     name: string;
     icon: ReactNode;
     propertyKey?: keyof T;
-    onClick: (value: unknown) => void;
+    onClick: (value: T[keyof T]) => void;
     className?: string;
   }>;
 };
@@ -140,7 +140,7 @@ function SkeletonRow({
     <tr className="bg-white">
       <td
         colSpan={columns.length}
-        className={cn('mx-2 my-1 py-2 px-3 rounded-4 text-14', className)}
+        className={cn('mx-2 my-1 py-2 px-3 rounded-4 ', className)}
       >
         <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
       </td>
@@ -217,8 +217,8 @@ export function DataGrid<T extends object>({
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn('overflow-x-auto table-fixed', className)}>
-        <table className="w-full border-separate ">
+      <div className={cn('overflow-x-auto table-fixed text-14', className)}>
+        <table className="w-full border-separate  ">
           <thead>
             <tr>
               {columns.map((col, idx) => (
@@ -254,7 +254,10 @@ export function DataGrid<T extends object>({
                 </th>
               ))}
               {rowActions.map((_, idx) => (
-                <th key={`action-h-${idx}`} className="px-2 py-1 text-left" />
+                <th
+                  key={`action-h-${idx}`}
+                  className="px-2 py-1 text-left w-fit"
+                />
               ))}
             </tr>
           </thead>
@@ -346,9 +349,7 @@ export function DataGrid<T extends object>({
           </div>
           <div className="text-center">
             {typeof noDataMessage === 'string' ? (
-              <p className="text-14 text-el-grey-500 font-medium">
-                {noDataMessage}
-              </p>
+              <p className=" text-el-grey-500 font-medium">{noDataMessage}</p>
             ) : (
               noDataMessage
             )}
@@ -422,7 +423,7 @@ export function DataGrid<T extends object>({
                 <td
                   key={colIdx}
                   className={cn(
-                    'mx-2 my-1 py-2 px-3 rounded-4 text-14',
+                    'mx-2 my-1 py-2 px-3 rounded-4 ',
                     col.className
                   )}
                 >

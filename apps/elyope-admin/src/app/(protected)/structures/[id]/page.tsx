@@ -1,9 +1,9 @@
-import StructureUpsertContent from '@/components/pages/structure/StructureUpsertContent';
+import { StructureEditContent } from '@/components/pages/structure/StructureEditContent';
 
 export default function StructureEditPage({
   params,
 }: {
   params: { id: string };
 }) {
-  return <StructureUpsertContent mode="edit" id={params.id} />;
+  return <StructureEditContent structureId={params.id} />;
 }

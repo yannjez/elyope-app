@@ -7,12 +7,10 @@ import {
   FormSeparator,
   Input,
   Toggle,
-  PageHeader,
-  BriefCaseIcon,
   ZodForm,
   z,
 } from '@app-test2/shared-components';
-import Link from 'next/link';
+
 import { useEffect, useState } from 'react';
 import {
   createStructure,
@@ -38,7 +36,7 @@ export const structureSchema = z.object({
 
 export type StructureFormData = z.infer<typeof structureSchema>;
 
-type StructureUpsertContentProps =
+export type StructureUpsertContentProps =
   | { mode: 'create' }
   | { mode: 'edit'; id: string };
 
@@ -103,17 +101,7 @@ export default function StructureUpsertContent(
 
   return (
     <>
-      <PageHeader
-        title={isEdit ? 'Edit Structure' : 'Create Structure'}
-        icon={<BriefCaseIcon className="w-full" />}
-        action={
-          <Link href="/structures" className="button-primary min-w-40">
-            Back to list
-          </Link>
-        }
-      />
-
-      <FormPanel title="Structure" className="main-container">
+      <FormPanel title="Structure data" className="main-container">
         <ZodForm
           schema={structureSchema}
           onSubmit={handleSubmit}

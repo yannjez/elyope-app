@@ -7,6 +7,7 @@ import {
   Pagination,
   PencilIcon,
   TrashIcon,
+  PageMain,
 } from '@app-test2/shared-components';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -114,7 +115,7 @@ export default function StructureListContent() {
           />
         }
       />
-      <main className="main-container">
+      <PageMain className="p-0">
         <div className="flex items-center justify-between mt-4">
           <div className="flex-1" />
           <Pagination
@@ -145,6 +146,7 @@ export default function StructureListContent() {
               {
                 className: 'hover:text-el-red-500',
                 name: 'Delete',
+
                 icon: <TrashIcon className="w-full h-full" />,
                 onClick: (id: string) => {
                   setSelectedId(String(id));
@@ -174,7 +176,7 @@ export default function StructureListContent() {
             }}
           />
         </div>
-      </main>
+      </PageMain>
     </>
   );
 }

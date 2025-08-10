@@ -2,6 +2,7 @@ export * from './lib/shared-components';
 
 /* Commons */
 export { default as PageHeader } from './lib/commons/PageHeader';
+export { default as PageMain } from './lib/commons/PageMain';
 export { MenuCard } from './lib/commons/MenuCard';
 export { default as Sidemenu } from './lib/commons/Sidemenu';
 export { LanguageSwitcher } from './lib/commons/LanguageSwitcher';
@@ -9,6 +10,7 @@ export { default as SideLogin } from './lib/commons/SideLogin';
 export { default as SideEmpty } from './lib/commons/SideEmpty';
 export { default as DialogConfirm } from './lib/commons/DialogConfirm';
 export { default as DialogModal } from './lib/commons/DialogModal';
+export { PanelTitle } from './lib/commons/PanelTitle';
 
 /* Icons */
 export {
@@ -39,6 +41,7 @@ export { ZodForm } from './lib/forms/ZodForm';
 export { z, zodResolver } from './lib/forms/ZodForm';
 export { default as SelectMultiButtons } from './lib/forms/SelectMultiButtons';
 export { default as Toggle } from './lib/forms/Toggle';
+export { default as SelectEntity } from './lib/forms/SelectEntity';
 
 /* Form Hooks */
 export * from './lib/forms/hooks';

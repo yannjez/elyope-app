@@ -11,6 +11,7 @@ import {
   DialogConfirm,
   DialogModal,
   SelectMultiButtons,
+  PageMain,
 } from '@app-test2/shared-components';
 
 import Link from 'next/link';
@@ -117,7 +118,8 @@ export default function UserListContent() {
           />
         }
       />
-      <main className="main-container">
+      <PageMain className="p-0">
+        {/* Pagination  ------------- */}
         <div className="flex justify-end mt-4 ">
           <Pagination
             currentPage={currentPage}
@@ -125,7 +127,7 @@ export default function UserListContent() {
             onPageChange={handlePageChange}
           />
         </div>
-
+        {/* DataGrid  ------------- */}
         <div className="">
           <DataGrid
             columns={columns}
@@ -215,7 +217,7 @@ export default function UserListContent() {
             }}
           />
         </div>
-      </main>
+      </PageMain>
     </>
   );
 }

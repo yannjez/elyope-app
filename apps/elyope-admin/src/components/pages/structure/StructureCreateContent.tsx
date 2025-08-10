@@ -1,1 +1,20 @@
-export { default } from './StructureUpsertContent';
+import { BriefCaseIcon, PageHeader } from '@app-test2/shared-components';
+import Form from './StructureUpsertContent';
+import Link from 'next/link';
+
+export function StructureCreateContent() {
+  return (
+    <>
+      <PageHeader
+        title={'Create Structure'}
+        icon={<BriefCaseIcon className="w-full" />}
+        action={
+          <Link href="/structures" className="button-primary min-w-40">
+            Back to list
+          </Link>
+        }
+      />
+      <Form mode="create" />
+    </>
+  );
+}

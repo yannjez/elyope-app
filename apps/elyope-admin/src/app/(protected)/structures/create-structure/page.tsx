@@ -1,5 +1,5 @@
-import StructureUpsertContent from '@/components/pages/structure/StructureUpsertContent';
+import { StructureCreateContent } from '@/components/pages/structure/StructureCreateContent';
 
 export default function NewStructurePage() {
-  return <StructureUpsertContent mode="create" />;
+  return <StructureCreateContent />;
 }
