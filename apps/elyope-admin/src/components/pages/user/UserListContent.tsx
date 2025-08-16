@@ -1,6 +1,6 @@
 'use client';
 
-import { User, FullUser, UserType } from '@elyope/db';
+import { User, FullUser } from '@elyope/db';
 import {
   PageHeader,
   UserIcon,
@@ -9,10 +9,7 @@ import {
   TrashIcon,
   PencilIcon,
   DialogConfirm,
-  DialogModal,
-  SelectMultiButtons,
   PageMain,
-  type Option,
 } from '@app-test2/shared-components';
 
 import Link from 'next/link';
@@ -20,32 +17,17 @@ import { useUserListControllerContext } from './UserListContext';
 import { UserListFilter } from './UserListFilter';
 import { useState } from 'react';
 import { cn } from '@app-test2/shared-components';
-// sort state type is defined in context
 
-const rolesOptions: Array<Option & { color: string }> = [
-  {
-    label: 'Veterinarian',
-    value: 'VETERINARIAN',
-    color: 'bg-el-blue-400',
-  },
-  {
-    label: 'Interpreter',
-    value: 'INTERPRETER',
-    color: 'bg-el-green-300',
-  },
-  {
-    label: 'Admin',
-    value: 'ADMIN',
-    color: 'bg-el-yellow-300',
-  },
-];
+// Role color mapping for display
+const roleColors: Record<string, string> = {
+  VETERINARIAN: 'bg-el-blue-400',
+  INTERPRETER: 'bg-el-green-300',
+  ADMIN: 'bg-el-yellow-300',
+};
 
 export default function UserListContent() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [editOpen, setEditOpen] = useState(false);
-  const [editUserId, setEditUserId] = useState<string | null>(null);
-  const [editRolesDraft, setEditRolesDraft] = useState<UserType[]>([]);
   const {
     data,
     pagination,
@@ -60,7 +42,6 @@ export default function UserListContent() {
     handleSort,
     handleReset,
     deleteUser,
-    updateRoles,
   } = useUserListControllerContext();
 
   const isFilterEmpty = !filter.keyword && (!filter.role || filter.role === '');
@@ -88,7 +69,7 @@ export default function UserListContent() {
               key={index}
               className={cn(
                 ' text-xs rounded-4 py-1 px-2 text-12  ',
-                rolesOptions.find((r) => r.value === role)?.color
+                roleColors[role as string] || 'bg-gray-200'
               )}
             >
               {role}
@@ -170,9 +151,9 @@ export default function UserListContent() {
                 onClick: (id) => {
                   const user = data.find((u) => String(u.id) === String(id));
                   if (user) {
-                    setEditUserId(String(user.externalId || user.id));
-                    setEditRolesDraft([...(user.roles as UserType[])]);
-                    setEditOpen(true);
+                    window.location.href = `/user/${
+                      user.externalId || user.id
+                    }`;
                   }
                 },
               },
@@ -187,36 +168,6 @@ export default function UserListContent() {
               },
             ]}
           />
-          <DialogModal
-            open={editOpen}
-            title="Update user roles"
-            confirmLabel="Save"
-            cancelLabel="Cancel"
-            onCancel={() => {
-              setEditOpen(false);
-              setEditUserId(null);
-              setEditRolesDraft([]);
-            }}
-            onConfirm={async () => {
-              if (editUserId) {
-                await updateRoles(editUserId, editRolesDraft);
-              }
-              setEditOpen(false);
-              setEditUserId(null);
-              setEditRolesDraft([]);
-            }}
-          >
-            <div className="mt-2">
-              <SelectMultiButtons
-                options={rolesOptions}
-                value={editRolesDraft}
-                onValuesChange={(vals) => setEditRolesDraft(vals as UserType[])}
-                minSelections={1}
-                maxSelections={3}
-                name="edit-roles"
-              />
-            </div>
-          </DialogModal>
           <DialogConfirm
             open={confirmOpen}
             title="Delete user"

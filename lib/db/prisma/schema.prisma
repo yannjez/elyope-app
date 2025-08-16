@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../dist/.prisma/client"
 }
 
 datasource db {
@@ -22,6 +21,13 @@ enum UserType {
   INTERPRETER
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
 model User {
   id    String @id @default(uuid())
   externalId String @unique
@@ -30,6 +36,7 @@ model User {
   roles UserType[] @default([])
   Interpreters Structure[] @relation("interpreter")
   Members StructureUser[] @relation("members")
+  SentInvitations UserInvitation[] @relation("user")
  
 }
 
@@ -68,5 +75,19 @@ model StructureUser {
   structure Structure @relation("members" , fields: [structureId], references: [id])
   userId String
   user User @relation("members", fields: [userId], references: [id])
+}
+
+model UserInvitation {
+  id String @id @default(uuid())
+  email String
+  createdAt DateTime @default(now())
+  userId String?
+  user User? @relation("user", fields: [userId], references: [id])
+
+  // Application URLs based on roles
+  adminAppUrl String?
+  veterinarianAppUrl String?
+  interpreterAppUrl String?
+  @@index([email])
 }
 

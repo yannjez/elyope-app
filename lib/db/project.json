@@ -36,7 +36,7 @@
         "migrate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma migrate dev",
+                "command": "pnpm  prisma migrate dev ",
                 "cwd": "lib/db"
             }
         },

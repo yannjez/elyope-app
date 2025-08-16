@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../../dist/.prisma/client/index.js';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 
 export class StructureService extends BaseService {
@@ -24,7 +24,7 @@ export class StructureService extends BaseService {
         { town: { contains: query, mode: 'insensitive' } },
         { account_email: { contains: query, mode: 'insensitive' } },
       ],
-    } as any;
+    } as Prisma.StructureWhereInput;
   }
 
   /**
@@ -33,7 +33,9 @@ export class StructureService extends BaseService {
    */
   getFilteredStructureCount = async (search?: string) => {
     const where = this.buildSearchWhere(search);
-    const count = await this.prisma.structure.count({ where: where as any });
+    const count = await this.prisma.structure.count({
+      where: where as Prisma.StructureWhereInput,
+    });
     return count;
   };
 
@@ -67,8 +69,8 @@ export class StructureService extends BaseService {
         : { createdAt: 'desc' };
 
     const data = await this.prisma.structure.findMany({
-      where: where as any,
-      orderBy: orderBy as any,
+      where: where as Prisma.StructureWhereInput,
+      orderBy: orderBy as Prisma.StructureOrderByWithRelationInput,
       skip: offset,
       take: limit,
     });

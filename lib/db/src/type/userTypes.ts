@@ -27,7 +27,6 @@ export type ClerkEmailAddress = {
     status: string;
     strategy: string;
   };
-  linked_to: any[];
 };
 
 export type ClerkExternalAccount = {
@@ -58,15 +57,9 @@ export type ClerkUser = {
   totp_enabled: boolean;
   backup_code_enabled: boolean;
   email_addresses: ClerkEmailAddress[];
-  phone_numbers: any[];
-  web3_wallets: any[];
-  passkeys: any[];
+
   external_accounts: ClerkExternalAccount[];
-  saml_accounts: any[];
-  enterprise_accounts: any[];
-  public_metadata: Record<string, any>;
-  private_metadata: Record<string, any>;
-  unsafe_metadata: Record<string, any>;
+
   external_id: string | null;
   last_sign_in_at: number;
   banned: boolean;
@@ -82,4 +75,23 @@ export type ClerkUser = {
   mfa_disabled_at: number | null;
   legal_accepted_at: number | null;
   profile_image_url: string;
+};
+
+export type UserInvitation = {
+  id: string;
+  email: string;
+  roles: UserType[];
+  status: 'PENDING' | 'ACCEPTED' | 'EXPIRED' | 'CANCELLED';
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+  acceptedAt?: string;
+  inviter?: {
+    id: string;
+    externalId: string;
+  };
+  structure?: {
+    id: string;
+    name: string;
+  };
 };

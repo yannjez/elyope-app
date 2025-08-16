@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../../dist/.prisma/client/index.js';
+import { PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import {
   ClerkUser,
@@ -7,6 +7,7 @@ import {
   User,
   UserType,
 } from '../type/index.js';
+
 import { ClerkService, ClerkSortField } from './clerkService.js';
 
 export class UserService extends BaseService {
@@ -34,7 +35,7 @@ export class UserService extends BaseService {
 
     if (existingUser) {
       // User exists, check if they already have the role
-      const hasRole = existingUser.roles.includes(userRoleType as any);
+      const hasRole = existingUser.roles.includes(userRoleType as UserType);
 
       if (!hasRole) {
         // User doesn't have this role, add it
@@ -236,6 +237,7 @@ export class UserService extends BaseService {
     return {
       ...user,
       ...clerkUser,
+      id: user?.id,
       fullName: clerkUser?.first_name + ' ' + clerkUser?.last_name,
       email: clerkUser?.email_addresses?.at(0)?.email_address || '',
     } as FullUser;
@@ -246,23 +248,17 @@ export class UserService extends BaseService {
     const clerkService = new ClerkService();
     const existingClerkUser = await clerkService.getUserByEmail(user.email);
 
-    try {
-      let createdClerkUser: ClerkUser | null = null;
-      if (!existingClerkUser) {
-        createdClerkUser = await clerkService.createUser(user);
-      }
-      // create the user or update it's role
-      const userf = await this.createUpdateUser(
-        existingClerkUser || createdClerkUser || undefined,
-        userRoleType
-      );
-
-      return userf;
-
-      // return await this.createUpdateUser(createdClerkUser, userRoleType);
-    } catch (error) {
-      throw error;
+    let createdClerkUser: ClerkUser | null = null;
+    if (!existingClerkUser) {
+      createdClerkUser = await clerkService.createUser(user);
     }
+    // create the user or update it's role
+    const userf = await this.createUpdateUser(
+      existingClerkUser || createdClerkUser || undefined,
+      userRoleType
+    );
+
+    return userf;
   };
 
   deleteUser = async (id: string) => {
@@ -299,9 +295,38 @@ export class UserService extends BaseService {
       where: { externalId },
       data: {
         // For scalar list fields Prisma supports `set` to replace the whole array
-        roles: { set: roles as any },
+        roles: { set: roles as UserType[] },
       },
     });
     return updated;
+  };
+
+  // ============ INVITATION CRUD METHODS ============
+
+  /**
+   * Create a new invitation
+   */
+  createInvitation = async (data: { email: string; userId?: string }) => {
+    console.log('createInvitation', data);
+    const invitation = await this.prisma.userInvitation.create({
+      data: {
+        email: data.email,
+        userId: data.userId,
+      },
+    });
+
+    return invitation;
+  };
+
+  /**
+   * Get all invitations with filters
+   */
+  getInvitations = async (filters?: { userId: string }) => {
+    const where = { userId: filters?.userId };
+    const invitations = await this.prisma.userInvitation.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
+    return invitations;
   };
 }

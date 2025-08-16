@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '../utils/cn';
 import SearchIcon from '../icons/search';
+import { BaseEntity } from '../types/Base';
 
-export type SelectEntityServices<T> = {
+export type SelectEntityServices<T extends BaseEntity> = {
   // Fetch initial/linked entities (shown when opening with empty input). Should return up to 5 items.
   loadInitial: () => Promise<T[]>;
   // Search entities when typing. Should return a reasonably small list (we will cap display to 5).
@@ -28,29 +29,16 @@ export type SelectEntityA11y = {
   'aria-describedby'?: string;
 };
 
-export type SelectEntityProps<T> = {
+export type SelectEntityProps<T extends BaseEntity> = {
   value: T | null;
   onChange: (value: T | null) => void;
 } & SelectEntityServices<T> &
   SelectEntityExtractors<T> &
   SelectEntityA11y;
 
-// Internal default extractors (kept generic via 'any')
-function defaultIdExtractor(item: any): string {
-  if (item && typeof item.id !== 'undefined') {
-    return String(item.id);
-  }
-  return JSON.stringify(item);
-}
-
-function defaultLabelExtractor(item: any): string {
-  if (item && typeof item.id !== 'undefined') {
-    return String(item.id);
-  }
-  return JSON.stringify(item);
-}
-
-export default function SelectEntity<T>(props: SelectEntityProps<T>) {
+export default function SelectEntity<T extends BaseEntity>(
+  props: SelectEntityProps<T>
+) {
   const {
     value,
     onChange,
@@ -77,11 +65,11 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [highlightIndex, setHighlightIndex] = useState<number>(-1);
 
-  function dedupeById(itemsToDedupe: T[], getId: (item: T) => string): T[] {
+  function dedupeById(itemsToDedupe: T[], getId?: (item: T) => string): T[] {
     const seen = new Set<string>();
     const result: T[] = [];
     for (const item of itemsToDedupe) {
-      const id = getId(item);
+      const id = (getId && getId(item)) || '';
       if (!seen.has(id)) {
         seen.add(id);
         result.push(item);
@@ -90,28 +78,23 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
     return result;
   }
 
-  // Resolve extractors for current T
-  const getId = useMemo<(item: T) => string>(
-    () => getItemIdProp ?? ((item: T) => defaultIdExtractor(item)),
-    [getItemIdProp]
-  );
-  const getLabel = useMemo<(item: T) => string>(
-    () => getItemLabelProp ?? ((item: T) => defaultLabelExtractor(item)),
-    [getItemLabelProp]
-  );
-
   const computeFormValue = useMemo<
     ((item: T | null) => string) | undefined
   >(() => {
     if (!name) return undefined;
     if (getFormValue) return getFormValue;
-    return (item: T | null) => (item ? getId(item) : '');
-  }, [name, getFormValue, getId]);
+    return (item: T | null) =>
+      item && getItemIdProp ? getItemIdProp(item) : '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name]);
 
   // Sync displayed text with selected value
   useEffect(() => {
     if (value) {
-      const label = (renderValue ? renderValue(value) : getLabel(value)) || '';
+      const label =
+        (renderValue
+          ? renderValue(value)
+          : getItemLabelProp && getItemLabelProp(value)) || '';
       setInputValue(label);
     } else if (!isOpen) {
       setInputValue('');
@@ -141,7 +124,7 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
       setIsLoading(true);
       try {
         const data = await loadInitial();
-        const unique = dedupeById(data || [], getId).slice(0, 5);
+        const unique = dedupeById(data || [], getItemIdProp).slice(0, 5);
         if (!isCancelled) setItems(unique);
       } finally {
         if (!isCancelled) setIsLoading(false);
@@ -151,7 +134,8 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
     return () => {
       isCancelled = true;
     };
-  }, [isOpen, inputValue, loadInitial, getId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, inputValue]);
 
   // Debounced search when typing
   useEffect(() => {
@@ -165,7 +149,7 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
     const handle = setTimeout(async () => {
       try {
         const data = await search(keyword);
-        const unique = dedupeById(data || [], getId).slice(0, 5);
+        const unique = dedupeById(data || [], getItemIdProp).slice(0, 5);
         if (!isCancelled) {
           setItems(unique);
           setHighlightIndex((idx) =>
@@ -181,7 +165,8 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
       isCancelled = true;
       clearTimeout(handle);
     };
-  }, [inputValue, isOpen, search, getId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputValue, isOpen]);
 
   const handleInputFocus = () => {
     if (disabled) return;
@@ -196,7 +181,10 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
 
   const handleSelect = (item: T) => {
     onChange(item);
-    const label = (renderValue ? renderValue(item) : getLabel(item)) || '';
+    const label =
+      (renderValue
+        ? renderValue(item)
+        : getItemLabelProp && getItemLabelProp(item)) || '';
     setInputValue(label);
     setIsOpen(false);
   };
@@ -281,9 +269,11 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
           )}
           {!isLoading &&
             renderedItems.map((item, index) => {
-              const id = getId(item);
-              const label = getLabel(item);
-              const isSelected = value ? getId(value) === id : false;
+              const id = getItemIdProp && getItemIdProp(item);
+              const label = getItemLabelProp && getItemLabelProp(item);
+              const isSelected = value
+                ? getItemIdProp && getItemIdProp(value) === id
+                : false;
               const isHighlighted = index === highlightIndex;
               return (
                 <div
@@ -300,7 +290,7 @@ export default function SelectEntity<T>(props: SelectEntityProps<T>) {
                     isHighlighted && 'bg-el-grey-200'
                   )}
                 >
-                  {renderItem ? renderItem(item, isSelected) : label}
+                  {renderItem ? renderItem(item, isSelected || false) : label}
                 </div>
               );
             })}

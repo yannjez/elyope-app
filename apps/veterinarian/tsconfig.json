@@ -8,11 +8,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -23,35 +19,25 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
+      "@/*": ["./src/*"],
       "@app-test2/shared-components": [
         "../../lib/shared-components/src/index.ts"
       ],
-      "@app-test2/shared-components/*": [
-        "../../lib/shared-components/src/*"
-      ],
-      "@elyope/db": [
-        "../../lib/db/src/index.ts"
-      ],
-      "@elyope/db/*": [
-        "../../lib/db/src/*"
-      ]
+      "@app-test2/shared-components/*": ["../../lib/shared-components/src/*"],
+      "@elyope/db": ["../../lib/db/src/index.ts"],
+      "@elyope/db/*": ["../../lib/db/src/*"]
     },
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
-    "../../apps/veterinarian/.next/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "postcss.config.js",
     "src/**/*.js",
     "src/**/*.jsx",
     "src/**/*.ts",
-    "src/**/*.tsx",
-    "../../dist/apps/veterinarian/.next/types/**/*.ts"
+    "src/**/*.tsx"
   ],
   "exclude": [
     "out-tsc",

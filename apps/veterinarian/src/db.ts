@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 // libs/db/src/db.ts
-import { PrismaClient } from '../../../dist/.prisma/client/index.js';
+import { PrismaClient } from '@elyope/db';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

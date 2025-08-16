@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../../dist/.prisma/client/index.js';
+import { PrismaClient } from '@prisma/client';
 import { PaginationInfo } from '../type/index.js';
 
 export class BaseService {

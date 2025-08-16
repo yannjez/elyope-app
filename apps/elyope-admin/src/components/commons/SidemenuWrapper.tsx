@@ -23,7 +23,7 @@ export function SidemenuWrapper() {
         ...item,
         isCurrent:
           item.href === '/'
-            ? pathname === '/'
+            ? (pathname === '/' || pathname?.startsWith('/user')) ?? false
             : pathname?.startsWith(item.href) ?? false,
       }))}
       profileButton={<ProfilButton label={t('profile')} />}

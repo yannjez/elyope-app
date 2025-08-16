@@ -64,7 +64,7 @@ export const updateStructure = async (
   const structureService = new StructureService(prisma);
   return await structureService.prisma.structure.update({
     where: { id },
-    data: input as any,
+    data: input,
   });
 };
 
@@ -106,7 +106,7 @@ export const getStructureMembers = async (structureId: string) => {
 
   const merged = clerkUsers.map((clerkUser) => {
     const dbUser = prismaUsers.find((u: any) => u.externalId === clerkUser.id);
-    return userService.mergeClerkData(dbUser as any, clerkUser as any);
+    return userService.mergeClerkData(dbUser, clerkUser);
   });
 
   return merged;
