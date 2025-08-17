@@ -61,25 +61,23 @@ export function FormField<T extends FieldValues>({
             {isMandatory && <span className="text-el-red-500">*</span>}
           </label>
         )}
-        <div>
-          <div>
-            {React.cloneElement(children, {
-              ...register(name),
-              id: name,
-              'aria-invalid': errors[name] ? 'true' : 'false',
-            } as any)}
-          </div>
-          {fieldError && (
-            <p
-              className="text-12 mt-1 text-red-500 flex items-center gap-2"
-              role="alert"
-            >
-              <ExclamationCircleIcon className="min-w-4 " />
-              <span>{fieldError}</span>
-            </p>
-          )}
-        </div>
-      </div>{' '}
+
+        {React.cloneElement(children, {
+          ...register(name),
+          id: name,
+          'aria-invalid': errors[name] ? 'true' : 'false',
+        } as React.InputHTMLAttributes<HTMLInputElement> & React.SelectHTMLAttributes<HTMLSelectElement>)}
+
+        {fieldError && (
+          <p
+            className="text-12 mt-1 text-red-500 flex items-center gap-2"
+            role="alert"
+          >
+            <ExclamationCircleIcon className="min-w-4 " />
+            <span>{fieldError}</span>
+          </p>
+        )}
+      </div>
     </div>
   );
 }

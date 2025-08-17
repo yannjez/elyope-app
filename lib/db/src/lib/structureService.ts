@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, Structure } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 
 export class StructureService extends BaseService {
@@ -75,7 +75,7 @@ export class StructureService extends BaseService {
       take: limit,
     });
 
-    return { data };
+    return { data } as { data: Structure[] };
   };
 
   /**
@@ -112,6 +112,81 @@ export class StructureService extends BaseService {
       },
     });
     return created;
+  };
+
+  /**
+   * Update a structure
+   */
+  updateStructure = async (
+    id: string,
+    input: {
+      name?: string;
+      description?: string | null;
+      address1?: string | null;
+      address2?: string | null;
+      zipcode?: string | null;
+      town?: string | null;
+      phone?: string | null;
+      mobile?: string | null;
+      account_lastname?: string | null;
+      account_firstname?: string | null;
+      account_email?: string | null;
+      interpreterId?: string | null;
+      is_structure_active?: boolean;
+    }
+  ) => {
+    // Ensure structure exists
+    const existingStructure = await this.prisma.structure.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+    if (!existingStructure) {
+      throw new Error('Structure not found');
+    }
+
+    // If interpreterId is provided, validate it exists
+    if (input.interpreterId !== undefined && input.interpreterId !== null) {
+      const interpreter = await this.prisma.user.findUnique({
+        where: { id: input.interpreterId },
+        select: { id: true },
+      });
+      if (!interpreter) {
+        throw new Error('Interpreter not found');
+      }
+    }
+
+    // Update structure
+    const updated = await this.prisma.structure.update({
+      where: { id },
+      data: {
+        ...(input.name !== undefined && { name: input.name }),
+        ...(input.description !== undefined && {
+          description: input.description,
+        }),
+        ...(input.address1 !== undefined && { address1: input.address1 }),
+        ...(input.address2 !== undefined && { address2: input.address2 }),
+        ...(input.zipcode !== undefined && { zipcode: input.zipcode }),
+        ...(input.town !== undefined && { town: input.town }),
+        ...(input.phone !== undefined && { phone: input.phone }),
+        ...(input.mobile !== undefined && { mobile: input.mobile }),
+        ...(input.account_lastname !== undefined && {
+          account_lastname: input.account_lastname,
+        }),
+        ...(input.account_firstname !== undefined && {
+          account_firstname: input.account_firstname,
+        }),
+        ...(input.account_email !== undefined && {
+          account_email: input.account_email,
+        }),
+        ...(input.interpreterId !== undefined && {
+          interpreterId: input.interpreterId,
+        }),
+        ...(input.is_structure_active !== undefined && {
+          is_structure_active: input.is_structure_active,
+        }),
+      },
+    });
+    return updated;
   };
 
   /**
@@ -215,14 +290,6 @@ export class StructureService extends BaseService {
   async getStructureById(id: string) {
     return this.prisma.structure.findUnique({
       where: { id },
-      include: {
-        Interpreter: true,
-        Members: {
-          include: {
-            user: true,
-          },
-        },
-      },
-    });
+    }) as unknown as Structure;
   }
 }

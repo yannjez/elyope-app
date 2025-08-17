@@ -56,7 +56,6 @@ export function AppTest2SharedComponents() {
               )}
             </div>
           )}
-          renderValue={(e: any) => e.name}
         />
       </div>
     </div>

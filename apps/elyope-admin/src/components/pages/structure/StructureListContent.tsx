@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { DialogConfirm } from '@app-test2/shared-components';
-import { deleteStructure } from './StructureListController';
+import { deleteStructure } from './StructureController';
 import { useStructureListControllerContext } from './StructureListContext';
 import { StructureListFilter } from './StructureListFilter';
 

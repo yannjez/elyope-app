@@ -62,10 +62,7 @@ export const updateStructure = async (
   input: Partial<CreateStructureInput>
 ) => {
   const structureService = new StructureService(prisma);
-  return await structureService.prisma.structure.update({
-    where: { id },
-    data: input,
-  });
+  return await structureService.updateStructure(id, input);
 };
 
 export const deleteStructure = async (id: string) => {
@@ -79,37 +76,12 @@ export const addStructureMember = async (
 ) => {
   const structureService = new StructureService(prisma);
 
-  return await structureService.addUserToStructureByExternalId(
-    structureId,
-    userId
-  );
+  return await structureService.addUserToStructure(structureId, userId);
 };
 
 export const getStructureMembers = async (structureId: string) => {
-  const structureService = new StructureService(prisma);
   const userService = new UserService(prisma);
-
-  const structure = await structureService.getStructureById(structureId);
-  const externalIds = (structure?.Members || [])
-    .map((m: any) => m?.user?.externalId)
-    .filter(Boolean) as string[];
-
-  if (!externalIds.length) {
-    return [] as Array<ReturnType<typeof userService.mergeClerkData>>;
-  }
-
-  // Fetch clerk users and prisma users, then merge
-  const [clerkUsers, prismaUsers] = await Promise.all([
-    userService.clerkService.getUsersByIDs(externalIds),
-    prisma.user.findMany({ where: { externalId: { in: externalIds } } }),
-  ]);
-
-  const merged = clerkUsers.map((clerkUser) => {
-    const dbUser = prismaUsers.find((u: any) => u.externalId === clerkUser.id);
-    return userService.mergeClerkData(dbUser, clerkUser);
-  });
-
-  return merged;
+  return await userService.getStructureMembers(structureId);
 };
 
 export const removeStructureMember = async (
@@ -120,5 +92,17 @@ export const removeStructureMember = async (
   return await structureService.removeUserFromStructureByExternalId(
     structureId,
     userExternalId
+  );
+};
+
+export const getInterpreters = async () => {
+  const userService = new UserService(prisma);
+  return await userService.getUsers(
+    1,
+    1000,
+    'fullName',
+    'asc',
+    '',
+    'INTERPRETER'
   );
 };

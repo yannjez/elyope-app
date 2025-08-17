@@ -10,7 +10,7 @@ import {
   useFormContext,
 } from '@app-test2/shared-components';
 import { getUserList } from '@/components/pages/user/UserListController';
-import { addStructureMember } from './StructureListController';
+import { addStructureMember } from './StructureController';
 import type { FullUser } from '@elyope/db';
 import { useState, useMemo } from 'react';
 import type { Ref } from 'react';
@@ -21,7 +21,7 @@ type StructureUsersPanelProps = {
 };
 
 const addUserShema = z.object({
-  id: z.string().min(2, 'Id is required'),
+  userToAddId: z.string().min(2, 'Id is required'),
 });
 
 export function StructureUsersPanel(props: StructureUsersPanelProps) {
@@ -44,36 +44,42 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
           className: _className,
           onChange: _ignoreOnChange,
           onBlur: _ignoreOnBlur,
-          name,
+
           ref: _ignoreRef,
           ...safeRest
         } = _props || {};
-        const form = useFormContext<any>();
+        const form = useFormContext<{ userToAddId: string }>();
         return (
           <SelectEntity<FullUser>
             className={_className}
             {...safeRest}
-            name={name}
+            name="userToAddId"
             value={selectedUser}
             onChange={(user) => {
               const selected = user as FullUser | null;
               setSelectedUser(selected);
-              if (form && name) {
-                form.setValue(name as any, selected ? selected.id : '');
-                form.trigger(name as any);
+              if (form) {
+                form.setValue('userToAddId', selected ? selected.id : '');
+                form.trigger('userToAddId');
               }
             }}
             loadInitial={async () => {
-              const { data } = await getUserList({ page: 1 });
-              return (data || []).slice(0, 5) as FullUser[];
+              const { data } = await getUserList({
+                page: 1,
+                role: 'VETERINARIAN',
+              });
+              return (data || []).slice(0, 10) as FullUser[];
             }}
             search={async (q) => {
-              const { data } = await getUserList({ page: 1, search: q });
-              return (data || []).slice(0, 5) as FullUser[];
+              const { data } = await getUserList({
+                page: 1,
+                search: q,
+                role: 'VETERINARIAN',
+              });
+              return (data || []).slice(0, 10) as FullUser[];
             }}
             getItemId={(u: FullUser) => u.id}
             getItemLabel={(u: FullUser) => u.fullName}
-            renderValue={(u: FullUser) => u.fullName}
             getFormValue={(u: FullUser | null) => (u ? u.id : '')}
             renderItem={(u: FullUser) => (
               <div className="flex items-center gap-2 text-12">
@@ -93,7 +99,7 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
   );
 
   return (
-    <FormPanel title="Add User">
+    <FormPanel title="Add User" className="w-full">
       <ZodForm
         id={structureId}
         schema={addUserShema}
@@ -106,7 +112,14 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
         }}
       >
         <div className="flex flex-col gap-2">
-          <UserSelectInput className="w-full" name="id" />
+          <UserSelectInput className="w-full" />
+        </div>
+        <div className="text-12 text-el-grey-500 mt-2">
+          Ps: Only{' '}
+          <span className="text-xs rounded-4 py-1 px-2 text-12 bg-el-blue-400">
+            VETERINARIAN
+          </span>{' '}
+          can be added to a structure
         </div>
         <FormSeparator className="my-4" />
         <Button

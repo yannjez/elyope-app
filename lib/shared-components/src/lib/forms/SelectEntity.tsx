@@ -16,7 +16,6 @@ export type SelectEntityExtractors<T> = {
   getItemId?: (item: T) => string;
   getItemLabel?: (item: T) => string;
   renderItem?: (item: T, isSelected: boolean) => React.ReactNode;
-  renderValue?: (item: T) => string; // string to show in the input when selected
   getFormValue?: (item: T | null) => string; // hidden input value
 };
 
@@ -44,10 +43,9 @@ export default function SelectEntity<T extends BaseEntity>(
     onChange,
     loadInitial,
     search,
-    getItemId: getItemIdProp,
+    getItemId: getItemIdProp = (item) => item.id,
     getItemLabel: getItemLabelProp,
     renderItem,
-    renderValue,
     placeholder = 'Select an entity…',
     disabled = false,
     className,
@@ -56,6 +54,11 @@ export default function SelectEntity<T extends BaseEntity>(
     'aria-label': ariaLabel,
     'aria-describedby': ariaDescribedby,
   } = props;
+
+  const DefaultRenderItem = (item: T) => {
+    return <span> {(getItemLabelProp && getItemLabelProp(item)) || '-'}</span>;
+  };
+  const renderItemInner = renderItem || DefaultRenderItem;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -91,10 +94,7 @@ export default function SelectEntity<T extends BaseEntity>(
   // Sync displayed text with selected value
   useEffect(() => {
     if (value) {
-      const label =
-        (renderValue
-          ? renderValue(value)
-          : getItemLabelProp && getItemLabelProp(value)) || '';
+      const label = (getItemLabelProp && getItemLabelProp(value)) || '';
       setInputValue(label);
     } else if (!isOpen) {
       setInputValue('');
@@ -181,10 +181,7 @@ export default function SelectEntity<T extends BaseEntity>(
 
   const handleSelect = (item: T) => {
     onChange(item);
-    const label =
-      (renderValue
-        ? renderValue(item)
-        : getItemLabelProp && getItemLabelProp(item)) || '';
+    const label = (getItemLabelProp && getItemLabelProp(item)) || '';
     setInputValue(label);
     setIsOpen(false);
   };
@@ -222,35 +219,37 @@ export default function SelectEntity<T extends BaseEntity>(
         <input
           type="hidden"
           name={name}
+          id={name}
           value={computeFormValue ? computeFormValue(value) : ''}
           readOnly
           aria-hidden="true"
         />
       )}
-      <div className={cn('relative')}>
-        <input
-          ref={inputRef}
-          type="text"
-          role="combobox"
-          aria-expanded={isOpen}
-          aria-controls={isOpen ? 'select-entity-listbox' : undefined}
-          aria-autocomplete="list"
-          aria-label={ariaLabel}
-          aria-describedby={ariaDescribedby}
-          placeholder={placeholder}
-          className={cn(
-            'px-2 py-1  outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control pr-8',
-            disabled && 'bg-el-grey-200 cursor-not-allowed opacity-70'
-          )}
-          value={inputValue}
-          onFocus={handleInputFocus}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          disabled={disabled}
-        />
-        <div className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-2 text-el-grey-400">
-          <SearchIcon />
-        </div>
+
+      <input
+        id={`${name}-input`}
+        name={`${name}-input`}
+        ref={inputRef}
+        type="text"
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? 'select-entity-listbox' : undefined}
+        aria-autocomplete="list"
+        aria-label={ariaLabel}
+        aria-describedby={ariaDescribedby}
+        placeholder={placeholder}
+        className={cn(
+          'px-2 py-1  outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control pr-8',
+          disabled && 'bg-el-grey-200 cursor-not-allowed opacity-70'
+        )}
+        value={inputValue}
+        onFocus={handleInputFocus}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        disabled={disabled}
+      />
+      <div className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-2 text-el-grey-400">
+        <SearchIcon />
       </div>
 
       {isOpen && (
@@ -290,7 +289,9 @@ export default function SelectEntity<T extends BaseEntity>(
                     isHighlighted && 'bg-el-grey-200'
                   )}
                 >
-                  {renderItem ? renderItem(item, isSelected || false) : label}
+                  {renderItemInner
+                    ? renderItemInner(item, isSelected || false)
+                    : label}
                 </div>
               );
             })}

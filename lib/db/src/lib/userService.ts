@@ -329,4 +329,51 @@ export class UserService extends BaseService {
     });
     return invitations;
   };
+
+  /**
+   * Get structure members by structure ID
+   * Returns merged user data from both Clerk and Prisma
+   */
+  getStructureMembers = async (structureId: string) => {
+    // Get structure with its members
+    const structure = await this.prisma.structure.findUnique({
+      where: { id: structureId },
+      include: {
+        Members: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (!structure || !structure.Members?.length) {
+      return [];
+    }
+
+    // Extract external IDs from structure members
+    const externalIds = structure.Members.map(
+      (member) => member?.user?.externalId
+    ).filter(Boolean) as string[];
+
+    if (!externalIds.length) {
+      return [];
+    }
+
+    // Fetch clerk users and prisma users, then merge
+    const [clerkUsers, prismaUsers] = await Promise.all([
+      this.clerkService.getUsersByIDs(externalIds),
+      this.prisma.user.findMany({
+        where: { externalId: { in: externalIds } },
+      }),
+    ]);
+
+    // Merge clerk and prisma user data
+    const merged = clerkUsers.map((clerkUser) => {
+      const dbUser = prismaUsers.find((u) => u.externalId === clerkUser.id);
+      return this.mergeClerkData(dbUser, clerkUser);
+    });
+
+    return merged;
+  };
 }

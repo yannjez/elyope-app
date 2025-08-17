@@ -3,21 +3,20 @@
 import {
   Button,
   FormField,
+  SelectEntity,
   FormPanel,
   FormSeparator,
   Input,
   Toggle,
   ZodForm,
   z,
+  useFormContext,
 } from '@app-test2/shared-components';
 
-import { useEffect, useState } from 'react';
-import {
-  createStructure,
-  getStructureById,
-  updateStructure,
-} from './StructureListController';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { createStructure, updateStructure } from './StructureController';
 import { useRouter } from 'next/navigation';
+import { FullUser, Structure } from '@elyope/db';
 
 export const structureSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -32,19 +31,26 @@ export const structureSchema = z.object({
   account_firstname: z.string().optional(),
   account_email: z.string().email().optional(),
   is_structure_active: z.boolean().optional(),
+  interpreterId: z.string().optional(),
 });
 
 export type StructureFormData = z.infer<typeof structureSchema>;
 
-export type StructureUpsertContentProps =
-  | { mode: 'create' }
-  | { mode: 'edit'; id: string };
+export type StructureUpsertContentProps = {
+  mode: 'create' | 'edit';
+  id?: string;
+  _structure?: Structure;
+  _interpreters: FullUser[];
+};
 
-export default function StructureUpsertContent(
-  props: StructureUpsertContentProps
-) {
+export default function StructureUpsertContent({
+  mode,
+  id = '',
+  _structure,
+  _interpreters,
+}: StructureUpsertContentProps) {
   const router = useRouter();
-  const isEdit = props.mode === 'edit';
+  const isEdit = mode === 'edit';
   const [defaults, setDefaults] = useState<StructureFormData | null>(
     isEdit
       ? null
@@ -61,40 +67,59 @@ export default function StructureUpsertContent(
           account_firstname: '',
           account_email: '',
           is_structure_active: true,
+          interpreterId: '',
         }
   );
 
   useEffect(() => {
     if (!isEdit) return;
     (async () => {
-      const s = await getStructureById((props as any).id as string);
       setDefaults({
-        name: s?.name || '',
-        description: s?.description || '',
-        address1: s?.address1 || '',
-        address2: s?.address2 || '',
-        zipcode: s?.zipcode || '',
-        town: s?.town || '',
-        phone: s?.phone || '',
-        mobile: s?.mobile || '',
-        account_lastname: s?.account_lastname || '',
-        account_firstname: s?.account_firstname || '',
-        account_email: s?.account_email || '',
+        name: _structure?.name || '',
+        description: _structure?.description || '',
+        address1: _structure?.address1 || '',
+        address2: _structure?.address2 || '',
+        zipcode: _structure?.zipcode || '',
+        town: _structure?.town || '',
+        phone: _structure?.phone || '',
+        mobile: _structure?.mobile || '',
+        account_lastname: _structure?.account_lastname || '',
+        account_firstname: _structure?.account_firstname || '',
+        account_email: _structure?.account_email || '',
         is_structure_active:
-          typeof s?.is_structure_active === 'boolean'
-            ? s.is_structure_active
+          typeof _structure?.is_structure_active === 'boolean'
+            ? _structure.is_structure_active
             : true,
+        interpreterId: _structure?.interpreterId || '',
       });
     })();
-  }, [isEdit, props]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const listInterpreters = useCallback((keyword?: string) => {
+    return _interpreters.filter((interpreter) =>
+      interpreter.fullName.toLowerCase().includes(keyword?.toLowerCase() || '')
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const currentInterpreter = useMemo(() => {
+    if (!defaults?.interpreterId) return null;
+    return (
+      _interpreters.find(
+        (interpreter) => interpreter.id === defaults?.interpreterId
+      ) || null
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaults?.interpreterId]);
 
   const handleSubmit = async (data: StructureFormData) => {
     if (isEdit) {
-      await updateStructure((props as any).id as string, data);
+      await updateStructure(id, data);
     } else {
       await createStructure(data);
     }
-    router.push('/structures');
+    router.refresh();
   };
 
   if (!defaults) return null;
@@ -149,6 +174,18 @@ export default function StructureUpsertContent(
             <Input type="email" placeholder="Email" />
           </FormField>
 
+          <FormField
+            name="interpreterId"
+            label="Interpreter"
+            className="w-full"
+          >
+            <SelectInterpreter
+              currentInterpreter={currentInterpreter}
+              setDefaults={setDefaults}
+              defaults={defaults}
+              listInterpreters={listInterpreters}
+            />
+          </FormField>
           <FormField name="is_structure_active" label="Active">
             <Toggle checkedLabel="" uncheckedLabel="" />
           </FormField>
@@ -160,5 +197,39 @@ export default function StructureUpsertContent(
         </ZodForm>
       </FormPanel>
     </>
+  );
+}
+
+function SelectInterpreter({
+  currentInterpreter,
+  setDefaults,
+  defaults,
+  listInterpreters,
+}: {
+  currentInterpreter: FullUser | null;
+  setDefaults: (defaults: StructureFormData) => void;
+  defaults: StructureFormData;
+  listInterpreters: (keyword?: string) => FullUser[];
+}) {
+  const form = useFormContext<StructureFormData>();
+  return (
+    <SelectEntity
+      className="w-full"
+      name="interpreterId"
+      value={currentInterpreter}
+      onChange={(value) => {
+        setDefaults({
+          ...defaults,
+          interpreterId: value?.id || '',
+        });
+        if (form) {
+          form.setValue('interpreterId', value?.id || '');
+          form.trigger('interpreterId');
+        }
+      }}
+      getItemLabel={(item) => item.fullName}
+      loadInitial={() => Promise.resolve(listInterpreters())}
+      search={(keyword) => Promise.resolve(listInterpreters(keyword))}
+    />
   );
 }

@@ -16,17 +16,20 @@ import StructureUsersPanel from './StructureUsersPanel';
 import {
   getStructureMembers,
   removeStructureMember,
-} from './StructureListController';
-import { useEffect, useMemo, useState } from 'react';
-import type { FullUser } from '@elyope/db';
+} from './StructureController';
+import { useMemo, useState } from 'react';
+import type { FullUser, Structure } from '@elyope/db';
 
 type StructureEditContentProps = {
   structureId: string;
+  _members: FullUser[];
+  _structure: Structure;
+  _interpreters: FullUser[];
 };
 
 export function StructureEditContent(props: StructureEditContentProps) {
-  const { structureId } = props;
-  const [members, setMembers] = useState<FullUser[]>([]);
+  const { structureId, _members, _structure, _interpreters } = props;
+  const [members, setMembers] = useState<FullUser[]>(_members);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
   const [pendingExternalId, setPendingExternalId] = useState<string | null>(
@@ -43,10 +46,6 @@ export function StructureEditContent(props: StructureEditContentProps) {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    void loadMembers();
-  }, [structureId]);
 
   const columns = useMemo(
     () => [
@@ -68,7 +67,12 @@ export function StructureEditContent(props: StructureEditContentProps) {
         }
       />
       <PageMain className="flex gap-3 p-0 ">
-        <Form mode="edit" id={structureId} />
+        <Form
+          mode="edit"
+          id={structureId}
+          _structure={_structure}
+          _interpreters={_interpreters}
+        />
         <div className="w-1/2 flex flex-col gap-3">
           <StructureUsersPanel
             structureId={structureId}
