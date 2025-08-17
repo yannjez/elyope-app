@@ -5,7 +5,6 @@ import { prisma } from '@/db';
 import { ListRequestType } from '@elyope/db';
 
 export const getUserList = async (listRequest?: ListRequestType) => {
-  console.log('getUserList', listRequest);
   const userService = new UserService(prisma);
 
   const { page, sort, sortDirection, search, role } = listRequest || {};

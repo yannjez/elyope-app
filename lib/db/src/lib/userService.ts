@@ -51,15 +51,20 @@ export class UserService extends BaseService {
         });
       }
       // User already has the role, return the existing user
-      return existingUser;
+      return {
+        externalId: user.id,
+      };
     } else {
       // User doesn't exist, create new user
-      return await this.prisma.user.create({
+      await this.prisma.user.create({
         data: {
           externalId: user.id,
           roles: [userRoleType as UserType],
         },
       });
+      return {
+        externalId: user.id,
+      };
     }
   };
 

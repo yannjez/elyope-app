@@ -105,7 +105,7 @@ export default function UserListContent() {
         title="Users"
         icon={<UserIcon className="w-full" />}
         action={
-          <Link href="/create-user" className="button-primary min-w-40">
+          <Link href="/user/create-user" className="button-primary min-w-40">
             + Create User
           </Link>
         }

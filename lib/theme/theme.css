@@ -66,7 +66,7 @@
 }  
 
 @utility button-destructive {  
-    @apply  button focus:bg-el-red-500 hover:bg-el-red-200 bg-el-grey-200  transition-all duration-300;
+    @apply  button hover:bg-el-red-200 focus:bg-el-grey-500 bg-el-red-500  transition-all duration-300;
 }  
 
 @utility select {

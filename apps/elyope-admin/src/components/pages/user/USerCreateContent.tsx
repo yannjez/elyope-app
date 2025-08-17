@@ -15,10 +15,14 @@ import {
 } from '@app-test2/shared-components';
 import Link from 'next/link';
 import { createUser } from './UserListController';
+import { redirect } from 'next/navigation';
 
 export default function UserCreateContent() {
   const handleSubmit = async (data: UserRegistrationData) => {
-    await createUser(data);
+    const user = await createUser(data);
+    if (user) {
+      redirect(`/user/${user.externalId}`);
+    }
   };
   return (
     <>

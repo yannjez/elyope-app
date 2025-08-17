@@ -1,28 +1,79 @@
 'use client';
 
-import { UserType } from '@elyope/db';
+import { UserType, Structure } from '@elyope/db';
 import {
   Button,
   PageHeader,
   PageMain,
   PanelTitle,
   UserIcon,
+  DataGrid,
+  TrashIcon,
+  FormSeparator,
+  DialogConfirm,
 } from '@app-test2/shared-components';
 import { UserRoleManagement } from './UserRoleManagement';
 import { UserInvitationComponent } from './UserInvitation';
+import { UserStructureManagement } from './UserStructureManagement';
 import { useUserDetail } from './UserDetailContext';
+import { removeFromAStructure } from './UserDetailController';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useState } from 'react';
 
 export default function UserDetailContent() {
   const router = useRouter();
-  const { currentUser, handleRolesSave } = useUserDetail();
+  const [confirmRemove, setConfirmRemove] = useState<{
+    show: boolean;
+    structure: Structure | null;
+  }>({ show: false, structure: null });
+  const { currentUser, handleRolesSave, userStructures } = useUserDetail();
+
+  if (!currentUser) {
+    return <div>User not found</div>;
+  }
 
   const handleRolesSaveWrapper = async (roles: UserType[]) => {
     await handleRolesSave(roles);
     // Refresh the page to ensure data consistency
     router.refresh();
   };
+
+  const handleRemoveStructure = (structureId: string) => {
+    const structure = userStructures.find((s) => s.id === structureId);
+    if (structure) {
+      setConfirmRemove({ show: true, structure });
+    }
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!confirmRemove.structure) return;
+
+    try {
+      await removeFromAStructure({
+        userId: currentUser.id,
+        structureId: confirmRemove.structure.id,
+      });
+      router.refresh();
+    } catch (error) {
+      console.error('Error removing user from structure:', error);
+    } finally {
+      setConfirmRemove({ show: false, structure: null });
+    }
+  };
+
+  const handleCancelRemove = () => {
+    setConfirmRemove({ show: false, structure: null });
+  };
+
+  // Define columns for the DataGrid
+  const structureColumns = [
+    {
+      header: 'Structure Name',
+      field: 'name' as keyof Structure,
+      className: 'font-medium',
+    },
+  ];
 
   return (
     <>
@@ -113,12 +164,55 @@ export default function UserDetailContent() {
             </div>
           </div>
 
-          {/* Right Column: User Invitations */}
-          <div className="bg-el-grey-100 rounded  p-6">
-            <UserInvitationComponent />
+          {/* Right Column: Structure Management & User Invitations */}
+          <div className="flex flex-col gap-4">
+            {/* Structure Management Section */}
+            <div className="bg-el-grey-100 rounded p-6">
+              <UserStructureManagement />
+              <FormSeparator className="my-4 bg-el-grey-300" />
+              {/* User Structures DataGrid */}
+              <DataGrid
+                columns={structureColumns}
+                data={userStructures}
+                loadingRows={2}
+                noDataMessage="No structures assigned to this user"
+                rowActions={[
+                  {
+                    name: 'Remove from structure',
+                    icon: <TrashIcon className="w-4 h-4" />,
+                    propertyKey: 'id',
+                    onClick: (structureId) =>
+                      handleRemoveStructure(structureId as string),
+                    className: 'hover:text-el-red-500 ',
+                  },
+                ]}
+                className=" "
+              />
+            </div>
+
+            {/* User Invitations Section */}
+            <div className="bg-el-grey-100 rounded p-6">
+              <UserInvitationComponent />
+            </div>
           </div>
         </div>
       </PageMain>
+
+      {/* Confirmation Dialog */}
+      <DialogConfirm
+        open={confirmRemove.show}
+        title="Remove User from Structure"
+        message={
+          confirmRemove.structure
+            ? `Are you sure you want to remove this user from "${confirmRemove.structure.name}"? This action cannot be undone.`
+            : ''
+        }
+        confirmLabel="Remove"
+        cancelLabel="Cancel"
+        onConfirm={handleConfirmRemove}
+        onCancel={handleCancelRemove}
+        confirmClassName="button-destructive text-el-grey-800"
+      />
     </>
   );
 }

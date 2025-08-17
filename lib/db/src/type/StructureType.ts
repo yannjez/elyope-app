@@ -14,5 +14,5 @@ export type Structure = {
   is_structure_active: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;
-  interpreterId?: string;
+  interpreterId?: string | null;
 };

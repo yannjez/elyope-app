@@ -7,7 +7,7 @@ import React, {
   useTransition,
   useCallback,
 } from 'react';
-import { UserType, UserInvitation, FullUser } from '@elyope/db';
+import { UserType, UserInvitation, FullUser, Structure } from '@elyope/db';
 import {
   updateUserRoles,
   createInvitation,
@@ -16,12 +16,16 @@ import {
 
 type UserDetailContextType = {
   // User state
-  currentUser: FullUser;
+  currentUser?: FullUser;
   setCurrentUser: (user: FullUser) => void;
 
   // Invitations state
   invitations: UserInvitation[];
   setInvitations: (invitations: UserInvitation[]) => void;
+
+  // Structures state
+  allStructures: Structure[];
+  userStructures: Structure[];
 
   // Loading states
   isPending: boolean;
@@ -41,16 +45,20 @@ const UserDetailContext = createContext<UserDetailContextType | undefined>(
 
 type UserDetailProviderProps = {
   children: React.ReactNode;
-  _currentUser: FullUser;
+  _currentUser: FullUser | null;
   _invitations: UserInvitation[];
+  _userStructures?: Structure[];
+  _allStructures?: Structure[];
 };
 
 export function UserDetailProvider({
   children,
   _currentUser,
   _invitations,
+  _userStructures = [],
+  _allStructures = [],
 }: UserDetailProviderProps) {
-  const [currentUser, setCurrentUser] = useState<FullUser>(_currentUser);
+  const [currentUser, setCurrentUser] = useState<FullUser | null>(_currentUser);
   const [invitations, setInvitations] =
     useState<UserInvitation[]>(_invitations);
   const [isRolesSaving, setIsRolesSaving] = useState(false);
@@ -59,6 +67,8 @@ export function UserDetailProvider({
   // Role management handler
   const handleRolesSave = useCallback(
     async (roles: UserType[]) => {
+      if (!_currentUser || !currentUser) return;
+
       setIsRolesSaving(true);
       try {
         await updateUserRoles(currentUser.externalId, roles);
@@ -73,11 +83,13 @@ export function UserDetailProvider({
         setIsRolesSaving(false);
       }
     },
-    [currentUser]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   // Load invitations for the current user
   const loadInvitations = useCallback(async () => {
+    if (!_currentUser || !currentUser) return;
     const userEmail =
       currentUser.email_addresses?.[0]?.email_address || currentUser.email;
     if (!userEmail) return;
@@ -90,10 +102,12 @@ export function UserDetailProvider({
         console.error('Failed to load invitations:', error);
       }
     });
-  }, [currentUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Create new invitation
   const handleCreateInvitation = useCallback(async () => {
+    if (!_currentUser || !currentUser) return;
     const userEmail =
       currentUser.email_addresses?.[0]?.email_address || currentUser.email;
     if (!userEmail || currentUser.roles.length === 0) {
@@ -125,12 +139,16 @@ export function UserDetailProvider({
 
   const contextValue: UserDetailContextType = {
     // User state
-    currentUser,
+    currentUser: currentUser || undefined,
     setCurrentUser,
 
     // Invitations state
     invitations,
     setInvitations,
+
+    // Structures state
+    allStructures: _allStructures,
+    userStructures: _userStructures,
 
     // Loading states
     isPending,
