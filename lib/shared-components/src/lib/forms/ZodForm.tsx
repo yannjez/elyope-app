@@ -30,7 +30,7 @@ export function ZodForm<T extends FieldValues>({
 }: ZodFormProps<T>) {
   const methods = useForm<T>({
     defaultValues,
-    resolver: zodResolver(schema as any),
+    resolver: zodResolver(schema),
   });
 
   return (

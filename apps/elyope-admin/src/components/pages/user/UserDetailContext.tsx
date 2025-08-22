@@ -135,6 +135,7 @@ export function UserDetailProvider({
         throw error;
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, loadInvitations]);
 
   const contextValue: UserDetailContextType = {

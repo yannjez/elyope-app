@@ -68,13 +68,13 @@ export function UserInvitationComponent() {
         <Button
           onClick={handleOpenInviteModal}
           className="button button-primary"
-          disabled={!currentUser.email}
+          disabled={!currentUser?.email}
         >
           + Send Invitation
         </Button>
       </div>
 
-      {!currentUser.email && (
+      {!currentUser?.email && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <p className="text-sm text-yellow-800">
             User email is required to manage invitations.
@@ -95,7 +95,7 @@ export function UserInvitationComponent() {
         <div className="space-y-4">
           <p className="text-sm text-gray-600">
             Send an invitation to{' '}
-            <strong>{currentUser.fullName || currentUser.email}</strong>?
+            <strong>{currentUser?.fullName || currentUser?.email}</strong>?
           </p>
 
           <div className="text-xs text-gray-500">

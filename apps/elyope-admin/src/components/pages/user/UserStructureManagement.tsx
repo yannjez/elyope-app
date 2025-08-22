@@ -31,14 +31,14 @@ export function UserStructureManagement({
   const { currentUser, userStructures, allStructures } = useUserDetail();
 
   const [selectedStructureId, setSelectedStructureId] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddToStructure = async () => {
     console.log('selectedStructureId', selectedStructureId);
     if (!selectedStructureId) return;
 
-    setIsLoading(true);
     try {
+      if (!currentUser) return;
+
       await addToAStructure({
         userId: currentUser.id,
         structureId: selectedStructureId,
@@ -50,8 +50,6 @@ export function UserStructureManagement({
       router.refresh();
     } catch (error) {
       console.error('Error adding user to structure:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -74,10 +72,10 @@ export function UserStructureManagement({
     <>
       <PanelTitle title="Structure Management" />
       <ZodForm
-        id={'structure-add-' + currentUser.id}
+        id={'structure-add-' + currentUser?.id}
         schema={addToStructureSchema}
         onSubmit={async () => {
-          if (selectedStructureId) {
+          if (selectedStructureId && currentUser?.id) {
             await addToAStructure({
               userId: currentUser.id,
               structureId: selectedStructureId,
@@ -99,7 +97,7 @@ export function UserStructureManagement({
             onClick={handleAddToStructure}
             disabled={
               !selectedStructureId ||
-              !currentUser.roles.includes('VETERINARIAN')
+              !currentUser?.roles.includes('VETERINARIAN')
             }
           >
             + Add

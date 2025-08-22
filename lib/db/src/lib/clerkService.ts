@@ -28,8 +28,8 @@ export class ClerkService {
    * @returns Promise with array of users
    */
   getUsers = async (
-    limit: number = 10,
-    offset: number = 0,
+    limit = 10,
+    offset = 0,
     sortField?: ClerkSortField,
     keyword?: string,
     userIds?: string[]
@@ -148,25 +148,8 @@ export class ClerkService {
     });
   };
 
-  /**
-   * Invite a user by email
-   * @param email - Email address to invite
-   * @returns Promise with invitation data
-   */
-  inviteUser = async (email: string): Promise<any> => {
-    const invitationData = {
-      email_address: email,
-      redirect_url: 'http://localhost:3000/auth/callback',
-    };
-
-    return this.baseFetch<any>('/invitations', {
-      method: 'POST',
-      body: JSON.stringify(invitationData),
-    });
-  };
-
-  deleteUserByID = async (id: string): Promise<any> => {
-    return this.baseFetch<any>(`/users/${id}`, {
+  deleteUserByID = async (id: string): Promise<void> => {
+    return this.baseFetch<void>(`/users/${id}`, {
       method: 'DELETE',
     });
   };

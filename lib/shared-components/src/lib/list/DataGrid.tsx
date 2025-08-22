@@ -45,7 +45,7 @@ export type DataGridProps<T> = {
     name: string;
     icon: ReactNode;
     propertyKey?: keyof T;
-    onClick: (value: T[keyof T]) => void;
+    onClick: (value: string | T[keyof T] | undefined) => void;
     className?: string;
   }>;
 };
@@ -133,7 +133,7 @@ function SkeletonRow({
   columns,
   className,
 }: {
-  columns: DataGridColumn<any>[];
+  columns: DataGridColumn<object>[];
   className?: string;
 }) {
   return (

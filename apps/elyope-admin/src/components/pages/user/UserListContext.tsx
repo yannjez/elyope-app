@@ -148,6 +148,7 @@ export const UserListProvider = ({
       sort: undefined,
       sortDirection: undefined,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDeleteUser = useCallback(

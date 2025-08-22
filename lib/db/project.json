@@ -53,6 +53,17 @@
                 "command": "pnpm dlx prisma db push --accept-data-loss",
                 "cwd": "lib/db"
             }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
+            "options": {
+                "lintFilePatterns": [
+                    "lib/db/**/*.{ts,tsx,js,jsx}"
+                ]
+            }
         }
     },
     "tags": []

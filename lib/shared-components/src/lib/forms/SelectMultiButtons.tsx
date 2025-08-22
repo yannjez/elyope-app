@@ -16,10 +16,12 @@ type SelectMultiButtonsProps = {
   'aria-describedby'?: string;
   maxSelections?: number;
   minSelections?: number;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 } & React.HTMLAttributes<HTMLDivElement> & {
     // react-hook-form register props forwarded by FormField
-    onBlur?: (event: any) => void;
-    onChange?: (event: any) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   };
 
 export default function SelectMultiButtons({

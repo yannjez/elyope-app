@@ -8,14 +8,19 @@ import {
   PencilIcon,
   TrashIcon,
   PageMain,
+  DataGridColumn,
 } from '@app-test2/shared-components';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { DialogConfirm } from '@app-test2/shared-components';
 import { deleteStructure } from './StructureController';
-import { useStructureListControllerContext } from './StructureListContext';
+import {
+  StructureFilter,
+  useStructureListControllerContext,
+} from './StructureListContext';
 import { StructureListFilter } from './StructureListFilter';
+import { Structure } from '@elyope/db';
 
 export default function StructureListContent() {
   const router = useRouter();
@@ -50,7 +55,7 @@ export default function StructureListContent() {
       header: 'State',
       field: 'state' as const,
       className: '!p-0',
-      displayCell: (row: any) => {
+      displayCell: (row: Structure) => {
         const stateKey = row.is_structure_active ? 'active' : 'inactive';
         const stateClassName: Record<'active' | 'inactive', [string, string]> =
           {
@@ -73,7 +78,7 @@ export default function StructureListContent() {
       header: 'Created',
       field: 'createdAt' as const,
       isSortable: true,
-      displayCell: (row: any) => (
+      displayCell: (row: Structure) => (
         <span className="text-sm text-el-gray-500">
           {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : ''}
         </span>
@@ -105,7 +110,7 @@ export default function StructureListContent() {
         }
         filters={
           <StructureListFilter
-            filter={filter as any}
+            filter={filter as StructureFilter}
             onKeywordChange={handleKeywordChange}
             onSearch={handleSearch}
             onReset={handleReset}
@@ -127,12 +132,12 @@ export default function StructureListContent() {
 
         <div className="mt-2">
           <DataGrid
-            columns={columns as any}
-            data={data as any}
+            columns={columns as DataGridColumn<Structure>[]}
+            data={data as Structure[]}
             className="rounded-4 w-full"
             skeletonRowClass="!p-3"
-            onSort={handleSort as any}
-            sortField={(sortState.field as any) ?? undefined}
+            onSort={handleSort as (field: keyof Structure, direction: 'asc' | 'desc') => void}
+            sortField={(sortState.field as keyof Structure) ?? undefined}
             sortDirection={sortState.direction}
             noDataMessage="No structures found"
             isLoading={isSearching}
@@ -142,6 +147,7 @@ export default function StructureListContent() {
                 name: 'Edit',
                 icon: <PencilIcon className="w-full h-full" />,
                 onClick: (id: string) => router.push(`/structures/${id}`),
+                propertyKey: 'id',
               },
               {
                 className: 'hover:text-el-red-500',

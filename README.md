@@ -60,6 +60,9 @@ npx nx test shared-components
 
 # Lint shared components
 npx nx lint shared-components
+
+# Lint shared components
+npx nx lint all
 ```
 
 ### Database Library
