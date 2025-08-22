@@ -1,5 +1,3 @@
-export * from './lib/shared-components';
-
 /* Commons */
 export { default as PageHeader } from './lib/commons/PageHeader';
 export { default as PageMain } from './lib/commons/PageMain';

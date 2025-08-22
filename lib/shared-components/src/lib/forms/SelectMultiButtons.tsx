@@ -77,7 +77,7 @@ export default function SelectMultiButtons({
     if (typeof fieldOnChange === 'function') {
       fieldOnChange({
         target: { name, type: 'checkbox', value: toggledValue, checked },
-      });
+      } as React.ChangeEvent<HTMLInputElement>);
     }
   };
 

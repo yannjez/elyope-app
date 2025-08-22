@@ -136,7 +136,12 @@ export default function StructureListContent() {
             data={data as Structure[]}
             className="rounded-4 w-full"
             skeletonRowClass="!p-3"
-            onSort={handleSort as (field: keyof Structure, direction: 'asc' | 'desc') => void}
+            onSort={
+              handleSort as (
+                field: keyof Structure,
+                direction: 'asc' | 'desc'
+              ) => void
+            }
             sortField={(sortState.field as keyof Structure) ?? undefined}
             sortDirection={sortState.direction}
             noDataMessage="No structures found"
@@ -146,7 +151,9 @@ export default function StructureListContent() {
               {
                 name: 'Edit',
                 icon: <PencilIcon className="w-full h-full" />,
-                onClick: (id: string) => router.push(`/structures/${id}`),
+                onClick: (id: string | undefined) => {
+                  if (id) router.push(`/structures/${id}`);
+                },
                 propertyKey: 'id',
               },
               {
@@ -154,9 +161,11 @@ export default function StructureListContent() {
                 name: 'Delete',
 
                 icon: <TrashIcon className="w-full h-full" />,
-                onClick: (id: string) => {
-                  setSelectedId(String(id));
-                  setConfirmOpen(true);
+                onClick: (id: string | undefined) => {
+                  if (id) {
+                    setSelectedId(id);
+                    setConfirmOpen(true);
+                  }
                 },
               },
             ]}

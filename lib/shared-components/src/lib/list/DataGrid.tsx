@@ -45,7 +45,7 @@ export type DataGridProps<T> = {
     name: string;
     icon: ReactNode;
     propertyKey?: keyof T;
-    onClick: (value: string | T[keyof T] | undefined) => void;
+    onClick: (value: string | undefined) => void;
     className?: string;
   }>;
 };
@@ -265,13 +265,15 @@ export function DataGrid<T extends object>({
             {Array.from({ length: loadingRows }).map((_, rowIdx) => (
               <SkeletonRow
                 key={rowIdx}
-                columns={[
-                  ...columns,
-                  ...rowActions.map(() => ({
-                    header: '',
-                    field: '' as unknown as keyof T,
-                  })),
-                ]}
+                columns={
+                  [
+                    ...columns,
+                    ...rowActions.map(() => ({
+                      header: '',
+                      field: '' as unknown as keyof T,
+                    })),
+                  ] as DataGridColumn<object>[]
+                }
                 className={skeletonRowClass}
               />
             ))}
