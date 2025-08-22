@@ -16,25 +16,7 @@
     ],
     "sharedGlobals": []
   },
-  "plugins": [
-    {
-      "plugin": "@nx/js/typescript",
-      "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        }
-      }
-    },
-    {
-      "plugin": "@nx/next/plugin"
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    }
-  ],
+  "plugins": [],
   "generators": {
     "@nx/next": {
       "application": {
