@@ -22,23 +22,11 @@
       "options": {
         "typecheck": {
           "targetName": "typecheck"
-        },
-        "build": {
-          "targetName": "build",
-          "configName": "tsconfig.lib.json",
-          "buildDepsName": "build-deps",
-          "watchDepsName": "watch-deps"
         }
       }
     },
     {
-      "plugin": "@nx/next/plugin",
-      "options": {
-        "startTargetName": "start",
-        "buildTargetName": "build",
-        "devTargetName": "dev",
-        "serveStaticTargetName": "serve-static"
-      }
+      "plugin": "@nx/next/plugin"
     },
     {
       "plugin": "@nx/eslint/plugin",
