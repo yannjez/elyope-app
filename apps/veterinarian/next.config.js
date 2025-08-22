@@ -28,6 +28,9 @@ const nextConfig = {
 
     return config;
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', '@elyope/db'],
+  },
 };
 
 module.exports = composePlugins(withNx, withNextIntl)(nextConfig);
