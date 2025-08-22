@@ -1,8 +1,13 @@
 import { BriefCaseIcon, PageHeader } from '@app-test2/shared-components';
 import Form from './StructureUpsertContent';
 import Link from 'next/link';
+import { FullUser } from '@elyope/db';
 
-export function StructureCreateContent() {
+export function StructureCreateContent({
+  interpreters,
+}: {
+  interpreters: FullUser[];
+}) {
   return (
     <>
       <PageHeader
@@ -14,7 +19,7 @@ export function StructureCreateContent() {
           </Link>
         }
       />
-      <Form mode="create" />
+      <Form mode="create" _interpreters={interpreters} />
     </>
   );
 }

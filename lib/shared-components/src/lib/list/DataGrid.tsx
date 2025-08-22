@@ -449,7 +449,7 @@ export function DataGrid<T extends object>({
                           action.className
                         )}
                         onClick={() =>
-                          actionValue && action.onClick(actionValue)
+                          actionValue && action.onClick(String(actionValue))
                         }
                       >
                         {action.icon}

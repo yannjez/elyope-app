@@ -16,10 +16,7 @@
             "options": {
                 "outputPath": "dist/lib/db",
                 "main": "lib/db/src/index.ts",
-                "tsConfig": "lib/db/tsconfig.lib.json",
-                "format": [
-                    "esm"
-                ]
+                "tsConfig": "lib/db/tsconfig.lib.json"
             }
         },
         "migrate-reset": {

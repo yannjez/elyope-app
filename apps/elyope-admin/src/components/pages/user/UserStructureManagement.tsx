@@ -64,7 +64,7 @@ export function UserStructureManagement({
               )
           )
         : [],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [allStructures, userStructures]
   );
 
