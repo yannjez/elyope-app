@@ -14,19 +14,26 @@ import { addStructureMember } from './StructureController';
 import type { FullUser } from '@elyope/db';
 import { useState, useMemo } from 'react';
 import type { Ref } from 'react';
+import { useTranslations } from 'next-intl';
 
 type StructureUsersPanelProps = {
   structureId: string;
   onUserAdded?: () => void;
 };
 
-const addUserShema = z.object({
-  userToAddId: z.string().min(2, 'Id is required'),
-});
+// Schema will be created inside component to access translations
+const createAddUserSchema = (idRequiredMessage: string) =>
+  z.object({
+    userToAddId: z.string().min(2, idRequiredMessage),
+  });
 
 export function StructureUsersPanel(props: StructureUsersPanelProps) {
+  const t = useTranslations('Data.Structure.edit.add_user_panel');
   const { structureId, onUserAdded } = props;
   const [selectedUser, setSelectedUser] = useState<FullUser | null>(null);
+
+  // Create schema with translated validation messages
+  const addUserShema = createAddUserSchema(t('validation.id_required'));
 
   // Adapter to avoid RHF register onChange overriding SelectEntity's onChange
   type UserSelectInputProps = {
@@ -52,6 +59,7 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
         return (
           <SelectEntity<FullUser>
             className={_className}
+            placeholder={t('placeholder')}
             {...safeRest}
             name="userToAddId"
             value={selectedUser}
@@ -95,11 +103,12 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
           />
         );
       },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedUser]
   );
 
   return (
-    <FormPanel title="Add User" className="w-full">
+    <FormPanel title={t('title')} className="w-full">
       <ZodForm
         id={structureId}
         schema={addUserShema}
@@ -115,11 +124,10 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
           <UserSelectInput className="w-full" />
         </div>
         <div className="text-12 text-el-grey-500 mt-2">
-          Ps: Only{' '}
+          {t('notice')}{' '}
           <span className="text-xs rounded-4 py-1 px-2 text-12 bg-el-blue-400">
-            VETERINARIAN
-          </span>{' '}
-          can be added to a structure
+            {t('role_veterinarian')}
+          </span>
         </div>
         <FormSeparator className="my-4" />
         <Button
@@ -127,7 +135,7 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
           className="button-primary "
           disabled={!selectedUser}
         >
-          ↓ Add
+          {t('add_button')}
         </Button>
       </ZodForm>
     </FormPanel>

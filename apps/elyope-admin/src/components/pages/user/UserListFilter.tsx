@@ -6,6 +6,7 @@ import {
   Button,
   type BaseFilter,
 } from '@app-test2/shared-components';
+import { useTranslations } from 'next-intl';
 
 type UserFilter = BaseFilter & {
   role?: string;
@@ -22,12 +23,7 @@ type UserListFilterProps = {
   t: (key: string) => string;
 };
 
-const ROLE_OPTIONS = [
-  { value: 'ALL', label: 'ALL' },
-  // { value: 'VETERINARIAN', label: 'VETERINARIAN' },
-  { value: 'ADMIN', label: 'ADMIN' },
-  { value: 'INTERPRETER', label: 'INTERPRETER' },
-];
+// Moved ROLE_OPTIONS inside component to access translations
 
 export function UserListFilter({
   filter,
@@ -39,6 +35,15 @@ export function UserListFilter({
   isFilterEmpty,
   t,
 }: UserListFilterProps) {
+  const tList = useTranslations('Data.User.list');
+  const tRoles = useTranslations('Data.User.roles');
+
+  const ROLE_OPTIONS = [
+    { value: 'ALL', label: tList('filter.role_all') },
+    { value: 'ADMIN', label: tRoles('admin') },
+    { value: 'INTERPRETER', label: tRoles('interpreter') },
+  ];
+
   const [selectedRole, setSelectedRole] = useState<string>(
     filter.role || 'ALL'
   );
@@ -55,7 +60,9 @@ export function UserListFilter({
 
   const roleFilterComponent = (
     <>
-      <span className="text-sm text-gray-600 min-w-[60px]">Roles:</span>
+      <span className="text-sm text-gray-600 min-w-[60px]">
+        {tList('filter.roles_label')}
+      </span>
       <div className="flex items-center gap-1">
         {ROLE_OPTIONS.map((role) => (
           <Button

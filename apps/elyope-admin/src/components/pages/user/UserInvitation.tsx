@@ -10,12 +10,15 @@ import {
 } from '@app-test2/shared-components';
 import { UserInvitation } from '@elyope/db';
 import { useUserDetail } from './UserDetailContext';
+import { useTranslations } from 'next-intl';
 
 // Types for invitations
 
 // No form schema needed anymore
 
 export function UserInvitationComponent() {
+  const t = useTranslations('Data.User.invitations');
+  const tCommon = useTranslations('Data.Common');
   const { invitations, isPending, currentUser, handleCreateInvitation } =
     useUserDetail();
 
@@ -45,12 +48,12 @@ export function UserInvitationComponent() {
   // DataGrid columns configuration
   const invitationColumns: DataGridColumn<UserInvitation>[] = [
     {
-      header: 'Email',
+      header: tCommon('fields.email'),
       field: 'email',
       isSortable: false,
     },
     {
-      header: 'Created At',
+      header: tCommon('fields.created_at'),
       field: 'createdAt',
       isSortable: false,
       displayCell: (invitation: UserInvitation) =>
@@ -65,21 +68,19 @@ export function UserInvitationComponent() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <PanelTitle title="User Invitations">User Invitations</PanelTitle>
+        <PanelTitle title={t('title')}>{t('title')}</PanelTitle>
         <Button
           onClick={handleOpenInviteModal}
           className="button button-primary"
           disabled={!currentUser?.email}
         >
-          + Send Invitation
+          {t('send_button')}
         </Button>
       </div>
 
       {!currentUser?.email && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <p className="text-sm text-yellow-800">
-            User email is required to manage invitations.
-          </p>
+          <p className="text-sm text-yellow-800">{t('email_required')}</p>
         </div>
       )}
 
@@ -88,21 +89,22 @@ export function UserInvitationComponent() {
         open={showConfirmModal}
         onCancel={() => setShowConfirmModal(false)}
         onConfirm={handleConfirmInvitation}
-        title="Send Invitation"
-        confirmLabel={isPending ? 'Sending...' : 'Send Invitation'}
-        cancelLabel="Cancel"
+        title={t('modal.title')}
+        confirmLabel={
+          isPending ? t('modal.confirm_sending') : t('modal.confirm')
+        }
+        cancelLabel={tCommon('actions.cancel')}
         isLoading={isPending}
       >
         <div className="space-y-4">
           <p className="text-sm text-gray-600">
-            Send an invitation to{' '}
-            <strong>{currentUser?.fullName || currentUser?.email}</strong>?
+            {t('modal.message', {
+              name:
+                currentUser?.fullName || currentUser?.email || 'Unknown User',
+            })}
           </p>
 
-          <div className="text-xs text-gray-500">
-            The user will receive an email with invitation links based on the
-            selected roles.
-          </div>
+          <div className="text-xs text-gray-500">{t('modal.description')}</div>
         </div>
       </DialogModal>
 
@@ -113,7 +115,7 @@ export function UserInvitationComponent() {
         data={invitations}
         isLoading={isPending && invitations.length === 0}
         loadingRows={3}
-        noDataMessage="No invitations found for this user."
+        noDataMessage={t('no_data')}
       />
     </div>
   );

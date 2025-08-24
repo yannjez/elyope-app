@@ -12,8 +12,8 @@ import {
 } from '@app-test2/shared-components';
 import { useUserDetail } from './UserDetailContext';
 import { addToAStructure } from './UserDetailController';
-
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 type UserStructureManagementProps = {
   onStructureChange?: () => void;
@@ -26,6 +26,8 @@ const addToStructureSchema = z.object({
 export function UserStructureManagement({
   onStructureChange,
 }: UserStructureManagementProps) {
+  const t = useTranslations('Data.User.structure_management');
+  const tCommon = useTranslations('Data.Common');
   const router = useRouter();
 
   const { currentUser, userStructures, allStructures } = useUserDetail();
@@ -70,7 +72,7 @@ export function UserStructureManagement({
 
   return (
     <>
-      <PanelTitle title="Structure Management" />
+      <PanelTitle title={t('title')} />
       <ZodForm
         id={'structure-add-' + currentUser?.id}
         schema={addToStructureSchema}
@@ -89,6 +91,7 @@ export function UserStructureManagement({
           <SelectStructure
             availableStructures={availableStructures}
             setSelectedStructureId={setSelectedStructureId}
+            placeholder={t('placeholder')}
           />
           {/* Add to Structure Section */}
 
@@ -100,12 +103,11 @@ export function UserStructureManagement({
               !currentUser?.roles.includes('VETERINARIAN')
             }
           >
-            + Add
+            {tCommon('actions.add')}
           </Button>
         </div>
         <div className="text-el-grey-500 text-12 mt-2">
-          Ps: the user can only be added to structure if he has the VETERINARIAN
-          role
+          {t('restriction_notice')}
         </div>
       </ZodForm>
     </>
@@ -115,11 +117,13 @@ export function UserStructureManagement({
 type SelectStructureProps = {
   availableStructures: Structure[];
   setSelectedStructureId: (id: string) => void;
+  placeholder: string;
 };
 
 function SelectStructure({
   availableStructures,
   setSelectedStructureId,
+  placeholder,
 }: SelectStructureProps) {
   const form = useFormContext<{ structutreToAddId: string }>();
   return (
@@ -140,7 +144,7 @@ function SelectStructure({
       getItemId={(item) => item.id}
       className="w-full"
       name="structutreToAddId"
-      placeholder="Select a structure"
+      placeholder={placeholder}
       loadInitial={function (): Promise<Structure[]> {
         return Promise.resolve(availableStructures);
       }}

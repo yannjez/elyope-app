@@ -8,24 +8,9 @@ import {
   Button,
   PanelTitle,
 } from '@app-test2/shared-components';
+import { useTranslations } from 'next-intl';
 
-const rolesOptions: Array<Option & { color: string }> = [
-  {
-    label: 'Veterinarian',
-    value: 'VETERINARIAN',
-    color: 'bg-el-blue-400',
-  },
-  {
-    label: 'Interpreter',
-    value: 'INTERPRETER',
-    color: 'bg-el-green-300',
-  },
-  {
-    label: 'Admin',
-    value: 'ADMIN',
-    color: 'bg-el-yellow-300',
-  },
-];
+// Moved rolesOptions inside component to access translations
 
 type UserRoleManagementProps = {
   currentRoles: UserType[];
@@ -38,6 +23,31 @@ export function UserRoleManagement({
   onSave,
   isLoading = false,
 }: UserRoleManagementProps) {
+  const t = useTranslations('Data.User.role_management');
+  const tRoles = useTranslations('Data.User.roles');
+  const tCommon = useTranslations('Data.Common');
+
+  const rolesOptions: Array<Option & { color: string }> = useMemo(
+    () => [
+      {
+        label: tRoles('veterinarian'),
+        value: 'VETERINARIAN',
+        color: 'bg-el-blue-400',
+      },
+      {
+        label: tRoles('interpreter'),
+        value: 'INTERPRETER',
+        color: 'bg-el-green-300',
+      },
+      {
+        label: tRoles('admin'),
+        value: 'ADMIN',
+        color: 'bg-el-yellow-300',
+      },
+    ],
+    [tRoles]
+  );
+
   const safeCurrentRoles = useMemo(() => currentRoles || [], [currentRoles]);
   const [rolesDraft, setRolesDraft] = useState<UserType[]>([
     ...safeCurrentRoles,
@@ -81,7 +91,7 @@ export function UserRoleManagement({
   return (
     <div className="space-y-4">
       <div>
-        <PanelTitle title="User Roles" />
+        <PanelTitle title={t('title')} />
         <SelectMultiButtons
           options={rolesOptions}
           value={rolesDraft}
@@ -89,6 +99,15 @@ export function UserRoleManagement({
           minSelections={1}
           maxSelections={3}
           name="user-roles"
+          t={(key, options) => {
+            if (key === 'Validation.SelectMultiButtons.min_selections') {
+              return t('validation.min_selections', options);
+            }
+            if (key === 'Validation.SelectMultiButtons.max_selections') {
+              return t('validation.max_selections', options);
+            }
+            return key;
+          }}
         />
       </div>
 
@@ -99,18 +118,18 @@ export function UserRoleManagement({
           disabled={!hasChanges || isSaving || isLoading}
           className="button-primary"
         >
-          {isSaving ? 'Saving...' : '↓ Save Changes'}
+          {isSaving ? tCommon('actions.saving') : tCommon('actions.save')}
         </Button>
         <Button
           onClick={handleReset}
           disabled={isSaving || isLoading}
           className="button-neutral"
         >
-          Reset
+          {tCommon('actions.reset')}
         </Button>
         {!hasChanges && (
           <span className="text-sm text-gray-500 self-center">
-            No changes to save
+            {tCommon('messages.no_changes')}
           </span>
         )}
       </div>

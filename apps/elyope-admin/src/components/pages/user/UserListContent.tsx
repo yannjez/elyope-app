@@ -17,6 +17,7 @@ import { useUserListControllerContext } from './UserListContext';
 import { UserListFilter } from './UserListFilter';
 import { useState } from 'react';
 import { cn } from '@app-test2/shared-components';
+import { useTranslations } from 'next-intl';
 
 // Role color mapping for display
 const roleColors: Record<string, string> = {
@@ -26,6 +27,9 @@ const roleColors: Record<string, string> = {
 };
 
 export default function UserListContent() {
+  const t = useTranslations('Data.User.list');
+  const tCommon = useTranslations('Data.Common');
+  const tRoles = useTranslations('Data.User.roles');
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const {
@@ -48,18 +52,18 @@ export default function UserListContent() {
 
   const columns = [
     {
-      header: 'Name',
+      header: t('columns.name'),
       field: 'fullName' as keyof FullUser,
       isSortable: true,
       className: 'font-medium',
     },
     {
-      header: 'Email',
+      header: tCommon('fields.email'),
       field: 'email' as keyof FullUser,
       isSortable: true,
     },
     {
-      header: 'Roles',
+      header: t('columns.roles'),
       field: 'roles' as keyof FullUser,
       isSortable: false,
       displayCell: (user: FullUser) => (
@@ -72,14 +76,14 @@ export default function UserListContent() {
                 roleColors[role as string] || 'bg-gray-200'
               )}
             >
-              {role}
+              {tRoles(role.toLowerCase())}
             </span>
           ))}
         </div>
       ),
     },
     {
-      header: 'Created',
+      header: t('columns.created'),
       field: 'createdAt' as keyof User,
       isSortable: true,
       displayCell: (user: User) => (
@@ -90,23 +94,17 @@ export default function UserListContent() {
     },
   ];
 
-  const t = (key: string) => {
-    const translations: Record<string, string> = {
-      filter: 'Filter your data',
-      search: 'Search',
-      reset: 'Reset search',
-    };
-    return translations[key] || key;
-  };
+  // Translation function for filters - using common translations
+  const tFilter = (key: string) => tCommon(key);
 
   return (
     <>
       <PageHeader
-        title="Users"
+        title={t('title')}
         icon={<UserIcon className="w-full" />}
         action={
           <Link href="/user/create-user" className="button-primary min-w-40">
-            + Create User
+            {t('create_button')}
           </Link>
         }
         filters={
@@ -118,7 +116,7 @@ export default function UserListContent() {
             onReset={handleReset}
             isSearching={isSearching}
             isFilterEmpty={isFilterEmpty}
-            t={t}
+            t={tFilter}
           />
         }
       />
@@ -141,12 +139,12 @@ export default function UserListContent() {
             onSort={handleSort}
             sortField={sortState.field as keyof FullUser}
             sortDirection={sortState.direction}
-            noDataMessage="No users found"
+            noDataMessage={t('no_data')}
             isLoading={isSearching}
             loadingRows={5}
             rowActions={[
               {
-                name: 'Edit',
+                name: t('actions.edit'),
                 icon: <PencilIcon className="w-full h-full" />,
                 onClick: (id) => {
                   const user = data.find((u) => String(u.id) === String(id));
@@ -159,7 +157,7 @@ export default function UserListContent() {
               },
               {
                 className: 'hover:text-el-red-500',
-                name: 'Delete',
+                name: t('actions.delete'),
                 icon: <TrashIcon className="w-full h-full" />,
                 onClick: (id) => {
                   setSelectedUserId(String(id));
@@ -170,10 +168,10 @@ export default function UserListContent() {
           />
           <DialogConfirm
             open={confirmOpen}
-            title="Delete user"
-            message="Are you sure you want to delete this user? This action cannot be undone."
-            confirmLabel="Delete"
-            cancelLabel="Cancel"
+            title={t('dialog.delete_title')}
+            message={t('dialog.delete_message')}
+            confirmLabel={t('actions.delete')}
+            cancelLabel={tCommon('actions.cancel')}
             onCancel={() => {
               setConfirmOpen(false);
               setSelectedUserId(null);

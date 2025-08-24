@@ -20,8 +20,11 @@ import { removeFromAStructure } from './UserDetailController';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function UserDetailContent() {
+  const t = useTranslations('Data.User.detail');
+  const tCommon = useTranslations('Data.Common');
   const router = useRouter();
   const [confirmRemove, setConfirmRemove] = useState<{
     show: boolean;
@@ -30,7 +33,7 @@ export default function UserDetailContent() {
   const { currentUser, handleRolesSave, userStructures } = useUserDetail();
 
   if (!currentUser) {
-    return <div>User not found</div>;
+    return <div>{t('not_found')}</div>;
   }
 
   const handleRolesSaveWrapper = async (roles: UserType[]) => {
@@ -69,7 +72,7 @@ export default function UserDetailContent() {
   // Define columns for the DataGrid
   const structureColumns = [
     {
-      header: 'Structure Name',
+      header: t('structure.column_name'),
       field: 'name' as keyof Structure,
       className: 'font-medium',
       isSortable: false,
@@ -79,13 +82,16 @@ export default function UserDetailContent() {
   return (
     <>
       <PageHeader
-        title={`User Details: ${currentUser.first_name} ${currentUser.last_name}`}
+        icon={<UserIcon className="w-full" />}
+        title={`${t('title_prefix')}${currentUser.first_name} ${
+          currentUser.last_name
+        }`}
         action={
           <Button
             className="button-primary-inverse"
             onClick={() => router.push('/user')}
           >
-            ← Back to Users
+            {tCommon('navigation.back_to_users')}
           </Button>
         }
       />
@@ -96,9 +102,9 @@ export default function UserDetailContent() {
           {/* Left Column: User Information & Roles */}
           <div className="flex flex-col gap-4 h-full">
             {/* User Information Section */}
-            <div className="bg-white rounded border border-gray-200 p-6">
+            <div className="bg-white rounded-4  border border-gray-200 p-6">
               <h2 className="">
-                <PanelTitle title="User Informations" />
+                <PanelTitle title={t('sections.information')} />
               </h2>
 
               <div className="flex items-start space-x-4">
@@ -121,7 +127,7 @@ export default function UserDetailContent() {
                 <div className="flex-1 grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-500">
-                      Full Name
+                      {t('fields.full_name')}
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
                       {currentUser.first_name} {currentUser.last_name}
@@ -130,17 +136,17 @@ export default function UserDetailContent() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-500">
-                      Email
+                      {tCommon('fields.email')}
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
                       {currentUser.email_addresses?.[0]?.email_address ||
-                        'No email provided'}
+                        t('fallback.no_email')}
                     </p>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-500">
-                      User ID
+                      {t('fields.user_id')}
                     </label>
                     <p className="mt-1 text-sm text-gray-900 font-mono">
                       {currentUser.externalId || currentUser.id}
@@ -149,11 +155,11 @@ export default function UserDetailContent() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-500">
-                      Account Status
+                      {t('fields.account_status')}
                     </label>
                     <p className="mt-1 text-sm text-gray-900">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                        Active
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-4  text-xs font-medium bg-green-100 text-green-800">
+                        {tCommon('status.active')}
                       </span>
                     </p>
                   </div>
@@ -162,7 +168,7 @@ export default function UserDetailContent() {
             </div>
 
             {/* Role Management Section */}
-            <div className="bg-white rounded  p-6 flex-1">
+            <div className="bg-white rounded-4   p-6 flex-1">
               <UserRoleManagement
                 currentRoles={currentUser.roles as UserType[]}
                 onSave={handleRolesSaveWrapper}
@@ -173,7 +179,7 @@ export default function UserDetailContent() {
           {/* Right Column: Structure Management & User Invitations */}
           <div className="flex flex-col gap-4">
             {/* Structure Management Section */}
-            <div className="bg-white rounded p-6">
+            <div className="bg-white rounded-4  p-6">
               <UserStructureManagement />
               <FormSeparator className="my-4 bg-el-grey-300" />
               {/* User Structures DataGrid */}
@@ -182,10 +188,10 @@ export default function UserDetailContent() {
                 columns={structureColumns}
                 data={userStructures}
                 loadingRows={2}
-                noDataMessage="No structures assigned to this user"
+                noDataMessage={t('fallback.no_structures')}
                 rowActions={[
                   {
-                    name: 'Remove from structure',
+                    name: t('structure.remove_action'),
                     icon: <TrashIcon className="w-6 h-6" />,
                     propertyKey: 'id',
                     onClick: (structureId) =>
@@ -198,7 +204,7 @@ export default function UserDetailContent() {
             </div>
 
             {/* User Invitations Section */}
-            <div className="bg-white rounded p-6 h-full">
+            <div className="bg-white rounded-4 p-6 h-full ">
               <UserInvitationComponent />
             </div>
           </div>
@@ -208,14 +214,14 @@ export default function UserDetailContent() {
       {/* Confirmation Dialog */}
       <DialogConfirm
         open={confirmRemove.show}
-        title="Remove User from Structure"
+        title={t('dialog.remove_title')}
         message={
           confirmRemove.structure
-            ? `Are you sure you want to remove this user from "${confirmRemove.structure.name}"? This action cannot be undone.`
+            ? t('dialog.remove_message', { name: confirmRemove.structure.name })
             : ''
         }
-        confirmLabel="Remove"
-        cancelLabel="Cancel"
+        confirmLabel={tCommon('actions.remove')}
+        cancelLabel={tCommon('actions.cancel')}
         onConfirm={handleConfirmRemove}
         onCancel={handleCancelRemove}
         confirmClassName="button-destructive text-el-grey-800"

@@ -21,8 +21,11 @@ import {
 } from './StructureListContext';
 import { StructureListFilter } from './StructureListFilter';
 import { Structure } from '@elyope/db';
+import { useTranslations } from 'next-intl';
 
 export default function StructureListContent() {
+  const t = useTranslations('Data.Structure.list');
+  const tCommon = useTranslations('Data.Common');
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -44,15 +47,19 @@ export default function StructureListContent() {
 
   const columns = [
     {
-      header: 'Name',
+      header: t('columns.name'),
       field: 'name' as const,
       isSortable: true,
       className: 'font-medium',
     },
-    { header: 'Town', field: 'town' as const, isSortable: true },
-    { header: 'Zipcode', field: 'zipcode' as const, isSortable: true },
+    { header: t('columns.town'), field: 'town' as const, isSortable: true },
     {
-      header: 'State',
+      header: t('columns.zipcode'),
+      field: 'zipcode' as const,
+      isSortable: true,
+    },
+    {
+      header: t('columns.state'),
       field: 'state' as const,
       className: '!p-0',
       displayCell: (row: Structure) => {
@@ -68,14 +75,18 @@ export default function StructureListContent() {
               <div
                 className={`w-2.5 h-2.5 rounded-full ${stateClassName[stateKey][1]}`}
               />
-              <span>{stateKey === 'active' ? 'Active' : 'Inactive'}</span>
+              <span>
+                {stateKey === 'active'
+                  ? tCommon('status.active')
+                  : tCommon('status.inactive')}
+              </span>
             </div>
           </div>
         );
       },
     },
     {
-      header: 'Created',
+      header: t('columns.created'),
       field: 'createdAt' as const,
       isSortable: true,
       displayCell: (row: Structure) => (
@@ -86,26 +97,20 @@ export default function StructureListContent() {
     },
   ];
 
-  const t = (key: string) => {
-    const translations: Record<string, string> = {
-      filter: 'Filter your data',
-      search: 'Search',
-      reset: 'Reset search',
-    };
-    return translations[key] || key;
-  };
+  // Translation function for filters - using common translations
+  const tFilter = (key: string) => tCommon(key);
 
   return (
     <>
       <PageHeader
-        title="Structures"
+        title={t('title')}
         icon={<BriefCaseIcon className="w-full" />}
         action={
           <Link
             href="/structures/create-structure"
             className="button-primary min-w-40"
           >
-            + Create Structure
+            {t('create_button')}
           </Link>
         }
         filters={
@@ -116,7 +121,7 @@ export default function StructureListContent() {
             onReset={handleReset}
             isSearching={isSearching}
             isFilterEmpty={isFilterEmpty}
-            t={t}
+            t={tFilter}
           />
         }
       />
@@ -144,12 +149,12 @@ export default function StructureListContent() {
             }
             sortField={(sortState.field as keyof Structure) ?? undefined}
             sortDirection={sortState.direction}
-            noDataMessage="No structures found"
+            noDataMessage={t('no_data')}
             isLoading={isSearching}
             loadingRows={5}
             rowActions={[
               {
-                name: 'Edit',
+                name: t('actions.edit'),
                 icon: <PencilIcon className="w-full h-full" />,
                 onClick: (id: string | undefined) => {
                   if (id) router.push(`/structures/${id}`);
@@ -158,7 +163,7 @@ export default function StructureListContent() {
               },
               {
                 className: 'hover:text-el-red-500',
-                name: 'Delete',
+                name: t('actions.delete'),
 
                 icon: <TrashIcon className="w-full h-full" />,
                 onClick: (id: string | undefined) => {
@@ -172,10 +177,10 @@ export default function StructureListContent() {
           />
           <DialogConfirm
             open={confirmOpen}
-            title="Delete structure"
-            message="Are you sure you want to delete this structure? This action cannot be undone."
-            confirmLabel="Delete"
-            cancelLabel="Cancel"
+            title={t('dialog.delete_title')}
+            message={t('dialog.delete_message')}
+            confirmLabel={t('actions.delete')}
+            cancelLabel={tCommon('actions.cancel')}
             confirmClassName="button-destructive"
             onCancel={() => {
               setConfirmOpen(false);

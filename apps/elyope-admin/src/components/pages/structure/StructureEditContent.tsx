@@ -19,6 +19,7 @@ import {
 } from './StructureController';
 import { useMemo, useState } from 'react';
 import type { FullUser, Structure } from '@elyope/db';
+import { useTranslations } from 'next-intl';
 
 type StructureEditContentProps = {
   structureId: string;
@@ -28,6 +29,8 @@ type StructureEditContentProps = {
 };
 
 export function StructureEditContent(props: StructureEditContentProps) {
+  const t = useTranslations('Data.Structure.edit');
+  const tCommon = useTranslations('Data.Common');
   const { structureId, _members, _structure, _interpreters } = props;
   const [members, setMembers] = useState<FullUser[]>(_members);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,20 +52,28 @@ export function StructureEditContent(props: StructureEditContentProps) {
 
   const columns = useMemo(
     () => [
-      { header: 'Name', field: 'fullName' as const, isSortable: true },
-      { header: 'Email', field: 'email' as const, isSortable: true },
+      {
+        header: t('users_panel.columns.name'),
+        field: 'fullName' as const,
+        isSortable: true,
+      },
+      {
+        header: tCommon('fields.email'),
+        field: 'email' as const,
+        isSortable: true,
+      },
     ],
-    []
+    [t, tCommon]
   );
 
   return (
     <>
       <PageHeader
-        title={' Structure Edit'}
+        title={t('title')}
         icon={<BriefCaseIcon className="w-full" />}
         action={
           <Link href="/structures" className="button-primary-inverse">
-            ← Back to list
+            {tCommon('navigation.back_to_list')}
           </Link>
         }
       />
@@ -79,7 +90,7 @@ export function StructureEditContent(props: StructureEditContentProps) {
             onUserAdded={loadMembers}
           />
           <div className="bg-white   rounded-4 h-full p-2">
-            <PanelTitle title="Users in this structure" />
+            <PanelTitle title={t('users_panel.title')} />
             <DataGrid
               blueMode={true}
               className="text-12"
@@ -87,10 +98,10 @@ export function StructureEditContent(props: StructureEditContentProps) {
               data={(members || []).map((m) => ({ ...m }))}
               isLoading={isLoading}
               loadingRows={4}
-              noDataMessage="No users in this structure"
+              noDataMessage={t('users_panel.no_data')}
               rowActions={[
                 {
-                  name: 'Remove from structure',
+                  name: t('users_panel.actions.remove'),
                   className: 'hover:text-el-red-500',
                   icon: <TrashIcon className="h-3/4 w-auto" />,
                   propertyKey: 'externalId',
@@ -98,7 +109,9 @@ export function StructureEditContent(props: StructureEditContentProps) {
                     const extId = String(externalId);
                     setPendingExternalId(extId);
                     const m = members.find((u) => u.externalId === extId);
-                    setPendingUserName(m?.fullName || 'this user');
+                    setPendingUserName(
+                      m?.fullName || t('users_panel.fallback.unknown_user')
+                    );
                     setConfirmOpen(true);
                   },
                 },
@@ -107,10 +120,12 @@ export function StructureEditContent(props: StructureEditContentProps) {
           </div>
           <DialogConfirm
             open={confirmOpen}
-            title="Remove user"
-            message={`Remove ${pendingUserName} from this structure?`}
-            confirmLabel="Remove"
-            cancelLabel="Cancel"
+            title={t('users_panel.dialog.remove_title')}
+            message={t('users_panel.dialog.remove_message', {
+              name: pendingUserName,
+            })}
+            confirmLabel={tCommon('actions.remove')}
+            cancelLabel={tCommon('actions.cancel')}
             onCancel={() => {
               setConfirmOpen(false);
               setPendingExternalId(null);

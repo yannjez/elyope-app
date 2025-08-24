@@ -17,24 +17,29 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createStructure, updateStructure } from './StructureController';
 import { useRouter } from 'next/navigation';
 import { FullUser, Structure } from '@elyope/db';
+import { useTranslations } from 'next-intl';
 
-export const structureSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  description: z.string().optional(),
-  address1: z.string().optional(),
-  address2: z.string().optional(),
-  zipcode: z.string().optional(),
-  town: z.string().optional(),
-  phone: z.string().optional(),
-  mobile: z.string().optional(),
-  account_lastname: z.string().optional(),
-  account_firstname: z.string().optional(),
-  account_email: z.string().email().optional(),
-  is_structure_active: z.boolean().optional(),
-  interpreterId: z.string().optional(),
-});
+// Schema will be created inside component to access translations
+const createStructureSchema = (nameRequiredMessage: string) =>
+  z.object({
+    name: z.string().min(2, nameRequiredMessage),
+    description: z.string().optional(),
+    address1: z.string().optional(),
+    address2: z.string().optional(),
+    zipcode: z.string().optional(),
+    town: z.string().optional(),
+    phone: z.string().optional(),
+    mobile: z.string().optional(),
+    account_lastname: z.string().optional(),
+    account_firstname: z.string().optional(),
+    account_email: z.string().email().optional(),
+    is_structure_active: z.boolean().optional(),
+    interpreterId: z.string().optional(),
+  });
 
-export type StructureFormData = z.infer<typeof structureSchema>;
+export type StructureFormData = z.infer<
+  ReturnType<typeof createStructureSchema>
+>;
 
 export type StructureUpsertContentProps = {
   mode: 'create' | 'edit';
@@ -49,8 +54,13 @@ export default function StructureUpsertContent({
   _structure,
   _interpreters,
 }: StructureUpsertContentProps) {
+  const t = useTranslations('Data.Structure.create');
+  const tCommon = useTranslations('Data.Common');
   const router = useRouter();
   const isEdit = mode === 'edit';
+
+  // Create schema with translated validation messages
+  const structureSchema = createStructureSchema(t('validation.name_required'));
   const [defaults, setDefaults] = useState<StructureFormData | null>(
     isEdit
       ? null
@@ -127,55 +137,68 @@ export default function StructureUpsertContent({
 
   return (
     <>
-      <FormPanel title="Structure data" className="main-container">
+      <FormPanel title={t('form_title')} className="main-container">
         <ZodForm
           schema={structureSchema}
           onSubmit={handleSubmit}
           defaultValues={defaults}
           className="space-y-2"
         >
-          <FormField name="name" label="Name" isMandatory>
-            <Input placeholder="Enter structure name" />
+          <FormField name="name" label={t('fields.name.label')} isMandatory>
+            <Input placeholder={t('fields.name.placeholder')} />
           </FormField>
 
-          <FormField name="description" label="Description">
-            <Input placeholder="Short description" />
+          <FormField name="description" label={t('fields.description.label')}>
+            <Input placeholder={t('fields.description.placeholder')} />
           </FormField>
           <FormSeparator className="w-full my-4" />
-          <FormField name="address1" label="Address 1">
-            <Input placeholder="Address line 1" />
+          <FormField name="address1" label={t('fields.address1.label')}>
+            <Input placeholder={t('fields.address1.placeholder')} />
           </FormField>
 
-          <FormField name="address2" label="Address 2">
-            <Input placeholder="Address line 2" />
+          <FormField name="address2" label={t('fields.address2.label')}>
+            <Input placeholder={t('fields.address2.placeholder')} />
           </FormField>
 
-          <FormField name="zipcode" label="Zipcode">
-            <Input placeholder="Zipcode" />
+          <FormField name="zipcode" label={t('fields.zipcode.label')}>
+            <Input placeholder={t('fields.zipcode.placeholder')} />
           </FormField>
-          <FormField name="town" label="Town">
-            <Input placeholder="Town" />
+          <FormField name="town" label={t('fields.town.label')}>
+            <Input placeholder={t('fields.town.placeholder')} />
           </FormField>
 
-          <FormField name="phone" label="Phone">
-            <Input type="tel" placeholder="Phone number" />
+          <FormField name="phone" label={t('fields.phone.label')}>
+            <Input type="tel" placeholder={t('fields.phone.placeholder')} />
           </FormField>
-          <FormField name="mobile" label="Mobile">
-            <Input type="tel" placeholder="Mobile number" />
+          <FormField name="mobile" label={t('fields.mobile.label')}>
+            <Input type="tel" placeholder={t('fields.mobile.placeholder')} />
           </FormField>
           <FormSeparator className="w-full my-4" />
-          <FormField name="account_lastname" label="Account Last name">
-            <Input placeholder="Last name" />
+          <FormField
+            name="account_lastname"
+            label={t('fields.account_lastname.label')}
+          >
+            <Input placeholder={t('fields.account_lastname.placeholder')} />
           </FormField>
-          <FormField name="account_firstname" label="Account First name">
-            <Input placeholder="First name" />
+          <FormField
+            name="account_firstname"
+            label={t('fields.account_firstname.label')}
+          >
+            <Input placeholder={t('fields.account_firstname.placeholder')} />
           </FormField>
 
-          <FormField name="account_email" label="Contact Email" isMandatory>
-            <Input type="email" placeholder="Email" />
+          <FormField
+            name="account_email"
+            label={t('fields.account_email.label')}
+            isMandatory
+          >
+            <Input
+              type="email"
+              placeholder={t('fields.account_email.placeholder')}
+            />
           </FormField>
 
-          <FormField name="interpreterId" label="Interpreter">
+          <FormField name="interpreterId" label={t('fields.interpreter.label')}>
             <SelectInterpreter
               currentInterpreter={currentInterpreter}
               setDefaults={setDefaults}
@@ -183,13 +206,16 @@ export default function StructureUpsertContent({
               listInterpreters={listInterpreters}
             />
           </FormField>
-          <FormField name="is_structure_active" label="Active">
+          <FormField
+            name="is_structure_active"
+            label={t('fields.active.label')}
+          >
             <Toggle checkedLabel="" uncheckedLabel="" />
           </FormField>
 
           <FormSeparator className="w-full my-4" />
           <Button type="submit" className="button-primary ">
-            ↓ Save
+            {tCommon('actions.save')}
           </Button>
         </ZodForm>
       </FormPanel>
@@ -209,10 +235,12 @@ function SelectInterpreter({
   listInterpreters: (keyword?: string) => FullUser[];
 }) {
   const form = useFormContext<StructureFormData>();
+  const t = useTranslations('Data.Structure.create');
   return (
     <SelectEntity
       className=" min-w-[400px]"
       name="interpreterId"
+      placeholder={t('fields.interpreter.placeholder')}
       value={currentInterpreter}
       onChange={(value) => {
         setDefaults({

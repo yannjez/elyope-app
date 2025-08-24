@@ -18,6 +18,11 @@ type SelectMultiButtonsProps = {
   minSelections?: number;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  // Translation function for validation messages
+  t?: (
+    key: string,
+    options?: { count?: number; plural?: string; plural_verb?: string }
+  ) => string;
 } & React.HTMLAttributes<HTMLDivElement> & {
     // react-hook-form register props forwarded by FormField
     onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -38,6 +43,7 @@ export default function SelectMultiButtons({
   minSelections = 0,
   onChange: fieldOnChange,
   onBlur: fieldOnBlur,
+  t,
   ...rest
 }: SelectMultiButtonsProps) {
   const [innerValues, setInnerValues] = useState<string[]>(value ?? []);
@@ -99,6 +105,35 @@ export default function SelectMultiButtons({
       return selectedOption?.label || currentValues[0];
     }
     return `${currentValues.length} selected`;
+  };
+
+  // Helper functions for validation messages
+  const getMinSelectionsMessage = () => {
+    if (!t) {
+      return `Please select at least ${minSelections} option${
+        minSelections > 1 ? 's' : ''
+      }`;
+    }
+    const plural = minSelections > 1 ? 's' : '';
+    return t('Validation.SelectMultiButtons.min_selections', {
+      count: minSelections,
+      plural,
+    });
+  };
+
+  const getMaxSelectionsMessage = () => {
+    if (!t) {
+      return `Maximum ${maxSelections} selection${
+        maxSelections && maxSelections > 1 ? 's' : ''
+      } allowed`;
+    }
+    const plural = maxSelections && maxSelections > 1 ? 's' : '';
+    const plural_verb = maxSelections && maxSelections > 1 ? 's' : '';
+    return t('Validation.SelectMultiButtons.max_selections', {
+      count: maxSelections,
+      plural,
+      plural_verb,
+    });
   };
 
   return (
@@ -171,15 +206,13 @@ export default function SelectMultiButtons({
       {/* Validation Messages */}
       {minSelections > 0 && currentValues.length < minSelections && (
         <div className="text-12 text-el-red-500">
-          Please select at least {minSelections} option
-          {minSelections > 1 ? 's' : ''}
+          {getMinSelectionsMessage()}
         </div>
       )}
 
       {maxSelections && currentValues.length > maxSelections && (
         <div className="text-12 text-el-red-500">
-          Maximum {maxSelections} selection{maxSelections > 1 ? 's' : ''}{' '}
-          allowed
+          {getMaxSelectionsMessage()}
         </div>
       )}
     </div>
