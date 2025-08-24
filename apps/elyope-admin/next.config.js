@@ -3,6 +3,7 @@
 const { composePlugins, withNx } = require('@nx/next');
 const createNextIntlPlugin = require('next-intl/plugin');
 const withNextIntl = createNextIntlPlugin();
+const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin');
 
 /** @type {import('@nx/next/plugins/with-nx').WithNxOptions} */
 const nextConfig = {
@@ -10,7 +11,10 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'img.clerk.com' }],
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // Add Prisma plugin for monorepo support
+    config.plugins = [...config.plugins, new PrismaPlugin()];
+
     // ✅ SVGR only for direct TS/JS imports, not CSS/backgrounds, not node_modules
     config.module.rules.push({
       test: /\.svg$/i,

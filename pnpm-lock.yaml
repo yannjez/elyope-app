@@ -75,6 +75,9 @@ importers:
       '@nx/web':
         specifier: ^21.2.1
         version: 21.3.11(@swc-node/register@1.10.10)(@swc/core@1.13.3)(nx@21.3.11)(verdaccio@6.1.6)
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^6.14.0
+        version: 6.14.0
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.2)
@@ -3884,6 +3887,10 @@ packages:
     resolution: {integrity: sha512-Nii2pX50fY4QKKxQwm7/vvqT6Ku8yYJLZAFX4e2vzHwRdMqjugcOG5hOSLjxqoXb0cvOspV70TOhMzrw8kqAnw==}
     dependencies:
       '@prisma/debug': 6.13.0
+
+  /@prisma/nextjs-monorepo-workaround-plugin@6.14.0:
+    resolution: {integrity: sha512-eZ9XTmL+r6TbTSlqLTrXaBha0PYLUIMqvbx+T3VSHxjeZYR7bURTDwPHrfNJWLTPKOYSR8RBFkGLOx4OwZ51Ug==}
+    dev: true
 
   /@rolldown/pluginutils@1.0.0-beta.27:
     resolution: {integrity: sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==}
