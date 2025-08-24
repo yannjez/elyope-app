@@ -61,8 +61,8 @@ export function StructureEditContent(props: StructureEditContentProps) {
         title={' Structure Edit'}
         icon={<BriefCaseIcon className="w-full" />}
         action={
-          <Link href="/structures" className="button-primary min-w-40">
-            Back to list
+          <Link href="/structures" className="button-primary-inverse">
+            ← Back to list
           </Link>
         }
       />
@@ -78,9 +78,10 @@ export function StructureEditContent(props: StructureEditContentProps) {
             structureId={structureId}
             onUserAdded={loadMembers}
           />
-          <div className="bg-el-grey-100   rounded-4 h-full p-2">
+          <div className="bg-white   rounded-4 h-full p-2">
             <PanelTitle title="Users in this structure" />
             <DataGrid
+              blueMode={true}
               className="text-12"
               columns={columns}
               data={(members || []).map((m) => ({ ...m }))}

@@ -99,6 +99,7 @@ export function ListFilter<T extends BaseFilter>({
               iconPosition="right"
               value={localKeyword}
               onChange={handleKeywordChange}
+              type="search"
             />
             {children}
           </div>

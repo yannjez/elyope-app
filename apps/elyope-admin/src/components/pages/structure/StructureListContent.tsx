@@ -176,6 +176,7 @@ export default function StructureListContent() {
             message="Are you sure you want to delete this structure? This action cannot be undone."
             confirmLabel="Delete"
             cancelLabel="Cancel"
+            confirmClassName="button-destructive"
             onCancel={() => {
               setConfirmOpen(false);
               setSelectedId(null);

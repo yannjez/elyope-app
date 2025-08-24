@@ -3,18 +3,20 @@ import { cn } from '../utils/cn';
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
+  type?: 'text' | 'search' | 'tel' | 'email';
 };
 
 export default function Input({
   className,
   icon,
+  type = 'text',
   iconPosition = 'right',
   ...props
 }: Props) {
   return (
     <div className={cn('relative', className)}>
       <input
-        type="text"
+        type={type}
         id="input"
         className={cn(
           'px-2 py-1 min-w-[400px] outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control',

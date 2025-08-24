@@ -99,7 +99,7 @@ export function UserRoleManagement({
           disabled={!hasChanges || isSaving || isLoading}
           className="button-primary"
         >
-          {isSaving ? 'Saving...' : 'Save Changes'}
+          {isSaving ? 'Saving...' : '↓ Save Changes'}
         </Button>
         <Button
           onClick={handleReset}

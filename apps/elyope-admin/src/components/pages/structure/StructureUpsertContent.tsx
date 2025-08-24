@@ -116,10 +116,11 @@ export default function StructureUpsertContent({
   const handleSubmit = async (data: StructureFormData) => {
     if (isEdit) {
       await updateStructure(id, data);
+      router.refresh();
     } else {
       await createStructure(data);
+      router.push('/structures');
     }
-    router.refresh();
   };
 
   if (!defaults) return null;
@@ -174,11 +175,7 @@ export default function StructureUpsertContent({
             <Input type="email" placeholder="Email" />
           </FormField>
 
-          <FormField
-            name="interpreterId"
-            label="Interpreter"
-            className="w-full"
-          >
+          <FormField name="interpreterId" label="Interpreter">
             <SelectInterpreter
               currentInterpreter={currentInterpreter}
               setDefaults={setDefaults}
@@ -191,7 +188,7 @@ export default function StructureUpsertContent({
           </FormField>
 
           <FormSeparator className="w-full my-4" />
-          <Button type="submit" className="button-primary min-w-40">
+          <Button type="submit" className="button-primary ">
             ↓ Save
           </Button>
         </ZodForm>
@@ -214,7 +211,7 @@ function SelectInterpreter({
   const form = useFormContext<StructureFormData>();
   return (
     <SelectEntity
-      className="w-full"
+      className=" min-w-[400px]"
       name="interpreterId"
       value={currentInterpreter}
       onChange={(value) => {

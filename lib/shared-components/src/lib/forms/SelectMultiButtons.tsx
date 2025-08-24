@@ -106,7 +106,7 @@ export default function SelectMultiButtons({
       {/* Selection Summary – align with Select */}
       <div
         className={cn(
-          ' hidden relative w-full border border-el-grey-400 rounded-4',
+          ' hidden relative w-full  rounded-4',
           'px-3 py-2 bg-el-grey-100 text-el-grey-800 text-14',
           disabled && 'opacity-50'
         )}

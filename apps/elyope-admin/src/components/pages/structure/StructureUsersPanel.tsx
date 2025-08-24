@@ -124,7 +124,7 @@ export function StructureUsersPanel(props: StructureUsersPanelProps) {
         <FormSeparator className="my-4" />
         <Button
           type="submit"
-          className="button-primary min-w-40"
+          className="button-primary "
           disabled={!selectedUser}
         >
           ↓ Add

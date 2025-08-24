@@ -25,6 +25,7 @@ export function UserInvitationComponent() {
   const handleConfirmInvitation = async () => {
     try {
       await handleCreateInvitation();
+      setShowConfirmModal(false);
     } catch (error) {
       console.error('Failed to create invitation:', error);
     }
@@ -46,12 +47,12 @@ export function UserInvitationComponent() {
     {
       header: 'Email',
       field: 'email',
-      isSortable: true,
+      isSortable: false,
     },
     {
       header: 'Created At',
       field: 'createdAt',
-      isSortable: true,
+      isSortable: false,
       displayCell: (invitation: UserInvitation) =>
         formatDate(invitation.createdAt),
     },
@@ -107,6 +108,7 @@ export function UserInvitationComponent() {
 
       {/* Invitations DataGrid */}
       <DataGrid
+        blueMode={true}
         columns={invitationColumns}
         data={invitations}
         isLoading={isPending && invitations.length === 0}

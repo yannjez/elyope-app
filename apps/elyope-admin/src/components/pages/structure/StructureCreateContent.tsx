@@ -14,8 +14,8 @@ export function StructureCreateContent({
         title={'Create Structure'}
         icon={<BriefCaseIcon className="w-full" />}
         action={
-          <Link href="/structures" className="button-primary min-w-40">
-            Back to list
+          <Link href="/structures" className="button-primary-inverse min-w-40">
+            ← Back to list
           </Link>
         }
       />

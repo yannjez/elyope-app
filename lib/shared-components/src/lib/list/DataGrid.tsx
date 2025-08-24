@@ -26,6 +26,7 @@ export type DataGridProps<T> = {
   // Controlled sort state
   sortField?: keyof T | null;
   sortDirection?: 'asc' | 'desc';
+  blueMode?: boolean;
   // Pagination props
   pagination?: {
     currentPage: number;
@@ -161,6 +162,7 @@ export function DataGrid<T extends object>({
   sortDirection: externalSortDirection,
   pagination,
   rowActions = [],
+  blueMode = false,
 }: DataGridProps<T>) {
   const [internalSortField, setInternalSortField] = useState<keyof T | null>(
     null
@@ -345,7 +347,12 @@ export function DataGrid<T extends object>({
         </table>
 
         {/* No Data State */}
-        <div className="flex items-center gap-2 justify-center py-12 px-4 bg-white rounded-4 ">
+        <div
+          className={cn(
+            'flex items-center gap-2 justify-center py-12 px-4 bg-white rounded-4 ',
+            blueMode ? 'bg-el-blue-200' : 'bg-white'
+          )}
+        >
           <div className="text-el-grey-300">
             <NoDataIcon className="w-8 h-8" />
           </div>
@@ -420,7 +427,14 @@ export function DataGrid<T extends object>({
         </thead>
         <tbody>
           {displayedData?.map((row, rowIdx) => (
-            <tr key={rowIdx} className={cn(' bg-white ', row.rowClass ?? '')}>
+            <tr
+              key={rowIdx}
+              className={cn(
+                ' bg-white ',
+                blueMode && 'bg-el-blue-200',
+                row.rowClass ?? ''
+              )}
+            >
               {columns.map((col, colIdx) => (
                 <td
                   key={colIdx}
@@ -446,6 +460,7 @@ export function DataGrid<T extends object>({
                         aria-label={action.name}
                         className={cn(
                           ' h-[28px] w-auto cursor-pointer   flex items-center justify-center rounded-4 bg-white text-el-grey-300 hover:text-el-blue-500 transition-colors duration-300',
+                          blueMode && 'bg-el-blue-200 text-el-blue-500',
                           action.className
                         )}
                         onClick={() =>

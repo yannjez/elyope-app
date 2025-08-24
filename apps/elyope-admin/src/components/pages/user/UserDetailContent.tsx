@@ -54,10 +54,10 @@ export default function UserDetailContent() {
         userId: currentUser.id,
         structureId: confirmRemove.structure.id,
       });
+      setConfirmRemove({ show: false, structure: null });
       router.refresh();
     } catch (error) {
       console.error('Error removing user from structure:', error);
-    } finally {
       setConfirmRemove({ show: false, structure: null });
     }
   };
@@ -72,6 +72,7 @@ export default function UserDetailContent() {
       header: 'Structure Name',
       field: 'name' as keyof Structure,
       className: 'font-medium',
+      isSortable: false,
     },
   ];
 
@@ -80,7 +81,12 @@ export default function UserDetailContent() {
       <PageHeader
         title={`User Details: ${currentUser.first_name} ${currentUser.last_name}`}
         action={
-          <Button onClick={() => router.push('/user')}>Back to Users</Button>
+          <Button
+            className="button-primary-inverse"
+            onClick={() => router.push('/user')}
+          >
+            ← Back to Users
+          </Button>
         }
       />
 
@@ -88,7 +94,7 @@ export default function UserDetailContent() {
         {/* Two-column grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full">
           {/* Left Column: User Information & Roles */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 h-full">
             {/* User Information Section */}
             <div className="bg-white rounded border border-gray-200 p-6">
               <h2 className="">
@@ -167,11 +173,12 @@ export default function UserDetailContent() {
           {/* Right Column: Structure Management & User Invitations */}
           <div className="flex flex-col gap-4">
             {/* Structure Management Section */}
-            <div className="bg-el-grey-100 rounded p-6">
+            <div className="bg-white rounded p-6">
               <UserStructureManagement />
               <FormSeparator className="my-4 bg-el-grey-300" />
               {/* User Structures DataGrid */}
               <DataGrid
+                blueMode={true}
                 columns={structureColumns}
                 data={userStructures}
                 loadingRows={2}
@@ -179,7 +186,7 @@ export default function UserDetailContent() {
                 rowActions={[
                   {
                     name: 'Remove from structure',
-                    icon: <TrashIcon className="w-4 h-4" />,
+                    icon: <TrashIcon className="w-6 h-6" />,
                     propertyKey: 'id',
                     onClick: (structureId) =>
                       handleRemoveStructure(structureId as string),
@@ -191,7 +198,7 @@ export default function UserDetailContent() {
             </div>
 
             {/* User Invitations Section */}
-            <div className="bg-el-grey-100 rounded p-6">
+            <div className="bg-white rounded p-6 h-full">
               <UserInvitationComponent />
             </div>
           </div>
