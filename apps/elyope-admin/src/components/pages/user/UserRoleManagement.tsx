@@ -112,23 +112,26 @@ export function UserRoleManagement({
       </div>
 
       {/* Always show buttons for now - remove hasChanges condition for debugging */}
-      <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button
-          onClick={handleSave}
-          disabled={!hasChanges || isSaving || isLoading}
-          className="button-primary"
-        >
-          {isSaving ? tCommon('actions.saving') : tCommon('actions.save')}
-        </Button>
-        <Button
-          onClick={handleReset}
-          disabled={isSaving || isLoading}
-          className="button-neutral"
-        >
-          {tCommon('actions.reset')}
-        </Button>
+      <div className="flex flex-col md:flex-row gap-2 pt-4 border-t border-el-grey-200">
+        <div className="flex gap-2">
+          <Button
+            onClick={handleSave}
+            disabled={!hasChanges || isSaving || isLoading}
+            className="button-primary"
+          >
+            {isSaving ? tCommon('actions.saving') : tCommon('actions.save')}
+          </Button>
+
+          <Button
+            onClick={handleReset}
+            disabled={isSaving || isLoading}
+            className="button-neutral"
+          >
+            {tCommon('actions.reset')}
+          </Button>
+        </div>
         {!hasChanges && (
-          <span className="text-sm text-gray-500 self-center">
+          <span className="text-sm text-gray-500 md:self-center">
             {tCommon('messages.no_changes')}
           </span>
         )}

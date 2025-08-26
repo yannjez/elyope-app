@@ -34,7 +34,10 @@ export default function UserCreateContent() {
         title={t('create_title')}
         icon={<UserIcon className="w-full" />}
         action={
-          <Link href="/" className="button-primary-inverse min-w-40">
+          <Link
+            href="/"
+            className="button-primary-inverse min-w-40 whitespace-nowrap"
+          >
             {tCommon('navigation.back_to_list')}
           </Link>
         }

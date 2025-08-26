@@ -133,90 +133,101 @@ export default function StructureUpsertContent({
     }
   };
 
-  if (!defaults) return null;
-
   return (
     <>
-      <FormPanel title={t('form_title')} className="main-container">
+      <FormPanel title={t('form_title')} className="main-container w-full">
         <ZodForm
           schema={structureSchema}
           onSubmit={handleSubmit}
-          defaultValues={defaults}
+          defaultValues={defaults || {}}
           className="space-y-2"
         >
-          <FormField name="name" label={t('fields.name.label')} isMandatory>
-            <Input placeholder={t('fields.name.placeholder')} />
-          </FormField>
+          <div className="flex flex-col gap-1">
+            <FormField name="name" label={t('fields.name.label')} isMandatory>
+              <Input placeholder={t('fields.name.placeholder')} />
+            </FormField>
 
-          <FormField name="description" label={t('fields.description.label')}>
-            <Input placeholder={t('fields.description.placeholder')} />
-          </FormField>
-          <FormSeparator className="w-full my-4" />
-          <FormField name="address1" label={t('fields.address1.label')}>
-            <Input placeholder={t('fields.address1.placeholder')} />
-          </FormField>
+            <FormField name="description" label={t('fields.description.label')}>
+              <Input placeholder={t('fields.description.placeholder')} />
+            </FormField>
 
-          <FormField name="address2" label={t('fields.address2.label')}>
-            <Input placeholder={t('fields.address2.placeholder')} />
-          </FormField>
+            <FormSeparator className="w-full my-4" />
 
-          <FormField name="zipcode" label={t('fields.zipcode.label')}>
-            <Input placeholder={t('fields.zipcode.placeholder')} />
-          </FormField>
-          <FormField name="town" label={t('fields.town.label')}>
-            <Input placeholder={t('fields.town.placeholder')} />
-          </FormField>
+            <FormField name="address1" label={t('fields.address1.label')}>
+              <Input placeholder={t('fields.address1.placeholder')} />
+            </FormField>
 
-          <FormField name="phone" label={t('fields.phone.label')}>
-            <Input type="tel" placeholder={t('fields.phone.placeholder')} />
-          </FormField>
-          <FormField name="mobile" label={t('fields.mobile.label')}>
-            <Input type="tel" placeholder={t('fields.mobile.placeholder')} />
-          </FormField>
-          <FormSeparator className="w-full my-4" />
-          <FormField
-            name="account_lastname"
-            label={t('fields.account_lastname.label')}
-          >
-            <Input placeholder={t('fields.account_lastname.placeholder')} />
-          </FormField>
-          <FormField
-            name="account_firstname"
-            label={t('fields.account_firstname.label')}
-          >
-            <Input placeholder={t('fields.account_firstname.placeholder')} />
-          </FormField>
+            <FormField name="address2" label={t('fields.address2.label')}>
+              <Input placeholder={t('fields.address2.placeholder')} />
+            </FormField>
 
-          <FormField
-            name="account_email"
-            label={t('fields.account_email.label')}
-            isMandatory
-          >
-            <Input
-              type="email"
-              placeholder={t('fields.account_email.placeholder')}
-            />
-          </FormField>
+            <FormField name="zipcode" label={t('fields.zipcode.label')}>
+              <Input placeholder={t('fields.zipcode.placeholder')} />
+            </FormField>
 
-          <FormField name="interpreterId" label={t('fields.interpreter.label')}>
-            <SelectInterpreter
-              currentInterpreter={currentInterpreter}
-              setDefaults={setDefaults}
-              defaults={defaults}
-              listInterpreters={listInterpreters}
-            />
-          </FormField>
-          <FormField
-            name="is_structure_active"
-            label={t('fields.active.label')}
-          >
-            <Toggle checkedLabel="" uncheckedLabel="" />
-          </FormField>
+            <FormField name="town" label={t('fields.town.label')}>
+              <Input placeholder={t('fields.town.placeholder')} />
+            </FormField>
 
-          <FormSeparator className="w-full my-4" />
-          <Button type="submit" className="button-primary ">
-            {tCommon('actions.save')}
-          </Button>
+            <FormField name="phone" label={t('fields.phone.label')}>
+              <Input type="tel" placeholder={t('fields.phone.placeholder')} />
+            </FormField>
+
+            <FormField name="mobile" label={t('fields.mobile.label')}>
+              <Input type="tel" placeholder={t('fields.mobile.placeholder')} />
+            </FormField>
+
+            <FormSeparator className="w-full my-4" />
+
+            <FormField
+              name="account_lastname"
+              label={t('fields.account_lastname.label')}
+            >
+              <Input placeholder={t('fields.account_lastname.placeholder')} />
+            </FormField>
+
+            <FormField
+              name="account_firstname"
+              label={t('fields.account_firstname.label')}
+            >
+              <Input placeholder={t('fields.account_firstname.placeholder')} />
+            </FormField>
+
+            <FormField
+              name="account_email"
+              label={t('fields.account_email.label')}
+              isMandatory
+            >
+              <Input
+                type="email"
+                placeholder={t('fields.account_email.placeholder')}
+              />
+            </FormField>
+
+            <FormField
+              name="interpreterId"
+              label={t('fields.interpreter.label')}
+            >
+              <SelectInterpreter
+                currentInterpreter={currentInterpreter}
+                setDefaults={setDefaults}
+                defaults={defaults || {}}
+                listInterpreters={listInterpreters}
+              />
+            </FormField>
+
+            <FormField
+              name="is_structure_active"
+              label={t('fields.active.label')}
+            >
+              <Toggle checkedLabel="" uncheckedLabel="" />
+            </FormField>
+
+            <FormSeparator className="w-full my-4" />
+            <Button type="submit" className="button-primary ">
+              {tCommon('actions.save')}
+            </Button>
+          </div>
         </ZodForm>
       </FormPanel>
     </>
@@ -238,7 +249,7 @@ function SelectInterpreter({
   const t = useTranslations('Data.Structure.create');
   return (
     <SelectEntity
-      className=" min-w-[400px]"
+      className="w-full min-w-0"
       name="interpreterId"
       placeholder={t('fields.interpreter.placeholder')}
       value={currentInterpreter}

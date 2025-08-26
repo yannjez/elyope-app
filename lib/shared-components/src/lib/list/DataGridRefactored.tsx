@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState, useMemo } from 'react';
+import { ReactNode, useState, useMemo, useEffect } from 'react';
 import { cn } from '../utils/cn';
 import Pagination from './Pagination';
 import DataGridTable from './DataGridTable';
@@ -34,6 +34,8 @@ export type DataGridProps<T> = {
   sortDirection?: 'asc' | 'desc';
   blueMode?: boolean;
   // Mobile configuration
+  mobileBreakpoint?: number; // Breakpoint in pixels (default: 768)
+  forceMobileView?: boolean; // Force mobile view regardless of screen size
   mobileCardClassName?: string; // Custom className for mobile cards
   // Pagination props
   pagination?: {
@@ -89,7 +91,15 @@ export type DataGridProps<T> = {
  *     { header: 'Created', field: 'createdAt', hiddenOnMobile: true },
  *   ]}
  *   data={users}
+ *   mobileBreakpoint={768}
  *   mobileCardClassName="shadow-sm"
+ * />
+ *
+ * // Force mobile view
+ * <DataGrid
+ *   columns={columns}
+ *   data={users}
+ *   forceMobileView={true}
  * />
  *
  * // With loading state
@@ -138,6 +148,28 @@ function sortData<T>(data: T[], field: keyof T, direction: 'asc' | 'desc') {
   });
 }
 
+// Hook to detect mobile view
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < breakpoint);
+    };
+
+    // Check on mount
+    checkIsMobile();
+
+    // Add event listener
+    window.addEventListener('resize', checkIsMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
 export function DataGrid<T extends object>({
   columns,
   data,
@@ -152,6 +184,8 @@ export function DataGrid<T extends object>({
   pagination,
   rowActions = [],
   blueMode = false,
+  mobileBreakpoint = 768,
+  forceMobileView = false,
   mobileCardClassName,
 }: DataGridProps<T>) {
   const [internalSortField, setInternalSortField] = useState<keyof T | null>(
@@ -160,6 +194,10 @@ export function DataGrid<T extends object>({
   const [internalSortDirection, setInternalSortDirection] = useState<
     'asc' | 'desc'
   >('asc');
+
+  // Mobile detection
+  const isMobileScreen = useIsMobile(mobileBreakpoint);
+  const isMobileView = forceMobileView || isMobileScreen;
 
   // Use external sort state if provided, otherwise use internal state
   const sortField =
@@ -205,66 +243,81 @@ export function DataGrid<T extends object>({
 
   // Loading state
   if (isLoading) {
-    return (
-      <div className={cn('text-14', className)}>
-        {/* Mobile loading skeleton cards - visible on mobile only */}
-        <div className="md:hidden space-y-3">
-          {Array.from({ length: loadingRows }).map((_, rowIdx) => (
-            <MobileSkeletonCard
-              key={rowIdx}
-              className={mobileCardClassName}
-              blueMode={blueMode}
-            />
-          ))}
-        </div>
+    if (isMobileView) {
+      return (
+        <div className={cn('text-14', className)}>
+          {/* Mobile loading skeleton cards */}
+          <div className="space-y-3">
+            {Array.from({ length: loadingRows }).map((_, rowIdx) => (
+              <MobileSkeletonCard
+                key={rowIdx}
+                className={mobileCardClassName}
+                blueMode={blueMode}
+              />
+            ))}
+          </div>
 
-        {/* Desktop loading table - visible on desktop only */}
-        <div className="hidden md:block overflow-x-auto table-fixed">
-          <table className="w-full border-separate">
-            <thead>
-              <tr>
-                {columns.map((col, idx) => (
-                  <th
-                    key={idx}
-                    className={cn(
-                      'text-left px-2 py-1',
-                      col.isSortable ? 'cursor-pointer' : ''
-                    )}
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="text-12 text-el-grey-500">
-                        {col.header}
-                      </span>
-                    </div>
-                  </th>
-                ))}
-                {rowActions.map((_, idx) => (
-                  <th
-                    key={`action-h-${idx}`}
-                    className="px-2 py-1 text-left w-fit"
-                  />
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: loadingRows }).map((_, rowIdx) => (
-                <SkeletonRow
-                  key={rowIdx}
-                  columns={
-                    [
-                      ...columns,
-                      ...rowActions.map(() => ({
-                        header: '',
-                        field: '' as unknown as keyof T,
-                      })),
-                    ] as DataGridColumn<object>[]
-                  }
-                  className={skeletonRowClass}
+          {/* Pagination in loading state */}
+          {pagination &&
+            paginationData &&
+            pagination.showPagination !== false && (
+              <Pagination
+                currentPage={pagination.currentPage}
+                totalPages={paginationData.totalPages}
+                onPageChange={pagination.onPageChange}
+                className="mt-4"
+              />
+            )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={cn('overflow-x-auto table-fixed text-14', className)}>
+        <table className="w-full border-separate">
+          <thead>
+            <tr>
+              {columns.map((col, idx) => (
+                <th
+                  key={idx}
+                  className={cn(
+                    'text-left px-2 py-1',
+                    col.isSortable ? 'cursor-pointer' : ''
+                  )}
+                >
+                  <div className="flex items-center gap-1">
+                    <span className="text-12 text-el-grey-500">
+                      {col.header}
+                    </span>
+                  </div>
+                </th>
+              ))}
+              {rowActions.map((_, idx) => (
+                <th
+                  key={`action-h-${idx}`}
+                  className="px-2 py-1 text-left w-fit"
                 />
               ))}
-            </tbody>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: loadingRows }).map((_, rowIdx) => (
+              <SkeletonRow
+                key={rowIdx}
+                columns={
+                  [
+                    ...columns,
+                    ...rowActions.map(() => ({
+                      header: '',
+                      field: '' as unknown as keyof T,
+                    })),
+                  ] as DataGridColumn<object>[]
+                }
+                className={skeletonRowClass}
+              />
+            ))}
+          </tbody>
+        </table>
 
         {/* Pagination in loading state */}
         {pagination &&
@@ -284,9 +337,10 @@ export function DataGrid<T extends object>({
   // No data state
   if (!displayedData || displayedData.length === 0) {
     return (
-      <div className={cn('text-14', className)}>
-        {/* Desktop table header - visible on desktop only */}
-        <div className="hidden md:block overflow-x-auto">
+      <div
+        className={cn(isMobileView ? 'text-14' : 'overflow-x-auto', className)}
+      >
+        {!isMobileView && (
           <table className="w-full border-separate">
             <thead>
               <tr>
@@ -314,25 +368,13 @@ export function DataGrid<T extends object>({
               </tr>
             </thead>
           </table>
-        </div>
+        )}
 
-        {/* No data message for mobile */}
-        <div className="md:hidden">
-          <DataGridNoData
-            message={noDataMessage}
-            isMobile={true}
-            blueMode={blueMode}
-          />
-        </div>
-
-        {/* No data message for desktop */}
-        <div className="hidden md:block">
-          <DataGridNoData
-            message={noDataMessage}
-            isMobile={false}
-            blueMode={blueMode}
-          />
-        </div>
+        <DataGridNoData
+          message={noDataMessage}
+          isMobile={isMobileView}
+          blueMode={blueMode}
+        />
 
         {/* Pagination in no data state */}
         {pagination &&
@@ -349,11 +391,10 @@ export function DataGrid<T extends object>({
     );
   }
 
-  // Main data rendering - responsive layout
-  return (
-    <div className={cn('text-14', className)}>
-      {/* Mobile card view - visible on mobile only */}
-      <div className="md:hidden">
+  // Main data rendering
+  if (isMobileView) {
+    return (
+      <div className={cn('text-14', className)}>
         <DataGridCard
           columns={columns}
           data={displayedData}
@@ -364,20 +405,34 @@ export function DataGrid<T extends object>({
           blueMode={blueMode}
           rowActions={rowActions}
         />
-      </div>
 
-      {/* Desktop table view - visible on desktop only */}
-      <div className="hidden md:block">
-        <DataGridTable
-          columns={columns}
-          data={displayedData}
-          onSort={handleSort}
-          sortField={sortField}
-          sortDirection={sortDirection}
-          blueMode={blueMode}
-          rowActions={rowActions}
-        />
+        {/* Pagination */}
+        {pagination &&
+          paginationData &&
+          pagination.showPagination !== false && (
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={paginationData.totalPages}
+              onPageChange={pagination.onPageChange}
+              className="mt-4"
+            />
+          )}
       </div>
+    );
+  }
+
+  // Desktop table view
+  return (
+    <div className={cn('text-14', className)}>
+      <DataGridTable
+        columns={columns}
+        data={displayedData}
+        onSort={handleSort}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        blueMode={blueMode}
+        rowActions={rowActions}
+      />
 
       {/* Pagination */}
       {pagination && paginationData && pagination.showPagination !== false && (

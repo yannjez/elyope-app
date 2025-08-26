@@ -13,9 +13,11 @@ export default async function StructureEditPage({
 }) {
   const { id } = await params;
 
-  const members = await getStructureMembers(id);
-  const structure = await getStructureById(id);
-  const interpreters = await getInterpreters();
+  const [members, structure, interpreters] = await Promise.all([
+    getStructureMembers(id),
+    getStructureById(id),
+    getInterpreters(),
+  ]);
 
   return (
     <StructureEditContent

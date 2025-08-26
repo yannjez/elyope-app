@@ -98,7 +98,7 @@ export function ListFilter<T extends BaseFilter>({
               icon={<SearchIcon className="h-4 w-4" />}
               iconPosition="right"
               value={localKeyword}
-              className="w-full md:w-auto"
+              className="w-full"
               onChange={handleKeywordChange}
               type="search"
             />

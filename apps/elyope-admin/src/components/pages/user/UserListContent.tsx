@@ -103,7 +103,10 @@ export default function UserListContent() {
         title={t('title')}
         icon={<UserIcon className="w-full" />}
         action={
-          <Link href="/user/create-user" className="button-primary min-w-40">
+          <Link
+            href="/user/create-user"
+            className="button-primary whitespace-nowrap min-w-40"
+          >
             {t('create_button')}
           </Link>
         }
@@ -122,7 +125,7 @@ export default function UserListContent() {
       />
       <PageMain className="p-0">
         {/* Pagination  ------------- */}
-        <div className="flex justify-end mt-4 ">
+        <div className="flex justify-end my-4 ">
           <Pagination
             currentPage={currentPage}
             totalPages={pagination.totalPages}

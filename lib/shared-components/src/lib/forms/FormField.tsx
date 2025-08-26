@@ -27,17 +27,24 @@ export function FormField<T extends FieldValues>({
   // Check if we're inside a form context
   if (!formContext) {
     return (
-      <div className={cn('flex items-center gap-2', className)}>
-        {label && (
-          <label
-            htmlFor={name}
-            className="block min-w-[220px] text-12 text-el-grey-500"
-          >
-            {label}
-          </label>
-        )}
-        <div className="text-red-600 text-sm">
-          Error: FormField must be used inside a Form component
+      <div className="w-full">
+        <div
+          className={cn(
+            'flex flex-col sm:flex-row sm:items-center gap-2',
+            className
+          )}
+        >
+          {label && (
+            <label
+              htmlFor={name}
+              className="block sm:min-w-[220px] text-12 text-el-grey-500 mb-1 sm:mb-0"
+            >
+              {label}
+            </label>
+          )}
+          <div className="flex-1 text-red-600 text-sm">
+            Error: FormField must be used inside a Form component
+          </div>
         </div>
       </div>
     );
@@ -50,33 +57,40 @@ export function FormField<T extends FieldValues>({
   const fieldError = (errors[name]?.message as string) || error;
 
   return (
-    <div>
-      <div className={cn('flex items-center gap-2', className)}>
+    <div className="w-full">
+      <div
+        className={cn(
+          'flex flex-col md:flex-row md:items-center gap-1',
+          className
+        )}
+      >
         {label && (
           <label
             htmlFor={name}
-            className="block min-w-[220px] text-12 text-el-grey-500"
+            className="block sm:min-w-[220px] text-12 text-el-grey-500"
           >
             {label}
             {isMandatory && <span className="text-el-red-500">*</span>}
           </label>
         )}
 
-        {React.cloneElement(children, {
-          ...register(name),
-          id: name,
-          'aria-invalid': errors[name] ? 'true' : 'false',
-        } as React.InputHTMLAttributes<HTMLInputElement> & React.SelectHTMLAttributes<HTMLSelectElement>)}
+        <div className="flex-1 w-full">
+          {React.cloneElement(children, {
+            ...register(name),
+            id: name,
+            'aria-invalid': errors[name] ? 'true' : 'false',
+          } as React.HTMLAttributes<HTMLElement>)}
 
-        {fieldError && (
-          <p
-            className="text-12 mt-1 text-red-500 flex items-center gap-2"
-            role="alert"
-          >
-            <ExclamationCircleIcon className="min-w-4 " />
-            <span>{fieldError}</span>
-          </p>
-        )}
+          {fieldError && (
+            <p
+              className="text-12 mt-1 text-red-500 flex items-center gap-2"
+              role="alert"
+            >
+              <ExclamationCircleIcon className="min-w-4 " />
+              <span>{fieldError}</span>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

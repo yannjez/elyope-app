@@ -91,7 +91,7 @@ export default function Sidemenu({
   return (
     <>
       {/* Mobile Menu Button - Only visible on mobile */}
-      <div className="lg:hidden flex gap-2 px-3 items-center justify-between fixed top-4 w-full  z-50 ">
+      <div className="lg:hidden flex gap-2 py-2 px-3 bg-white backdrop-blur-sm  items-center justify-between fixed  w-full  z-50 ">
         <button
           onClick={toggleMobileMenu}
           className=" p-2 bg-el-grey-100 rounded-4 "
@@ -167,10 +167,10 @@ export default function Sidemenu({
           </svg>
         </button>
 
-        <div className="flex flex-col gap-5 mt-8 lg:mt-0">
+        <div className="flex flex-col gap-5 md:mt-8 lg:mt-0">
           <div className="min-h-10 flex flex-col gap-2">
-            <div className="flex items-start justify-center gap-0">
-              <Logo className="w-full" />
+            <div className="flex md:items-start md:justify-center gap-2">
+              <Logo className="md:w-full" />
               <div className="bg-el-blue-500 rounded-[33px] text-[12px] tracking-[0] text-white px-[4.5px] py-[3px]">
                 {qualifier}
               </div>
