@@ -4,7 +4,6 @@ import { AppProvider } from './AppContext';
 import { SidemenuWrapper } from '../commons/SidemenuWrapper';
 // Removed invalid import of UserService from @elyope/db
 
-
 export default async function ProtectedLayout({
   children,
 }: {
@@ -54,7 +53,7 @@ export default async function ProtectedLayout({
     >
       <div className="flex gap-1">
         <SidemenuWrapper />
-        <main className="w-full">{children}</main>
+        <main className="w-full p-3 md:p-3 pt-16 md:pt-3">{children}</main>
       </div>
     </AppProvider>
   );

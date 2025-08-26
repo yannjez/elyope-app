@@ -85,27 +85,30 @@ export function ListFilter<T extends BaseFilter>({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full  ">
       {/* Custom Filters */}
 
       {/* Search and Actions */}
-      <div className="flex items-center gap-4 w-full justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 w-full justify-between">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 ">
           <span className="text-sm text-gray-600">{t('filter')}</span>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 ">
             <Input
               placeholder={`${t('search')}...`}
               icon={<SearchIcon className="h-4 w-4" />}
               iconPosition="right"
               value={localKeyword}
+              className="w-full md:w-auto"
               onChange={handleKeywordChange}
               type="search"
             />
-            {children}
+            <div className="flex flex-col md:flex-row md:items-center gap-2 ">
+              {children}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex md:items-center gap-2 ">
           <Button
             className="button-neutral"
             disabled={isFilterEmpty ?? false}

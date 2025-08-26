@@ -19,7 +19,7 @@ export default function Input({
         type={type}
         id="input"
         className={cn(
-          'px-2 py-1 min-w-[400px] outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control',
+          'px-2 py-1 md:min-w-[400px] outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control',
           {
             'pl-8': icon && iconPosition === 'left',
             'pr-8': icon && iconPosition === 'right',
