@@ -64,6 +64,19 @@
                     "lib/db/**/*.{ts,tsx,js,jsx}"
                 ]
             }
+        },
+        "typecheck": {
+            "executor": "@nx/js:tsc",
+            "options": {
+                "main": "lib/db/src/index.ts",
+                "tsConfig": "lib/db/tsconfig.lib.json",
+                "outputPath": "dist/lib/db",
+                "noEmit": true,
+                "verbose": true
+            },
+            "dependsOn": [
+                "^typecheck"
+            ]
         }
     },
     "tags": []

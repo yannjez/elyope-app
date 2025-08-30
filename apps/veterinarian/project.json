@@ -40,6 +40,19 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint"
+        },
+        "typecheck": {
+            "executor": "@nx/js:tsc",
+            "options": {
+                "main": "apps/veterinarian/src/app/page.tsx",
+                "tsConfig": "apps/veterinarian/tsconfig.json",
+                "outputPath": "dist/apps/veterinarian",
+                "noEmit": true,
+                "verbose": true
+            },
+            "dependsOn": [
+                "^typecheck"
+            ]
         }
     },
     "tags": []

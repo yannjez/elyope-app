@@ -92,9 +92,13 @@ npx nx build db
 
 # Push model to database l
 npx nx run db:db-push
+
+#check lint
+npx nx run-many --target=lint  --all
+
+#check lint
+npx nx run-many --target=typechek  --all
 ```
-
-
 
 ### Theme
 
@@ -165,5 +169,3 @@ npx nx g @nx/react:component --project=shared-components
 
 npx nx g @nx/next:app apps/{appName}
 ```
-
-

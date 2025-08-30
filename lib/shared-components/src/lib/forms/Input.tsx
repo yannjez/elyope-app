@@ -3,7 +3,7 @@ import { cn } from '../utils/cn';
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
-  type?: 'text' | 'search' | 'tel' | 'email';
+  type?: 'text' | 'search' | 'tel' | 'email' | 'password';
 };
 
 export default function Input({
