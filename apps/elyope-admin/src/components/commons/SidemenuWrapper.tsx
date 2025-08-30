@@ -12,7 +12,7 @@ export function SidemenuWrapper() {
   const pathname = usePathname();
 
   const menuItems = [
-    { href: '/', label: t('users') },
+    { href: '/user', label: t('users') },
     { href: '/structures', label: t('structures') },
     { href: '/tools', label: t('tools') },
   ];
