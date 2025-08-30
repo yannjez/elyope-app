@@ -211,7 +211,7 @@ export default function StructureUpsertContent({
               <SelectInterpreter
                 currentInterpreter={currentInterpreter}
                 setDefaults={setDefaults}
-                defaults={defaults || {}}
+                defaults={defaults || { name: '' }}
                 listInterpreters={listInterpreters}
               />
             </FormField>
