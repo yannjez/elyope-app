@@ -7,7 +7,7 @@ function Button({ children, className, ...props }: ButtonProps) {
   return (
     <button
       className={cn(
-        'button px-2 py-1 rounded-4 disabled:opacity-50',
+        'button px-2 py-1 rounded-4 disabled:opacity-50 whitespace-nowrap',
 
         className
       )}

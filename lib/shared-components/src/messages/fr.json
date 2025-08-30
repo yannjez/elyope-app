@@ -4,7 +4,36 @@
             "filter": "Filtrer vos données",
             "search": "Rechercher",
             "reset": "Effacer les filtres",
-            "all": "Tous"
+            "all": "Tous",
+            "actions": {
+                "save": "↓ Sauvegarder",
+                "cancel": "Annuler",
+                "reset": "Réinitialiser",
+                "add": "+ Ajouter",
+                "remove": "Retirer",
+                "saving": "Sauvegarde...",
+                "confirm": "Confirmer",
+                "close": "Fermer"
+            },
+            "navigation": {
+                "back_to_list": "← Retour à la liste",
+                "back_to_users": "← Retour aux utilisateurs"
+            },
+            "status": {
+                "active": "Actif",
+                "inactive": "Inactif"
+            },
+            "messages": {
+                "no_changes": "Aucune modification à sauvegarder",
+                "no_data": "Aucune donnée disponible",
+                "loading": "Chargement...",
+                "error": "Une erreur s'est produite"
+            },
+            "fields": {
+                "email": "Email",
+                "name": "Nom",
+                "created_at": "Créé le"
+            }
         },
         "Examen": {
             "name": "Examen",
@@ -21,6 +50,234 @@
                 "completed": "Terminé",
                 "archived": "Archivé"
             }
+        },
+        "User": {
+            "create_title": "Créer un utilisateur",
+            "form_title": "Utilisateur",
+            "fields": {
+                "first_name": {
+                    "label": "Prénom",
+                    "placeholder": "Entrez votre prénom"
+                },
+                "last_name": {
+                    "label": "Nom",
+                    "placeholder": "Entrez votre nom"
+                },
+                "email": {
+                    "label": "Email",
+                    "placeholder": "Entrez votre email"
+                },
+                "roles": {
+                    "label": "Rôles"
+                }
+            },
+            "roles": {
+                "veterinarian": "Vétérinaire",
+                "interpreter": "Interprétateur",
+                "admin": "Administrateur"
+            },
+            "validation": {
+                "min_selections": "Veuillez sélectionner au moins {count} option{plural}",
+                "max_selections": "Maximum {count} sélection{plural} autorisée{plural_verb}"
+            },
+            "detail": {
+                "title_prefix": "Détails de l'utilisateur : ",
+                "not_found": "Utilisateur introuvable",
+                "sections": {
+                    "information": "Informations utilisateur",
+                    "role_management": "Gestion des rôles",
+                    "structure_management": "Gestion des structures",
+                    "invitations": "Invitations utilisateur"
+                },
+                "fields": {
+                    "full_name": "Nom complet",
+                    "user_id": "ID utilisateur",
+                    "account_status": "Statut du compte"
+                },
+                "fallback": {
+                    "no_email": "Aucun email fourni",
+                    "no_structures": "Aucune structure assignée à cet utilisateur"
+                },
+                "structure": {
+                    "column_name": "Nom de la structure",
+                    "remove_action": "Retirer de la structure"
+                },
+                "dialog": {
+                    "remove_title": "Retirer l'utilisateur de la structure",
+                    "remove_message": "Êtes-vous sûr de vouloir retirer cet utilisateur de \"{name}\" ? Cette action ne peut pas être annulée."
+                }
+            },
+            "structure_management": {
+                "title": "Gestion des structures",
+                "placeholder": "Sélectionner une structure",
+                "restriction_notice": "Ps: l'utilisateur ne peut être ajouté à une structure que s'il a le rôle VÉTÉRINAIRE"
+            },
+            "invitations": {
+                "title": "Invitations utilisateur",
+                "send_button": "+ Envoyer l'invitation",
+                "email_required": "L'email de l'utilisateur est requis pour gérer les invitations.",
+                "no_data": "Aucune invitation trouvée pour cet utilisateur.",
+                "modal": {
+                    "title": "Envoyer une invitation",
+                    "confirm_sending": "Envoi en cours...",
+                    "confirm": "Envoyer invitation",
+                    "message": "Envoyer une invitation à {name} ?",
+                    "description": "L'utilisateur recevra un email avec des liens d'invitation basés sur les rôles sélectionnés."
+                }
+            },
+            "role_management": {
+                "title": "Rôles utilisateur",
+                "validation": {
+                    "min_selections": "Veuillez sélectionner au moins {count} option{plural}",
+                    "max_selections": "Maximum {count} sélection{plural} autorisée{plural_verb}"
+                }
+            },
+            "list": {
+                "title": "Utilisateurs",
+                "create_button": "+ Créer un utilisateur",
+                "columns": {
+                    "name": "Nom",
+                    "roles": "Rôles",
+                    "created": "Créé"
+                },
+                "no_data": "Aucun utilisateur trouvé",
+                "actions": {
+                    "edit": "Modifier",
+                    "delete": "Supprimer"
+                },
+                "filter": {
+                    "roles_label": "Rôles :",
+                    "role_all": "TOUS"
+                },
+                "dialog": {
+                    "delete_title": "Supprimer l'utilisateur",
+                    "delete_message": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action ne peut pas être annulée."
+                }
+            }
+        },
+        "Structure": {
+            "list": {
+                "title": "Structures",
+                "create_button": "+ Créer une structure",
+                "columns": {
+                    "name": "Nom",
+                    "town": "Ville",
+                    "zipcode": "Code postal",
+                    "state": "État",
+                    "created": "Créé"
+                },
+                "no_data": "Aucune structure trouvée",
+                "actions": {
+                    "edit": "Modifier",
+                    "delete": "Supprimer"
+                },
+                "dialog": {
+                    "delete_title": "Supprimer la structure",
+                    "delete_message": "Êtes-vous sûr de vouloir supprimer cette structure ? Cette action ne peut pas être annulée."
+                }
+            },
+            "create": {
+                "title": "Créer une structure",
+                "form_title": "Données de la structure",
+                "fields": {
+                    "name": {
+                        "label": "Nom",
+                        "placeholder": "Entrez le nom de la structure"
+                    },
+                    "description": {
+                        "label": "Description",
+                        "placeholder": "Description courte"
+                    },
+                    "address1": {
+                        "label": "Adresse 1",
+                        "placeholder": "Ligne d'adresse 1"
+                    },
+                    "address2": {
+                        "label": "Adresse 2",
+                        "placeholder": "Ligne d'adresse 2"
+                    },
+                    "zipcode": {
+                        "label": "Code postal",
+                        "placeholder": "Code postal"
+                    },
+                    "town": {
+                        "label": "Ville",
+                        "placeholder": "Ville"
+                    },
+                    "phone": {
+                        "label": "Téléphone",
+                        "placeholder": "Numéro de téléphone"
+                    },
+                    "mobile": {
+                        "label": "Mobile",
+                        "placeholder": "Numéro de mobile"
+                    },
+                    "account_lastname": {
+                        "label": "Nom de famille du compte",
+                        "placeholder": "Nom de famille"
+                    },
+                    "account_firstname": {
+                        "label": "Prénom du compte",
+                        "placeholder": "Prénom"
+                    },
+                    "account_email": {
+                        "label": "Email de contact",
+                        "placeholder": "Email"
+                    },
+                    "interpreter": {
+                        "label": "Interprétateur",
+                        "placeholder": "Sélectionner un interprétateur"
+                    },
+                    "active": {
+                        "label": "Actif"
+                    }
+                },
+                "validation": {
+                    "name_required": "Le nom est requis"
+                }
+            },
+            "edit": {
+                "title": "Modifier la structure",
+                "users_panel": {
+                    "title": "Utilisateurs dans cette structure",
+                    "no_data": "Aucun utilisateur dans cette structure",
+                    "columns": {
+                        "name": "Nom"
+                    },
+                    "actions": {
+                        "remove": "Retirer de la structure"
+                    },
+                    "fallback": {
+                        "unknown_user": "cet utilisateur"
+                    },
+                    "dialog": {
+                        "remove_title": "Retirer l'utilisateur",
+                        "remove_message": "Retirer {name} de cette structure ?"
+                    }
+                },
+                "add_user_panel": {
+                    "placeholder": "Sélectionner un utilisateur",
+                    "title": "Ajouter un utilisateur",
+                    "notice": "Ps: Pour être ajouté à une structure, l'utilisateur doit avoir le role :",
+                    "role_veterinarian": "VÉTÉRINAIRE",
+                    "add_button": "↓ Ajouter",
+                    "validation": {
+                        "id_required": "L'ID est requis"
+                    }
+                }
+            }
+        },
+        "Tools": {
+            "title": "Outils",
+            "soon_badge": "BIENTÔT",
+            "description": "Ici vous pourrez télécharger des examens avec un filtre par période",
+            "support_message": "Pour toute question ou assistance, contactez-nous :"
+        }
+    },
+    "Validation": {
+        "SelectMultiButtons": {
+            "min_selections": "Veuillez sélectionner au moins {count} option{plural}",
+            "max_selections": "Maximum {count} sélection{plural} autorisée{plural_verb}"
         }
     },
     "NotAllowedPage": {

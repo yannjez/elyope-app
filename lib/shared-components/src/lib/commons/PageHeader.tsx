@@ -14,17 +14,21 @@ export default function PageHeader({
   action,
 }: PageHeaderProps) {
   return (
-    <div className="bg-el-grey-100 rounded-4 p-3 flex flex-col content-center justify-center gap-2 min-h-15 w-full mb-1 ">
-      <div className="flex  justify-between items-center ">
-        <h1 className="flex items-center gap-1">
-          <span className="text-el-blue-500 w-4.5 h-auto">{icon && icon}</span>
-          <span className="text-24/[90%] font-bold ">{title}</span>
-        </h1>
-        {action && <div> {action}</div>}
+    <div className="bg-white rounded-4   main-container min-h-15 w-full mb-3 ">
+      <div className=" main-container p-3 flex flex-col md:content-center md:justify-center gap-2  ">
+        <div className="flex flex-col md:flex-row  gap-2 justify-between md:items-center ">
+          <h1 className="flex  items-center gap-1">
+            <span className="text-el-blue-500 w-4.5 h-auto">
+              {icon && icon}
+            </span>
+            <span className="text-24/[90%] font-bold ">{title}</span>
+          </h1>
+          {action && <div> {action}</div>}
+        </div>
+        {filters && (
+          <div className="flex justify-between items-center">{filters}</div>
+        )}
       </div>
-      {filters && (
-        <div className="flex justify-between items-center">{filters}</div>
-      )}
     </div>
   );
 }

@@ -42,7 +42,9 @@
     --text-34:34px;
 }
  
-
+@utility main-container {
+    @apply max-w-7xl pr-0;
+}
   
 @utility control {
     @apply  border border-transparent  outline-none ring-0 focus:!border-el-grey-800 border;
@@ -64,7 +66,7 @@
 }  
 
 @utility button-destructive {  
-    @apply  button focus:bg-el-red-500 hover:bg-el-red-200 bg-el-grey-200  transition-all duration-300;
+    @apply  button hover:bg-el-red-200 focus:bg-el-grey-500 bg-el-red-500  transition-all duration-300;
 }  
 
 @utility select {

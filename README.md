@@ -60,6 +60,9 @@ npx nx test shared-components
 
 # Lint shared components
 npx nx lint shared-components
+
+# Lint shared components
+npx nx lint all
 ```
 
 ### Database Library
@@ -82,16 +85,20 @@ npx nx run db:generate
 npx nx run db:migrate
 
 # Reset database
-npx nx run db:reset
+npx nx run db:migrate-reset
 
 # Build database library
 npx nx build db
 
 # Push model to database l
 npx nx run db:db-push
+
+#check lint
+npx nx run-many --target=lint  --all
+
+#check lint
+npx nx run-many --target=typechek  --all
 ```
-
-
 
 ### Theme
 
@@ -162,5 +169,3 @@ npx nx g @nx/react:component --project=shared-components
 
 npx nx g @nx/next:app apps/{appName}
 ```
-
-

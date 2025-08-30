@@ -9,13 +9,16 @@ const compat = new FlatCompat({
   baseDirectory: dirname(fileURLToPath(import.meta.url)),
   recommendedConfig: js.configs.recommended,
 });
-
-export default [
+const config = [
   ...fixupConfigRules(compat.extends('next')),
   ...fixupConfigRules(compat.extends('next/core-web-vitals')),
   ...baseConfig,
   ...nx.configs['flat/react-typescript'],
   {
-    ignores: ['.next/**/*'],
+    ignores: ['.next/**/*', 'dist/**/*', 'node_modules/**/*', 'coverage/**/*'],
+    rules: {
+      '@next/next/no-html-link-for-pages': 'off',
+    },
   },
 ];
+export default config;

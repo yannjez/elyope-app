@@ -19,33 +19,64 @@
                 "tsConfig": "lib/db/tsconfig.lib.json"
             }
         },
+        "migrate-reset": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm dlx prisma migrate reset",
+                "cwd": "lib/db"
+            }
+        },
         "generate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma generate",
+                "command": "pnpm dlx prisma generate",
                 "cwd": "lib/db"
             }
         },
         "migrate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma migrate dev",
+                "command": "pnpm  prisma migrate dev ",
                 "cwd": "lib/db"
             }
         },
         "studio": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma studio",
+                "command": "pnpm dlx prisma studio",
                 "cwd": "lib/db"
             }
         },
         "db-push": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx prisma db push --accept-data-loss",
+                "command": "pnpm dlx prisma db push --accept-data-loss",
                 "cwd": "lib/db"
             }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
+            "options": {
+                "lintFilePatterns": [
+                    "lib/db/**/*.{ts,tsx,js,jsx}"
+                ]
+            }
+        },
+        "typecheck": {
+            "executor": "@nx/js:tsc",
+            "options": {
+                "main": "lib/db/src/index.ts",
+                "tsConfig": "lib/db/tsconfig.lib.json",
+                "outputPath": "dist/lib/db",
+                "noEmit": true,
+                "verbose": true
+            },
+            "dependsOn": [
+                "^typecheck"
+            ]
         }
     },
     "tags": []

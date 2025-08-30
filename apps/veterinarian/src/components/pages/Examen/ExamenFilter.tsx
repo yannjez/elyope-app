@@ -42,7 +42,7 @@ export default function ExamenFilter() {
       <ListFilter
         filter={{ keyword: filters.keyword ?? '' }}
         onKeywordChange={(value: string) => updateFilters('keyword', value)}
-        onSearch={() => {}}
+        onSearch={() => undefined}
         onReset={() => {
           updateFilters('status', '');
           updateFilters('keyword', '');

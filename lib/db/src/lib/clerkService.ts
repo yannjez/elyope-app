@@ -1,0 +1,193 @@
+import { ClerkUser, ExternalUSer } from '../type/userTypes.js';
+
+export type ClerkSortField =
+  | 'created_at'
+  | '-created_at'
+  | 'updated_at'
+  | '-updated_at'
+  | 'email_address'
+  | 'first_name'
+  | '-first_name'
+  | 'last_name'
+  | '-last_name'
+  | 'username'
+  | '-username'
+  | 'last_active_at'
+  | '-last_active_at'
+  | 'last_sign_in_at'
+  | '-last_sign_in_at';
+
+export class ClerkService {
+  baseURl = 'https://api.clerk.com/v1';
+
+  /**
+   * Get users with pagination and ordering
+   * @param limit - Number of users to return (1-500, default 10)
+   * @param offset - Number of users to skip (default 0)
+   * @param orderBy - Order by field with +/- prefix (default "-created_at")
+   * @returns Promise with array of users
+   */
+  getUsers = async (
+    limit = 10,
+    offset = 0,
+    sortField?: ClerkSortField,
+    keyword?: string,
+    userIds?: string[]
+  ): Promise<ClerkUser[]> => {
+    const url = new URL(`${this.baseURl}/users`);
+    url.searchParams.set('limit', limit.toString());
+    url.searchParams.set('offset', offset.toString());
+    if (sortField) {
+      url.searchParams.set('order_by', sortField);
+    }
+    if (keyword) {
+      url.searchParams.set('query', keyword);
+    }
+
+    if (userIds && userIds.length > 0) {
+      userIds.forEach((id) => {
+        url.searchParams.append('user_id', id);
+      });
+    }
+    console.log('url', url.searchParams.toString());
+
+    const data = await this.baseFetch<ClerkUser[]>(
+      '/users?' + url.searchParams.toString()
+    );
+    console.log('data', data);
+    return data;
+  };
+
+  getUsersCount = async (ids?: string[], keyword?: string): Promise<number> => {
+    const url = new URL(`${this.baseURl}/users/count`);
+    if (ids && ids.length > 0) {
+      ids.forEach((id) => {
+        url.searchParams.append('user_id', id);
+      });
+    }
+    if (keyword) {
+      url.searchParams.set('query', keyword);
+    }
+    const count = await this.baseFetch<{ total_count: number }>(
+      '/users/count?' + url.searchParams.toString()
+    );
+
+    return count?.total_count || 0;
+  };
+
+  /**
+   * Get users by their IDs
+   * @param ids - Array of user IDs
+   * @param keyword - Optional search keyword
+   * @returns Promise with array of users
+   */
+  getUsersByIDs = async (
+    ids: string[],
+    keyword?: string
+  ): Promise<ClerkUser[]> => {
+    const url = new URL(`${this.baseURl}/users`);
+
+    if (ids.length > 0) {
+      ids.forEach((id) => {
+        url.searchParams.append('user_id', id);
+      });
+    }
+    if (keyword) {
+      url.searchParams.set('query', keyword);
+    }
+
+    return this.baseFetch<ClerkUser[]>('/users?' + url.searchParams.toString());
+  };
+
+  /**
+   * Get a single user by ID
+   * @param id - User ID
+   * @returns Promise with user data or null
+   */
+  getUserByID = async (id: string): Promise<ClerkUser | null> => {
+    const users = await this.getUsersByIDs([id]);
+    return users?.at(0) || null;
+  };
+
+  /**
+   * Get a user by email address
+   * @param email - Email address to search for
+   * @returns Promise with user data or null
+   */
+  getUserByEmail = async (email: string): Promise<ClerkUser | null> => {
+    const url = new URL(`${this.baseURl}/users`);
+    url.searchParams.set('email_address', email);
+
+    const users = await this.baseFetch<ClerkUser[]>(
+      '/users?' + url.searchParams.toString()
+    );
+    return users?.at(0) || null;
+  };
+
+  /**
+   * Create a new user
+   * @param user - User data to create
+   * @returns Promise with created user data
+   */
+  createUser = async (user: ExternalUSer): Promise<ClerkUser> => {
+    const firstName = user.firstName || '';
+    const lastName = user.lastName || '';
+
+    const userData = {
+      email_address: [user.email],
+      first_name: firstName,
+      last_name: lastName,
+      password: null,
+      skip_password_requirement: true,
+      skip_password_checks: true,
+    };
+
+    return this.baseFetch<ClerkUser>('/users', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  };
+
+  deleteUserByID = async (id: string): Promise<void> => {
+    return this.baseFetch<void>(`/users/${id}`, {
+      method: 'DELETE',
+    });
+  };
+
+  /**
+   * Base fetch function for making API calls to Clerk
+   * @param endpoint - The API endpoint (without base URL)
+   * @param options - Fetch options (method, body, etc.)
+   * @returns Promise with the response data
+   */
+  private async baseFetch<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = new URL(`${this.baseURl}${endpoint}`);
+    const defaultOptions: RequestInit = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
+      },
+      ...options,
+    };
+
+    try {
+      const response = await fetch(url, defaultOptions);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error(`Clerk API error for ${endpoint}:`, errorData);
+        throw new Error(
+          `Clerk API error: ${response.status} ${response.statusText}`
+        );
+      }
+
+      return response.json() as Promise<T>;
+    } catch (error) {
+      console.error(`Error in baseFetch for ${endpoint}:`, error);
+      throw error;
+    }
+  }
+}

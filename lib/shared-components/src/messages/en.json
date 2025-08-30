@@ -4,7 +4,36 @@
             "filter": "Filter your data",
             "search": "Search",
             "reset": "Reset search",
-            "all": "All"
+            "all": "All",
+            "actions": {
+                "save": "↓ Save",
+                "cancel": "Cancel",
+                "reset": "Reset",
+                "add": "+ Add",
+                "remove": "Remove",
+                "saving": "Saving...",
+                "confirm": "Confirm",
+                "close": "Close"
+            },
+            "navigation": {
+                "back_to_list": "← Back to list",
+                "back_to_users": "← Back to Users"
+            },
+            "status": {
+                "active": "Active",
+                "inactive": "Inactive"
+            },
+            "messages": {
+                "no_changes": "No changes to save",
+                "no_data": "No data available",
+                "loading": "Loading...",
+                "error": "An error occurred"
+            },
+            "fields": {
+                "email": "Email",
+                "name": "Name",
+                "created_at": "Created At"
+            }
         },
         "Examen": {
             "name": "Examen",
@@ -26,6 +55,234 @@
                 "completed": "Completed",
                 "archived": "Archived"
             }
+        },
+        "User": {
+            "create_title": "Create User",
+            "form_title": "User",
+            "fields": {
+                "first_name": {
+                    "label": "First Name",
+                    "placeholder": "Enter your first name"
+                },
+                "last_name": {
+                    "label": "Last Name",
+                    "placeholder": "Enter your last name"
+                },
+                "email": {
+                    "label": "Email",
+                    "placeholder": "Enter your email"
+                },
+                "roles": {
+                    "label": "Roles"
+                }
+            },
+            "roles": {
+                "veterinarian": "Veterinarian",
+                "interpreter": "Interpreter",
+                "admin": "Admin"
+            },
+            "validation": {
+                "min_selections": "Please select at least {count} option{plural}",
+                "max_selections": "Maximum {count} selection{plural} allowed"
+            },
+            "detail": {
+                "title_prefix": "User Details: ",
+                "not_found": "User not found",
+                "sections": {
+                    "information": "User Informations",
+                    "role_management": "Role Management",
+                    "structure_management": "Structure Management",
+                    "invitations": "User Invitations"
+                },
+                "fields": {
+                    "full_name": "Full Name",
+                    "user_id": "User ID",
+                    "account_status": "Account Status"
+                },
+                "fallback": {
+                    "no_email": "No email provided",
+                    "no_structures": "No structures assigned to this user"
+                },
+                "structure": {
+                    "column_name": "Structure Name",
+                    "remove_action": "Remove from structure"
+                },
+                "dialog": {
+                    "remove_title": "Remove User from Structure",
+                    "remove_message": "Are you sure you want to remove this user from \"{name}\"? This action cannot be undone."
+                }
+            },
+            "structure_management": {
+                "title": "Structure Management",
+                "placeholder": "Select a structure",
+                "restriction_notice": "Ps: the user can only be added to structure if he has the VETERINARIAN role"
+            },
+            "invitations": {
+                "title": "User Invitations",
+                "send_button": "+ Send Invitation",
+                "email_required": "User email is required to manage invitations.",
+                "no_data": "No invitations found for this user.",
+                "modal": {
+                    "title": "Send Invitation",
+                    "confirm_sending": "Sending...",
+                    "confirm": "Send Invitation",
+                    "message": "Send an invitation to {name}?",
+                    "description": "The user will receive an email with invitation links based on the selected roles."
+                }
+            },
+            "role_management": {
+                "title": "User Roles",
+                "validation": {
+                    "min_selections": "Please select at least {count} option{plural}",
+                    "max_selections": "Maximum {count} selection{plural} allowed"
+                }
+            },
+            "list": {
+                "title": "Users",
+                "create_button": "+ Create User",
+                "columns": {
+                    "name": "Name",
+                    "roles": "Roles",
+                    "created": "Created"
+                },
+                "no_data": "No users found",
+                "actions": {
+                    "edit": "Edit",
+                    "delete": "Delete"
+                },
+                "filter": {
+                    "roles_label": "Roles:",
+                    "role_all": "ALL"
+                },
+                "dialog": {
+                    "delete_title": "Delete user",
+                    "delete_message": "Are you sure you want to delete this user? This action cannot be undone."
+                }
+            }
+        },
+        "Structure": {
+            "list": {
+                "title": "Structures",
+                "create_button": "+ Create Structure",
+                "columns": {
+                    "name": "Name",
+                    "town": "Town",
+                    "zipcode": "Zipcode",
+                    "state": "State",
+                    "created": "Created"
+                },
+                "no_data": "No structures found",
+                "actions": {
+                    "edit": "Edit",
+                    "delete": "Delete"
+                },
+                "dialog": {
+                    "delete_title": "Delete structure",
+                    "delete_message": "Are you sure you want to delete this structure? This action cannot be undone."
+                }
+            },
+            "create": {
+                "title": "Create Structure",
+                "form_title": "Structure data",
+                "fields": {
+                    "name": {
+                        "label": "Name",
+                        "placeholder": "Enter structure name"
+                    },
+                    "description": {
+                        "label": "Description",
+                        "placeholder": "Short description"
+                    },
+                    "address1": {
+                        "label": "Address 1",
+                        "placeholder": "Address line 1"
+                    },
+                    "address2": {
+                        "label": "Address 2",
+                        "placeholder": "Address line 2"
+                    },
+                    "zipcode": {
+                        "label": "Zipcode",
+                        "placeholder": "Zipcode"
+                    },
+                    "town": {
+                        "label": "Town",
+                        "placeholder": "Town"
+                    },
+                    "phone": {
+                        "label": "Phone",
+                        "placeholder": "Phone number"
+                    },
+                    "mobile": {
+                        "label": "Mobile",
+                        "placeholder": "Mobile number"
+                    },
+                    "account_lastname": {
+                        "label": "Account Last name",
+                        "placeholder": "Last name"
+                    },
+                    "account_firstname": {
+                        "label": "Account First name",
+                        "placeholder": "First name"
+                    },
+                    "account_email": {
+                        "label": "Contact Email",
+                        "placeholder": "Email"
+                    },
+                    "interpreter": {
+                        "label": "Interpreter",
+                        "placeholder": "Select an interpreter"
+                    },
+                    "active": {
+                        "label": "Active"
+                    }
+                },
+                "validation": {
+                    "name_required": "Name is required"
+                }
+            },
+            "edit": {
+                "title": "Structure Edit",
+                "users_panel": {
+                    "title": "Users in this structure",
+                    "no_data": "No users in this structure",
+                    "columns": {
+                        "name": "Name"
+                    },
+                    "actions": {
+                        "remove": "Remove from structure"
+                    },
+                    "fallback": {
+                        "unknown_user": "this user"
+                    },
+                    "dialog": {
+                        "remove_title": "Remove user",
+                        "remove_message": "Remove {name} from this structure?"
+                    }
+                },
+                "add_user_panel": {
+                    "placeholder": "Select a user",
+                    "title": "Add User",
+                    "notice": "PS: To be added to a structure, the user must have the role:",
+                    "role_veterinarian": "VETERINARIAN",
+                    "add_button": "↓ Add",
+                    "validation": {
+                        "id_required": "Id is required"
+                    }
+                }
+            }
+        },
+        "Tools": {
+            "title": "Tools",
+            "soon_badge": "SOON",
+            "description": "Here you can download examens with a period filter",
+            "support_message": "For questions or assistance, contact us:"
+        }
+    },
+    "Validation": {
+        "SelectMultiButtons": {
+            "min_selections": "Please select at least {count} option{plural}",
+            "max_selections": "Maximum {count} selection{plural} allowed"
         }
     },
     "NotAllowedPage": {

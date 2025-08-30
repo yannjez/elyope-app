@@ -2,7 +2,7 @@
 
 import {
   AnimauxIcon,
-  ExamensIcon,
+  Examens,
   MenuCard,
   MessagerieIcon,
   ProfileIcon,
@@ -17,7 +17,7 @@ export default function MenuBlock() {
       <div className="flex flex-wrap gap-3 ">
         <MenuCard
           href="/examens"
-          icon={<ExamensIcon className="w-8 h-8 text-el-blue-500" />}
+          icon={<Examens className="w-8 h-8 text-el-blue-500" />}
           title={t('examens.title')}
           description={t('examens.description')}
           action={{

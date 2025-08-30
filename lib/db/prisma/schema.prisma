@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../dist/.prisma/client"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -22,23 +22,29 @@ enum UserType {
   INTERPRETER
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
 model User {
   id    String @id @default(uuid())
-  email String @unique
-  name  String
   externalId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   roles UserType[] @default([])
   Interpreters Structure[] @relation("interpreter")
   Members StructureUser[] @relation("members")
+  SentInvitations UserInvitation[] @relation("user")
  
 }
 
 model Structure {
   id String @id @default(uuid())
   name String
-  externalId String @unique
+  description String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -70,5 +76,19 @@ model StructureUser {
   structure Structure @relation("members" , fields: [structureId], references: [id])
   userId String
   user User @relation("members", fields: [userId], references: [id])
+}
+
+model UserInvitation {
+  id String @id @default(uuid())
+  email String
+  createdAt DateTime @default(now())
+  userId String?
+  user User? @relation("user", fields: [userId], references: [id])
+
+  // Application URLs based on roles
+  adminAppUrl String?
+  veterinarianAppUrl String?
+  interpreterAppUrl String?
+  @@index([email])
 }
 

@@ -1,4 +1,7 @@
+'use client';
+
 import Sidemenu from './Sidemenu';
+import { usePathname } from 'next/navigation';
 
 const menuItems = [
   {
@@ -12,5 +15,14 @@ export default function SideLogin({
 }: {
   languageSelector: React.ReactNode;
 }) {
-  return <Sidemenu menuItems={menuItems} languageSelector={languageSelector} />;
+  const pathname = usePathname();
+  return (
+    <Sidemenu
+      menuItems={menuItems.map((item) => ({
+        ...item,
+        isCurrent: pathname === item.href,
+      }))}
+      languageSelector={languageSelector}
+    />
+  );
 }

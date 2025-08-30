@@ -1,17 +1,18 @@
 import { PrismaClient } from '@prisma/client';
+import { PaginationInfo } from '../type/index.js';
 
 export class BaseService {
   public prisma: PrismaClient;
-  public listLimit = 20;
+  public listLimit = 10;
 
   constructor(protected readonly _prisma: PrismaClient) {
     this.prisma = _prisma;
   }
 
   getPaginationInfo = (count: number, limit: number = this.listLimit) => {
-    const totalPages = Math.ceil(count / limit);
+    const totalPages = Math.ceil(count / limit) || 1;
     return {
       totalPages,
-    };
+    } as PaginationInfo;
   };
 }
