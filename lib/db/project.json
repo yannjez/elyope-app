@@ -54,6 +54,13 @@
                 "cwd": "lib/db"
             }
         },
+        "seed": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm dlx tsx prisma/seed.ts",
+                "cwd": "lib/db"
+            }
+        },
         "lint": {
             "executor": "@nx/eslint:lint",
             "outputs": [

@@ -92,3 +92,32 @@ model UserInvitation {
   @@index([email])
 }
 
+enum AnimalSpecies {
+  CHIEN
+  CHAT
+  OTHER   // nouveaux animaux de compagnie (lapin, hamster, etc.)
+}
+
+model AnimalBreed {
+  id        String       @id @default(uuid())
+  name      String
+  name_fr   String
+  species   AnimalSpecies
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  Animals   Animal[]     // no @relation here
+  isArchive Boolean      @default(false)
+}
+
+model Animal {
+  id        String       @id @default(uuid())
+  name      String
+  species   AnimalSpecies
+  breedId   String
+  breed     AnimalBreed  @relation(fields: [breedId], references: [id])
+  birthDate DateTime?
+  comment String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
