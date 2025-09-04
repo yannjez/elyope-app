@@ -9,7 +9,7 @@ CREATE TABLE "public"."AnimalBreed" (
     "species" "public"."AnimalSpecies" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "isArchive" BOOLEAN NOT NULL DEFAULT false,
+    "isArchived" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "AnimalBreed_pkey" PRIMARY KEY ("id")
 );

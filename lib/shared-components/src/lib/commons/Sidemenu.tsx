@@ -17,6 +17,7 @@ type SidemenuProps = {
   className?: string;
   menuItems?: MenuItem[];
   languageSelector?: React.ReactNode;
+  additionalElement?: React.ReactNode;
   footer?: {
     copyright: string;
     version: string;
@@ -59,6 +60,7 @@ export default function Sidemenu({
     copyright: `©${new Date().getFullYear()} Elyope`,
     version: 'Elyope App V1.0.0',
   },
+  additionalElement,
   profileButton,
   qualifier = 'APP',
   onMobileMenuToggle,
@@ -199,6 +201,9 @@ export default function Sidemenu({
           </nav>
         </div>
         <div className="flex gap-2 justify-between mt-auto items-center">
+          {additionalElement}
+        </div>
+        <div className="flex gap-2 justify-between  items-center">
           {profileButton}
           {languageSelector}
         </div>

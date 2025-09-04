@@ -29,7 +29,14 @@
         "generate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma generate",
+                "command": "pnpm  prisma generate",
+                "cwd": "lib/db"
+            }
+        },
+        "migrate-deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm  prisma migrate deploy",
                 "cwd": "lib/db"
             }
         },
@@ -43,21 +50,21 @@
         "studio": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma studio",
+                "command": "pnpm  prisma studio",
                 "cwd": "lib/db"
             }
         },
         "db-push": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma db push --accept-data-loss",
+                "command": "pnpm  prisma db push --accept-data-loss",
                 "cwd": "lib/db"
             }
         },
         "seed": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx tsx prisma/seed.ts",
+                "command": "pnpm  tsx prisma/seed.ts",
                 "cwd": "lib/db"
             }
         },

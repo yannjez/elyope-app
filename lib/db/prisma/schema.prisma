@@ -106,7 +106,7 @@ model AnimalBreed {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
   Animals   Animal[]     // no @relation here
-  isArchive Boolean      @default(false)
+  isArchived Boolean      @default(false)
 }
 
 model Animal {

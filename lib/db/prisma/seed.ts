@@ -5,11 +5,10 @@
  * or:
  *   npx tsx prisma/seed.ts
  */
-import { createReadStream } from 'fs';
+
 import fs from 'fs';
 import path from 'path';
 
-import readline from 'readline';
 import { PrismaClient, AnimalSpecies } from '@prisma/client';
 
 const prisma = new PrismaClient();

@@ -39,6 +39,23 @@ export class StructureService extends BaseService {
     return count;
   };
 
+  getStrucuturesByExternalId = async (externalId: string) => {
+    const user = await this.prisma.user.findUnique({
+      where: { externalId: externalId },
+      select: { id: true },
+    });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const structuresUser = await this.prisma.structureUser.findMany({
+      where: { userId: user.id },
+      select: { structure: true },
+    });
+    return structuresUser.map(
+      (structure) => structure.structure
+    ) as Structure[];
+  };
+
   /**
    * List structures with pagination, sorting and keyword search
    * Same contract style as UserService.getUsers

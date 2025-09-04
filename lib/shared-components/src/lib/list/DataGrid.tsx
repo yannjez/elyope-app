@@ -10,7 +10,7 @@ import { SkeletonRow, MobileSkeletonCard } from './DataGridSkeletons';
 
 export type DataGridColumn<T> = {
   header: string | ReactNode;
-  field: keyof T;
+  field: keyof T | string; // Allow both keyof T and string for dot notation (e.g., 'breed.name_fr')
   isSortable?: boolean;
   displayCell?: (row: T) => ReactNode | string;
   className?: string;
@@ -25,12 +25,12 @@ export type DataGridProps<T> = {
   data: (T & { rowClass?: string })[];
   className?: string;
   skeletonRowClass?: string;
-  onSort?: (field: keyof T, direction: 'asc' | 'desc') => void;
+  onSort?: (field: keyof T | string, direction: 'asc' | 'desc') => void;
   noDataMessage?: string | ReactNode;
   isLoading?: boolean;
   loadingRows?: number;
   // Controlled sort state
-  sortField?: keyof T | null;
+  sortField?: keyof T | string | null;
   sortDirection?: 'asc' | 'desc';
   blueMode?: boolean;
   // Mobile configuration
@@ -60,73 +60,26 @@ export type DataGridProps<T> = {
 };
 
 /**
- * DataGrid component with sorting, no data state, loading state, pagination support, and responsive mobile view
- *
- * Features:
- * - Sortable columns with visual indicators
- * - Loading state with skeleton rows
- * - Built-in no data state with cross-in-circle icon
- * - Customizable no data message
- * - Pagination with configurable page size and navigation
- * - Responsive design with mobile card layout
- * - Configurable mobile breakpoint
- * - Mobile-specific column configuration
- *
- * @example
- * ```tsx
- * // Basic usage
- * <DataGrid
- *   columns={columns}
- *   data={users}
- *   onSort={handleSort}
- * />
- *
- * // With mobile configuration
- * <DataGrid
- *   columns={[
- *     { header: 'Name', field: 'name', isPrimary: true, isSortable: true },
- *     { header: 'Email', field: 'email', mobileLabel: 'Email Address' },
- *     { header: 'Created', field: 'createdAt', hiddenOnMobile: true },
- *   ]}
- *   data={users}
- *   mobileCardClassName="shadow-sm"
- * />
- *
- * // With loading state
- * <DataGrid
- *   columns={columns}
- *   data={users}
- *   isLoading={true}
- *   loadingRows={5}
- * />
- *
- * // With pagination
- * <DataGrid
- *   columns={columns}
- *   data={currentPageData}
- *   onSort={handleSort}
- *   pagination={{
- *     currentPage: 1,
- *     pageSize: 10,
- *     totalItems: 100,
- *     onPageChange: handlePageChange,
- *     showPagination: true,
- *   }}
- * />
- *
- * // With custom no data message
- * <DataGrid
- *   columns={columns}
- *   data={users}
- *   noDataMessage="No users found"
- * />
- * ```
+ * Helper function to get nested object values using dot notation
  */
+function getNestedValue(obj: unknown, path: string): unknown {
+  return path.split('.').reduce((current, key) => {
+    return current && typeof current === 'object'
+      ? (current as Record<string, unknown>)[key]
+      : undefined;
+  }, obj);
+}
 
-function sortData<T>(data: T[], field: keyof T, direction: 'asc' | 'desc') {
+function sortData<T>(
+  data: T[],
+  field: keyof T | string,
+  direction: 'asc' | 'desc'
+) {
   return [...data].sort((a, b) => {
-    const aValue = a[field];
-    const bValue = b[field];
+    const aValue =
+      typeof field === 'string' ? getNestedValue(a, field) : a[field];
+    const bValue =
+      typeof field === 'string' ? getNestedValue(b, field) : b[field];
     if (aValue == null) return 1;
     if (bValue == null) return -1;
     if (aValue === bValue) return 0;
@@ -154,9 +107,9 @@ export function DataGrid<T extends object>({
   blueMode = false,
   mobileCardClassName,
 }: DataGridProps<T>) {
-  const [internalSortField, setInternalSortField] = useState<keyof T | null>(
-    null
-  );
+  const [internalSortField, setInternalSortField] = useState<
+    keyof T | string | null
+  >(null);
   const [internalSortDirection, setInternalSortDirection] = useState<
     'asc' | 'desc'
   >('asc');
@@ -169,7 +122,7 @@ export function DataGrid<T extends object>({
       ? externalSortDirection
       : internalSortDirection;
 
-  const handleSort = (field: keyof T, direction: 'asc' | 'desc') => {
+  const handleSort = (field: keyof T | string, direction: 'asc' | 'desc') => {
     // Update internal state if not using external state
     if (externalSortField === undefined) {
       setInternalSortDirection(direction);

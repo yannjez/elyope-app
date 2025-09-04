@@ -5,12 +5,26 @@ import { cn } from '../utils/cn';
 import CarretIcon from '../icons/Carret';
 import { DataGridColumn } from './DataGrid';
 
+/**
+ * Helper function to get nested object values using dot notation
+ * @param obj - The object to traverse
+ * @param path - The dot-separated path (e.g., 'breed.name_fr')
+ * @returns The value at the specified path or undefined if not found
+ */
+function getNestedValue(obj: unknown, path: string): unknown {
+  return path.split('.').reduce((current, key) => {
+    return current && typeof current === 'object'
+      ? (current as Record<string, unknown>)[key]
+      : undefined;
+  }, obj);
+}
+
 export type DataGridTableProps<T> = {
   columns: DataGridColumn<T>[];
   data: (T & { rowClass?: string })[];
   className?: string;
-  onSort?: (field: keyof T, direction: 'asc' | 'desc') => void;
-  sortField?: keyof T | null;
+  onSort?: (field: keyof T | string, direction: 'asc' | 'desc') => void;
+  sortField?: keyof T | string | null;
   sortDirection?: 'asc' | 'desc';
   blueMode?: boolean;
   rowActions?: Array<{
@@ -38,7 +52,7 @@ export function DataGridTable<T extends object>({
   blueMode = false,
   rowActions = [],
 }: DataGridTableProps<T>) {
-  const handleSort = (field: keyof T) => {
+  const handleSort = (field: keyof T | string) => {
     const newSortDirection =
       sortField === field ? (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
     onSort?.(field, newSortDirection);
@@ -101,7 +115,7 @@ export function DataGridTable<T extends object>({
                 >
                   {col.displayCell
                     ? col.displayCell(row)
-                    : String(row[col.field] ?? '')}
+                    : String(getNestedValue(row, String(col.field)) ?? '')}
                 </td>
               ))}
               {rowActions.map((action, actionIdx) => {
