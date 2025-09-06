@@ -286,7 +286,11 @@
                 "select_species": "Sélectionner une espèce",
                 "dialog": {
                     "delete_title": "Supprimer l'animal",
-                    "delete_message": "Êtes-vous sûr de vouloir supprimer cet animal ? Cette action ne peut pas être annulée."
+                    "delete_message": "Êtes-vous sûr de vouloir supprimer cet animal ? Cette action ne peut pas être annulée.",
+                    "cannot_delete_title": "Impossible de supprimer l'animal",
+                    "cannot_delete_linked_exams": "Cet animal ne peut pas être supprimé car il a des examens liés.",
+                    "cannot_delete_linked_messages": "Cet animal ne peut pas être supprimé car il a des messages liés.",
+                    "cannot_delete_multiple_reasons": "Cet animal ne peut pas être supprimé car il a des examens et des messages liés."
                 }
             },
             "species": {

@@ -2,12 +2,22 @@
 
 import { prisma } from '@/db';
 import { AnimalResquest } from '@/types/animals';
-import { Animal, AnimalBreed, AnimalService, PaginationInfo } from '@elyope/db';
+import { Animal, AnimalBreed, AnimalService, PaginationInfo, CanDeleteAnimalReason } from '@elyope/db';
 import { getLocale } from 'next-intl/server';
 
 export const getAnimalBreeds = async (): Promise<AnimalBreed[]> => {
   const animalService = new AnimalService(prisma);
   return await animalService.getAnimalBreedList();
+};
+
+export const canDeleteAnimal = async (structureId: string, id: string): Promise<{ canDelete: boolean; reason: CanDeleteAnimalReason }> => {
+  const animalService = new AnimalService(prisma);
+  return await animalService.canDeleteAnimal(structureId, id);
+};
+
+export const deleteAnimal = async (structureId: string, id: string) => {
+  const animalService = new AnimalService(prisma);
+  return await animalService.deleteAnimal(structureId, id);
 };
 
 export const getAnimals = async (

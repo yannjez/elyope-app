@@ -1,11 +1,11 @@
-import {
-  AnimalSpecies,
-  AnimalWithBreed,
-  Prisma,
-  PrismaClient,
-} from '@prisma/client';
+import { AnimalSpecies, Prisma, PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
-import { AnimalBreed } from 'src/type/index.js';
+import {
+  AnimalBreed,
+  AnimalWithBreed,
+  CanDeleteAnimalReason,
+  AnimalFull,
+} from 'src/type/index.js';
 
 export class AnimalService extends BaseService {
   constructor(prisma: PrismaClient) {
@@ -22,6 +22,20 @@ export class AnimalService extends BaseService {
     }
 
     return (await this.prisma.animalBreed.findMany({ where })) as AnimalBreed[];
+  };
+
+  canDeleteAnimal = async (
+    structureId: string,
+    id: string
+  ): Promise<{ canDelete: boolean; reason: CanDeleteAnimalReason }> => {
+    //TODO: check if there is exams  or message linked to the animal e
+
+    const reason: CanDeleteAnimalReason = {
+      linkedExams: false,
+      linkedMessages: false,
+    };
+
+    return { canDelete: true, reason };
   };
 
   deleteAnimal = async (structureId: string, id: string) => {
@@ -88,7 +102,7 @@ export class AnimalService extends BaseService {
         fullBreed: `${species}  ${
           locale === 'fr' ? animal.breed.name_fr : animal.breed.name
         }`,
-      };
+      } as AnimalFull;
     });
   };
 

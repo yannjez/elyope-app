@@ -4,7 +4,6 @@ import {
   AnimauxIcon,
   DataGrid,
   DataGridColumn,
-  DialogConfirm,
   PageHeader,
   PageMain,
   Pagination,
@@ -18,11 +17,11 @@ import { useAnimalListContext } from './AnimalListContext';
 import AnimalListFilter from './AnimalListFilter';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import AnimalDeleteDialog from '../AnimalDeleteDialog';
 
 export default function AnimalListContent() {
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const tCommon = useTranslations('Data.Common');
   const t = useTranslations('Data.Animal.list');
 
   const columns: DataGridColumn<AnimalFull & { 'breed.name_fr': string }>[] = [
@@ -67,6 +66,7 @@ export default function AnimalListContent() {
     sortState,
     handleSort,
     handleSearch,
+    filter,
   } = useAnimalListContext();
 
   const router = useRouter();
@@ -116,35 +116,27 @@ export default function AnimalListContent() {
               {
                 className: 'hover:text-el-red-500',
                 name: t('actions.delete'),
-
                 icon: <TrashIcon className="w-full h-full" />,
                 onClick: (id: string | undefined) => {
                   if (id) {
                     setSelectedId(id);
-                    setConfirmOpen(true);
+                    setDeleteDialogOpen(true);
                   }
                 },
               },
             ]}
           />
-          <DialogConfirm
-            open={confirmOpen}
-            title={t('dialog.delete_title')}
-            message={t('dialog.delete_message')}
-            confirmLabel={t('actions.delete')}
-            cancelLabel={tCommon('actions.cancel')}
-            confirmClassName="button-destructive"
-            onCancel={() => {
-              setConfirmOpen(false);
+          <AnimalDeleteDialog
+            open={deleteDialogOpen}
+            animalId={selectedId}
+            structureId={filter.structureId}
+            onClose={() => {
+              setDeleteDialogOpen(false);
               setSelectedId(null);
             }}
-            onConfirm={async () => {
-              if (selectedId) {
-                // Trigger a refresh by re-searching current page
-                handleSearch();
-              }
-              setConfirmOpen(false);
-              setSelectedId(null);
+            onDeleted={() => {
+              // Trigger a refresh by re-searching current page
+              handleSearch();
             }}
           />
         </div>

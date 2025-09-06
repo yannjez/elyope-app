@@ -14,3 +14,8 @@ export type AnimalWithBreed = Prisma.AnimalGetPayload<{
 }>;
 
 export type AnimalFull = AnimalWithBreed & { fullBreed: string };
+
+export type CanDeleteAnimalReason = {
+  linkedExams: boolean;
+  linkedMessages: boolean;
+};

@@ -135,6 +135,13 @@ npx nx serve veterinarian
 # Run all tests
 npx nx run-many --target=test --all
 
+# Run all lint
+npx nx run-many --target=lint --all
+
+# Run all typecheck
+npx nx run-many --target=typecheck --all
+
+
 # Build all projects
 npx nx run-many --target=build --all
 ```

@@ -9,7 +9,9 @@
         "start": "nx start",
         "lint": "nx lint",
         "test": "nx test",
-        "postinstall": "nx run db:generate"
+        "postinstall": "nx run db:generate",
+        "lint-all": "nx run-many --target=lint --all",
+        "typecheck-all": "nx run-many --target=typecheck --all"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.9.1",
