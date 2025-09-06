@@ -22,7 +22,7 @@
         "migrate-reset": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma migrate reset",
+                "command": "pnpm  prisma migrate reset",
                 "cwd": "lib/db"
             }
         },
@@ -64,7 +64,7 @@
         "seed": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm  tsx prisma/seed.ts",
+                "command": "pnpm ts-node prisma/seed.ts",
                 "cwd": "lib/db"
             }
         },

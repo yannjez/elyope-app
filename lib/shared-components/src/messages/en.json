@@ -272,12 +272,44 @@
                 }
             }
         },
+        "Animal": {
+            "list": {
+                "title": "Animals",
+                "create_button": "+ Create Animal",
+                "columns": {
+                    "name": "Name",
+                    "breed": "Breed",
+                    "birthDate": "Birth Date",
+                    "comment": "Comment"
+                },
+                "no_data": "No animals found",
+                "actions": {
+                    "edit": "Edit",
+                    "delete": "Delete"
+                },
+                "species_filter_label": "Species:",
+                "select_species": "Select species",
+                "dialog": {
+                    "delete_title": "Delete animal",
+                    "delete_message": "Are you sure you want to delete this animal? This action cannot be undone."
+                }
+            },
+            "species": {
+                "CHIEN": "Dog",
+                "CHAT": "Cat"
+            }
+        },
         "Tools": {
             "title": "Tools",
             "soon_badge": "SOON",
             "description": "Here you can download examens with a period filter",
             "support_message": "For questions or assistance, contact us:"
         }
+    },
+    "Filter": {
+        "filter": "Filter",
+        "search": "Search",
+        "reset": "Reset"
     },
     "Validation": {
         "SelectMultiButtons": {

@@ -267,12 +267,44 @@
                 }
             }
         },
+        "Animal": {
+            "list": {
+                "title": "Animaux",
+                "create_button": "+ Créer un animal",
+                "columns": {
+                    "name": "Nom",
+                    "breed": "Race",
+                    "birthDate": "Date de naissance",
+                    "comment": "Commentaire"
+                },
+                "no_data": "Aucun animal trouvé",
+                "actions": {
+                    "edit": "Modifier",
+                    "delete": "Supprimer"
+                },
+                "species_filter_label": "Espèce :",
+                "select_species": "Sélectionner une espèce",
+                "dialog": {
+                    "delete_title": "Supprimer l'animal",
+                    "delete_message": "Êtes-vous sûr de vouloir supprimer cet animal ? Cette action ne peut pas être annulée."
+                }
+            },
+            "species": {
+                "CHIEN": "Chien",
+                "CHAT": "Chat"
+            }
+        },
         "Tools": {
             "title": "Outils",
             "soon_badge": "BIENTÔT",
             "description": "Ici vous pourrez télécharger des examens avec un filtre par période",
             "support_message": "Pour toute question ou assistance, contactez-nous :"
         }
+    },
+    "Filter": {
+        "filter": "Filtrer",
+        "search": "Rechercher",
+        "reset": "Réinitialiser"
     },
     "Validation": {
         "SelectMultiButtons": {

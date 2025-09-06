@@ -31,6 +31,17 @@
         "animals": "Animaux",
         "messages": "Messagerie",
         "design": "Design",
-        "profile": "Mon profil"
+        "profile": "Mon profil",
+        "myStructure": "Ma Structure",
+        "currentStructure": "Structure Actuelle",
+        "switchTo": "Changer pour :"
+    },
+    "Data": {
+        "Animal": {
+            "species": {
+                "CHIEN": "Chien",
+                "CHAT": "Chat"
+            }
+        }
     }
 }

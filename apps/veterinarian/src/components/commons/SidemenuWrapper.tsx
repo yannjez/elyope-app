@@ -72,7 +72,7 @@ export function SidemenuWrapper() {
           {/* Current Structure Info */}
           <div className="px-4 py-3 bg-el-grey-50 border-b border-el-grey-200">
             <div className="font-semibold text-14 text-el-grey-800 mb-1">
-              Current Structure
+              {t('currentStructure')}
             </div>
             <div className=" text-12 text-el-grey-700">
               {currentStructure?.name}
@@ -86,40 +86,8 @@ export function SidemenuWrapper() {
           {structures.length > 1 && (
             <div className="py-2">
               <div className="px-4 py-2 text-12 font-medium text-el-grey-600 uppercase tracking-wide">
-                Switch to:
+                {t('switchTo')}
               </div>
-              {structures
-                .filter((structure) => structure.id !== currentStructure?.id)
-                .map((structure) => (
-                  <div
-                    key={structure.id}
-                    onClick={() => handleStructureSelect(structure.id)}
-                    className="px-4 py-2 cursor-pointer text-14 hover:bg-el-blue-200 transition-colors"
-                  >
-                    <div className=" text-12 text-el-grey-700">
-                      {structure.name}
-                    </div>
-                    <div className="text-12 text-el-grey-500">
-                      {structure.zipcode} {structure.town}
-                    </div>
-                  </div>
-                ))}
-              {structures
-                .filter((structure) => structure.id !== currentStructure?.id)
-                .map((structure) => (
-                  <div
-                    key={structure.id}
-                    onClick={() => handleStructureSelect(structure.id)}
-                    className="px-4 py-2 cursor-pointer text-14 hover:bg-el-blue-200 transition-colors"
-                  >
-                    <div className=" text-12 text-el-grey-700">
-                      {structure.name}
-                    </div>
-                    <div className="text-12 text-el-grey-500">
-                      {structure.zipcode} {structure.town}
-                    </div>
-                  </div>
-                ))}
               {structures
                 .filter((structure) => structure.id !== currentStructure?.id)
                 .map((structure) => (

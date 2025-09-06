@@ -11,42 +11,52 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@app-test2/shared-components';
-import { Animal, AnimalGrid } from '@elyope/db';
+import { AnimalFull } from '@elyope/db';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useAnimalListContext } from './AnimalListContext';
+import AnimalListFilter from './AnimalListFilter';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAppContext } from '@/components/layouts/AppContext';
-
-const columns: DataGridColumn<AnimalGrid & { 'breed.name_fr': string }>[] = [
-  {
-    header: 'Name',
-    field: 'name',
-    isSortable: true,
-  },
-  {
-    header: 'Breed',
-    field: 'breed.name_fr',
-    isSortable: true,
-  },
-  {
-    header: 'Birth Date',
-    field: 'birthDate',
-    isSortable: true,
-    displayCell: (row) => row.birthDate?.toLocaleDateString(),
-  },
-  {
-    header: 'Comment',
-    field: 'comment',
-  },
-];
 
 export default function AnimalListContent() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const tCommon = useTranslations('Data.Common');
-  const { locale } = useAppContext();
+  const t = useTranslations('Data.Animal.list');
+
+  const columns: DataGridColumn<AnimalFull & { 'breed.name_fr': string }>[] = [
+    {
+      header: t('columns.name'),
+      field: 'name',
+      isSortable: true,
+    },
+    {
+      header: t('columns.breed'),
+      field: 'fullBreed',
+      isSortable: true,
+    },
+    {
+      header: t('columns.birthDate'),
+      field: 'birthDate',
+      isSortable: true,
+      displayCell: (row) => row.birthDate?.toLocaleDateString(),
+    },
+    {
+      header: t('columns.comment'),
+      field: 'comment',
+      displayCell: (row) => (
+        <div className="xl:whitespace-normal">
+          <span
+            className=" block overflow-hidden text-ellipsis whitespace-nowrap max-w-[200px]"
+            title={row.comment || ''}
+          >
+            {row.comment}
+          </span>
+        </div>
+      ),
+    },
+  ];
 
   const {
     animals,
@@ -60,18 +70,14 @@ export default function AnimalListContent() {
   } = useAnimalListContext();
 
   const router = useRouter();
-
-  const t = useTranslations('Data.Animal.list');
   return (
     <>
       <PageHeader
-        title={t('title') + ' ' + locale}
+        title={t('title')}
         icon={<AnimauxIcon className="w-full" />}
+        filters={<AnimalListFilter />}
         action={
-          <Link
-            href="/structures/create-structure"
-            className="button-primary min-w-40"
-          >
+          <Link href="/animals/create" className="button-primary min-w-40">
             {t('create_button')}
           </Link>
         }
@@ -88,17 +94,12 @@ export default function AnimalListContent() {
 
         <div className="mt-2">
           <DataGrid
-            columns={columns as DataGridColumn<Animal>[]}
-            data={animals as Animal[]}
+            columns={columns as DataGridColumn<AnimalFull>[]}
+            data={animals as AnimalFull[]}
             className="rounded-4 w-full"
             skeletonRowClass="!p-3"
-            onSort={
-              handleSort as (
-                field: keyof Animal,
-                direction: 'asc' | 'desc'
-              ) => void
-            }
-            sortField={(sortState.field as keyof Animal) ?? undefined}
+            onSort={handleSort}
+            sortField={(sortState.field as keyof AnimalFull) ?? undefined}
             sortDirection={sortState.direction}
             noDataMessage={t('no_data')}
             isLoading={isSearching}
@@ -108,7 +109,7 @@ export default function AnimalListContent() {
                 name: t('actions.edit'),
                 icon: <PencilIcon className="w-full h-full" />,
                 onClick: (id: string | undefined) => {
-                  if (id) router.push(`/structures/${id}`);
+                  if (id) router.push(`/animals/${id}`);
                 },
                 propertyKey: 'id',
               },

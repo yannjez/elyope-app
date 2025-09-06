@@ -68,6 +68,8 @@ model Structure {
   Interpreter User? @relation("interpreter", fields: [interpreterId], references: [id])
   interpreterId String?
   Members StructureUser[] @relation("members")
+  @@index([interpreterId])
+  Animal Animal[]
 }
 
 model StructureUser {
@@ -76,6 +78,7 @@ model StructureUser {
   structure Structure @relation("members" , fields: [structureId], references: [id])
   userId String
   user User @relation("members", fields: [userId], references: [id])
+  @@index([structureId, userId])
 }
 
 model UserInvitation {
@@ -90,6 +93,7 @@ model UserInvitation {
   veterinarianAppUrl String?
   interpreterAppUrl String?
   @@index([email])
+  @@index([userId])
 }
 
 enum AnimalSpecies {
@@ -115,9 +119,14 @@ model Animal {
   species   AnimalSpecies
   breedId   String
   breed     AnimalBreed  @relation(fields: [breedId], references: [id])
+  structureId String
+  structure Structure @relation(fields: [structureId], references: [id]) 
   birthDate DateTime?
   comment String?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+  @@index([structureId])
+  @@index([species])
+
 }
 
