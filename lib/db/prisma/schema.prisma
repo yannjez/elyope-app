@@ -118,6 +118,7 @@ model Animal {
   name      String
   species   AnimalSpecies
   breedId   String
+  externalRef String?
   breed     AnimalBreed  @relation(fields: [breedId], references: [id])
   structureId String
   structure Structure @relation(fields: [structureId], references: [id]) 

@@ -36,6 +36,11 @@ export default function AnimalListContent() {
       isSortable: true,
     },
     {
+      header: t('columns.externalRef'),
+      field: 'externalRef',
+      isSortable: true,
+    },
+    {
       header: t('columns.birthDate'),
       field: 'birthDate',
       isSortable: true,

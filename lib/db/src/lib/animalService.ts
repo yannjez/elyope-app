@@ -56,7 +56,7 @@ export class AnimalService extends BaseService {
     structureId: string,
     page: number,
     limit: number,
-    sort?: 'name' | 'breed',
+    sort?: 'name' | 'fullBreed' | 'externalRef' | 'birthDate',
     sortDirection?: 'asc' | 'desc',
     search?: string,
     type?: AnimalSpecies,
@@ -64,21 +64,21 @@ export class AnimalService extends BaseService {
   ) => {
     const offset = (page - 1) * limit;
 
-    console.log('structureId', structureId);
-    console.log('search', search);
-    console.log('type', type);
     const where = this.buildSearchWhere(structureId, search, type);
-
-    const sortableFields: Record<string, 'name' | 'breed.name'> = {
-      name: 'name',
-      breed: 'breed.name',
+    const direction = sortDirection === 'asc' ? 'asc' : 'desc';
+    console.log('direction', direction, sort);
+    const sortableFields: Record<
+      string,
+      Prisma.AnimalOrderByWithRelationInput
+    > = {
+      name: { name: direction },
+      fullBreed: { breed: { name: direction } },
+      externalRef: { externalRef: direction },
+      birthDate: { birthDate: direction },
     };
 
-    const direction = sortDirection === 'asc' ? 'asc' : 'desc';
-    const orderBy =
-      sort && sortableFields[sort]
-        ? { [sortableFields[sort]]: direction }
-        : { createdAt: 'desc' };
+    const orderBy = sort && sortableFields[sort];
+    console.log('orderBy', orderBy);
 
     const data = (await this.prisma.animal.findMany({
       where,
@@ -87,7 +87,7 @@ export class AnimalService extends BaseService {
       },
       skip: offset,
       take: limit,
-      orderBy: orderBy as Prisma.AnimalOrderByWithRelationInput,
+      orderBy: orderBy,
     })) as AnimalWithBreed[];
 
     return data.map((animal) => {

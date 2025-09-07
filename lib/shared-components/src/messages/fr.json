@@ -275,7 +275,8 @@
                     "name": "Nom",
                     "breed": "Race",
                     "birthDate": "Date de naissance",
-                    "comment": "Commentaire"
+                    "comment": "Commentaire",
+                    "externalRef": "Ref."
                 },
                 "no_data": "Aucun animal trouvé",
                 "actions": {

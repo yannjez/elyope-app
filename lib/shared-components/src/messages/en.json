@@ -280,7 +280,8 @@
                     "name": "Name",
                     "breed": "Breed",
                     "birthDate": "Birth Date",
-                    "comment": "Comment"
+                    "comment": "Comment",
+                    "externalRef": "Ref."
                 },
                 "no_data": "No animals found",
                 "actions": {
