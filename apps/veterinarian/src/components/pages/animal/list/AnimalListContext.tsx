@@ -126,7 +126,7 @@ export const AnimalListProvider = ({
       setCurrentPage(1);
       fetchAnimals(filterChange);
     },
-    [fetchAnimals]
+    [fetchAnimals, filter]
   );
 
   const handleSearch = useCallback(async () => {

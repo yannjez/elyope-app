@@ -5,14 +5,20 @@ import {
   AnimalWithBreed,
   CanDeleteAnimalReason,
   AnimalFull,
-} from 'src/type/index.js';
+  AnimalSortField,
+  AnimalBreedFull,
+} from '../type/index.js';
 
 export class AnimalService extends BaseService {
   constructor(prisma: PrismaClient) {
     super(prisma);
   }
 
-  getAnimalBreedList = async (type?: AnimalSpecies, addIsArchived = false) => {
+  getAnimalBreedList = async (
+    type?: AnimalSpecies,
+    addIsArchived = false,
+    locale: 'fr' | 'en' = 'fr'
+  ) => {
     const where: Prisma.AnimalBreedWhereInput = {};
     if (type) {
       where.species = type;
@@ -21,12 +27,28 @@ export class AnimalService extends BaseService {
       where.isArchived = false;
     }
 
-    return (await this.prisma.animalBreed.findMany({ where })) as AnimalBreed[];
+    const orderBy: Prisma.AnimalBreedOrderByWithRelationInput =
+      locale === 'fr' ? { name: 'asc' } : { name_fr: 'asc' };
+
+    const breeds = (await this.prisma.animalBreed.findMany({
+      where,
+      orderBy,
+    })) as AnimalBreed[];
+    return breeds.map((breed) => {
+      let species = breed.species === AnimalSpecies.CHAT ? 'Cat >' : 'Dog >';
+      if (locale === 'fr') {
+        species = breed.species === AnimalSpecies.CHAT ? 'Chat >' : 'Chien >';
+      }
+      return {
+        ...breed,
+        fullname: `${species} ${locale === 'fr' ? breed.name_fr : breed.name}`,
+      } as AnimalBreedFull;
+    });
   };
 
   canDeleteAnimal = async (
-    structureId: string,
-    id: string
+    _structureId: string,
+    _id: string
   ): Promise<{ canDelete: boolean; reason: CanDeleteAnimalReason }> => {
     //TODO: check if there is exams  or message linked to the animal e
 
@@ -52,11 +74,70 @@ export class AnimalService extends BaseService {
     });
   };
 
+  createAnimal = async (input: {
+    name: string;
+    species: AnimalSpecies;
+    breedId: string;
+    structureId: string;
+    externalRef?: string | null;
+    birthDate?: Date | null;
+    comment?: string | null;
+  }) => {
+    return await this.prisma.animal.create({
+      data: {
+        name: input.name,
+        species: input.species,
+        breedId: input.breedId,
+        structureId: input.structureId,
+        externalRef: input.externalRef,
+        birthDate: input.birthDate,
+        comment: input.comment,
+      },
+      include: {
+        breed: true,
+      },
+    });
+  };
+
+  updateAnimal = async (
+    id: string,
+    input: {
+      name?: string;
+      species?: AnimalSpecies;
+      breedId?: string;
+      externalRef?: string | null;
+      birthDate?: Date | null;
+      comment?: string | null;
+    }
+  ) => {
+    return await this.prisma.animal.update({
+      where: { id },
+      data: input,
+      include: {
+        breed: true,
+      },
+    });
+  };
+
+  getAnimalById = async (
+    id: string,
+    structureId: string,
+    locale: 'fr' | 'en' = 'fr'
+  ) => {
+    const data = await this.prisma.animal.findFirst({
+      where: { id, structureId },
+      include: {
+        breed: true,
+      },
+    });
+    return this.postprocessAnimal(data as AnimalWithBreed, locale);
+  };
+
   getAnimals = async (
     structureId: string,
     page: number,
     limit: number,
-    sort?: 'name' | 'fullBreed' | 'externalRef' | 'birthDate',
+    sort?: AnimalSortField,
     sortDirection?: 'asc' | 'desc',
     search?: string,
     type?: AnimalSpecies,
@@ -66,7 +147,6 @@ export class AnimalService extends BaseService {
 
     const where = this.buildSearchWhere(structureId, search, type);
     const direction = sortDirection === 'asc' ? 'asc' : 'desc';
-    console.log('direction', direction, sort);
     const sortableFields: Record<
       string,
       Prisma.AnimalOrderByWithRelationInput
@@ -78,7 +158,6 @@ export class AnimalService extends BaseService {
     };
 
     const orderBy = sort && sortableFields[sort];
-    console.log('orderBy', orderBy);
 
     const data = (await this.prisma.animal.findMany({
       where,
@@ -91,19 +170,30 @@ export class AnimalService extends BaseService {
     })) as AnimalWithBreed[];
 
     return data.map((animal) => {
-      let species =
-        animal.breed.species === AnimalSpecies.CHAT ? 'Cat >' : 'Dog >';
-      if (locale === 'fr') {
-        species =
-          animal.breed.species === AnimalSpecies.CHAT ? 'Chat >' : 'Chien >';
-      }
-      return {
-        ...animal,
-        fullBreed: `${species}  ${
-          locale === 'fr' ? animal.breed.name_fr : animal.breed.name
-        }`,
-      } as AnimalFull;
+      return this.postprocessAnimal(animal, locale);
     });
+  };
+
+  postprocessAnimal = (animal: AnimalWithBreed, locale: 'fr' | 'en' = 'fr') => {
+    console.log(
+      'animal',
+      animal,
+      animal.birthDate ? new Date(animal.birthDate) : null
+    );
+
+    let species =
+      animal.breed.species === AnimalSpecies.CHAT ? 'Cat >' : 'Dog >';
+    if (locale === 'fr') {
+      species =
+        animal.breed.species === AnimalSpecies.CHAT ? 'Chat >' : 'Chien >';
+    }
+    return {
+      ...animal,
+      fullBreed: `${species}  ${
+        locale === 'fr' ? animal.breed.name_fr : animal.breed.name
+      }`,
+      birthDateOb: animal.birthDate ? new Date(animal.birthDate) : null,
+    } as AnimalFull;
   };
 
   /**

@@ -4,16 +4,23 @@ import { prisma } from '@/db';
 import { AnimalResquest } from '@/types/animals';
 import {
   Animal,
-  AnimalBreed,
+  AnimalBreedFull,
   AnimalService,
   PaginationInfo,
   CanDeleteAnimalReason,
+  AnimalSpecies,
+  AnimalSortField,
 } from '@elyope/db';
 import { getLocale } from 'next-intl/server';
 
-export const getAnimalBreeds = async (): Promise<AnimalBreed[]> => {
+export const getAnimalBreeds = async (): Promise<AnimalBreedFull[]> => {
+  const locale = await getLocale();
   const animalService = new AnimalService(prisma);
-  return await animalService.getAnimalBreedList();
+  return await animalService.getAnimalBreedList(
+    undefined,
+    false,
+    locale?.includes('fr') ? 'fr' : 'en'
+  );
 };
 
 export const canDeleteAnimal = async (
@@ -39,7 +46,7 @@ export const getAnimals = async (
     request.structureId,
     request.page || 1,
     animalService.listLimit,
-    request.sort as 'name' | 'breed' | 'externalRef' | undefined,
+    request.sort as AnimalSortField | undefined,
     request.sortDirection as 'asc' | 'desc' | undefined,
     request.search,
     request.type,
@@ -64,4 +71,37 @@ export const getInitialAnimals = async (
   request.type = undefined;
 
   return await getAnimals(request);
+};
+
+export type CreateAnimalInput = {
+  name: string;
+  species: AnimalSpecies;
+  breedId: string;
+  structureId: string;
+  externalRef?: string | null;
+  birthDate?: Date | null;
+  comment?: string | null;
+};
+
+export const createAnimal = async (input: CreateAnimalInput) => {
+  const animalService = new AnimalService(prisma);
+  return await animalService.createAnimal(input);
+};
+
+export const updateAnimal = async (
+  id: string,
+  input: Partial<Omit<CreateAnimalInput, 'structureId'>>
+) => {
+  const animalService = new AnimalService(prisma);
+  return await animalService.updateAnimal(id, input);
+};
+
+export const getAnimalById = async (id: string, structureId: string) => {
+  const locale = await getLocale();
+  const animalService = new AnimalService(prisma);
+  return await animalService.getAnimalById(
+    id,
+    structureId,
+    locale?.includes('fr') ? 'fr' : 'en'
+  );
 };

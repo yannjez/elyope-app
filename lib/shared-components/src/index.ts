@@ -40,6 +40,7 @@ export { Form } from './lib/forms/Form';
 export { ZodForm } from './lib/forms/ZodForm';
 export { z, zodResolver } from './lib/forms/ZodForm';
 export { default as SelectMultiButtons } from './lib/forms/SelectMultiButtons';
+export { default as SelectButton } from './lib/forms/SelectButton';
 export { default as Toggle } from './lib/forms/Toggle';
 export { default as SelectEntity } from './lib/forms/SelectEntity';
 

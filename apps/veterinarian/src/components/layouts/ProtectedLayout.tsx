@@ -29,13 +29,11 @@ export default async function ProtectedLayout({
   const currentStructure = structures.find(
     (structure) => structure.id === structureIdParams
   );
-  console.log('currentStructure', currentStructure, structures);
 
   if (!currentStructure) {
     const otherStructure = structures.find(
       (structure) => structure.id !== structureIdParams
     );
-    console.log('otherStructure', otherStructure);
     if (otherStructure) {
       return redirect(`/${otherStructure.id}`);
     }

@@ -294,9 +294,46 @@
                     "cannot_delete_multiple_reasons": "Cet animal ne peut pas être supprimé car il a des examens et des messages liés."
                 }
             },
+            "create": {
+                "title": "Créer un animal",
+                "form_title": "Informations de l'animal",
+                "fields": {
+                    "name": {
+                        "label": "Nom",
+                        "placeholder": "Saisir le nom de l'animal"
+                    },
+                    "species": {
+                        "label": "Espèce",
+                        "placeholder": "Sélectionner l'espèce"
+                    },
+                    "breed": {
+                        "label": "Race",
+                        "placeholder": "Sélectionner la race"
+                    },
+                    "externalRef": {
+                        "label": "Référence externe",
+                        "placeholder": "Référence externe (optionnel)"
+                    },
+                    "birthDate": {
+                        "label": "Date de naissance",
+                        "placeholder": "Sélectionner la date de naissance"
+                    },
+                    "comment": {
+                        "label": "Commentaire",
+                        "placeholder": "Commentaires supplémentaires (optionnel)"
+                    }
+                },
+                "validation": {
+                    "name_required": "Le nom est requis",
+                    "species_required": "L'espèce est requise",
+                    "breed_required": "La race est requise",
+                    "invalid_date": "Veuillez entrer une date valide"
+                }
+            },
             "species": {
                 "CHIEN": "Chien",
-                "CHAT": "Chat"
+                "CHAT": "Chat",
+                "OTHER": "Autre"
             }
         },
         "Tools": {

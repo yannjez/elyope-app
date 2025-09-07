@@ -307,7 +307,6 @@ async function insertBreeds(filePath: string) {
           )})`
         );
       }
-      console.log(`Header: ${normalized.join(',')}`, headerIdx);
       continue;
     }
 
@@ -334,14 +333,12 @@ async function insertBreeds(filePath: string) {
 
     // Batch insert every N rows to keep memory low
     if (toInsert.length >= 100) {
-      console.log(`Inserting batch of ${toInsert.length} rows`);
       await insertBreedBatch(toInsert);
       toInsert = [];
     }
   }
 
   if (toInsert.length) {
-    console.log(`Inserting batch of ${toInsert.length} rows`);
 
     await insertBreedBatch(toInsert);
   }

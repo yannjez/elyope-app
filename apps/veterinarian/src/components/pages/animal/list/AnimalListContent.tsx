@@ -18,6 +18,7 @@ import AnimalListFilter from './AnimalListFilter';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import AnimalDeleteDialog from '../AnimalDeleteDialog';
+import { useAppContext } from '@/components/layouts/AppContext';
 
 export default function AnimalListContent() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -62,6 +63,8 @@ export default function AnimalListContent() {
     },
   ];
 
+  const { currentStructure } = useAppContext();
+
   const {
     animals,
     pagination,
@@ -82,7 +85,10 @@ export default function AnimalListContent() {
         icon={<AnimauxIcon className="w-full" />}
         filters={<AnimalListFilter />}
         action={
-          <Link href="/animals/create" className="button-primary min-w-40">
+          <Link
+            href={`/${currentStructure?.id}/animals/create`}
+            className="button-primary min-w-40"
+          >
             {t('create_button')}
           </Link>
         }
@@ -114,7 +120,7 @@ export default function AnimalListContent() {
                 name: t('actions.edit'),
                 icon: <PencilIcon className="w-full h-full" />,
                 onClick: (id: string | undefined) => {
-                  if (id) router.push(`/animals/${id}`);
+                  if (id) router.push(`/${currentStructure?.id}/animals/${id}`);
                 },
                 propertyKey: 'id',
               },

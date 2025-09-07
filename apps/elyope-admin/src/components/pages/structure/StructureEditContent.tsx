@@ -73,7 +73,7 @@ export function StructureEditContent(props: StructureEditContentProps) {
         icon={<BriefCaseIcon className="w-full" />}
         action={
           <Link href="/structures" className="button-primary-inverse">
-            {tCommon('navigation.back_to_list')}
+            ← {tCommon('navigation.back_to_list')}
           </Link>
         }
       />

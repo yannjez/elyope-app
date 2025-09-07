@@ -39,7 +39,6 @@ export default function AnimalDeleteDialog({
 
       canDeleteAnimal(structureId, animalId)
         .then((deleteCheck) => {
-          console.log('deleteCheck', deleteCheck);
           setCanDelete(deleteCheck.canDelete);
           setDeleteReason(deleteCheck.reason);
         })

@@ -299,9 +299,46 @@
                     "cannot_delete_multiple_reasons": "This animal cannot be deleted because it has linked exams and messages."
                 }
             },
+            "create": {
+                "title": "Create Animal",
+                "form_title": "Animal Information",
+                "fields": {
+                    "name": {
+                        "label": "Name",
+                        "placeholder": "Enter animal name"
+                    },
+                    "species": {
+                        "label": "Species",
+                        "placeholder": "Select species"
+                    },
+                    "breed": {
+                        "label": "Breed",
+                        "placeholder": "Select breed"
+                    },
+                    "externalRef": {
+                        "label": "External Reference",
+                        "placeholder": "External reference (optional)"
+                    },
+                    "birthDate": {
+                        "label": "Birth Date",
+                        "placeholder": "Select birth date"
+                    },
+                    "comment": {
+                        "label": "Comment",
+                        "placeholder": "Additional comments (optional)"
+                    }
+                },
+                "validation": {
+                    "name_required": "Name is required",
+                    "species_required": "Species is required",
+                    "breed_required": "Breed is required",
+                    "invalid_date": "Please enter a valid date"
+                }
+            },
             "species": {
                 "CHIEN": "Dog",
-                "CHAT": "Cat"
+                "CHAT": "Cat",
+                "OTHER": "Other"
             }
         },
         "Tools": {
