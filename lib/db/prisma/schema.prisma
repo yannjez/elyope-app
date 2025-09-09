@@ -125,7 +125,7 @@ model Animal {
   Exams Exam[]
 }
 
-enum ExamStaus {
+enum ExamStatus {
   PENDING              // Examen vigile
   PROCESSING
   COMPLETED
@@ -136,7 +136,7 @@ enum ExamStaus {
 model Exam {
   id             String   @id @default(uuid())
 
-  status ExamStaus
+  status ExamStatus
   // Header
   requestedAt    DateTime
   vetReference   String?

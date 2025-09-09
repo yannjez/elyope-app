@@ -6,6 +6,7 @@ import {
   Select,
   ListFilter,
 } from '@app-test2/shared-components';
+import { ExamStatus } from '@elyope/db';
 
 import { useExamenControllerContext } from './ExamenContext';
 import { useTranslations } from 'next-intl';
@@ -22,10 +23,11 @@ function ExamenStatusFilter({ onFilterChange, value }: ExamenFilterProps) {
     <Select
       options={[
         { label: tCommon('all'), value: '' },
-        { label: tStatus('pending'), value: 'pending' },
-        { label: tStatus('processing'), value: 'processing' },
-        { label: tStatus('completed'), value: 'completed' },
-        { label: tStatus('archived'), value: 'archived' },
+        { label: tStatus('pending'), value: ExamStatus.PENDING },
+        { label: tStatus('processing'), value: ExamStatus.PROCESSING },
+        { label: tStatus('completed'), value: ExamStatus.COMPLETED },
+        { label: tStatus('archived'), value: ExamStatus.ARCHIVED },
+        { label: tStatus('cancelled'), value: ExamStatus.CANCELLED },
       ]}
       value={value.status ?? ''}
       onChange={(value: string) => onFilterChange(value as ExamenStatus)}
@@ -34,25 +36,22 @@ function ExamenStatusFilter({ onFilterChange, value }: ExamenFilterProps) {
 }
 
 export default function ExamenFilter() {
-  const { filters, updateFilters } = useExamenControllerContext();
+  const { filter, updateFilters, handleReset } = useExamenControllerContext();
   const t = useTranslations('Data.Common');
   return (
     <>
-      {/* <div>{JSON.stringify(filters)}</div> */}
+      {/* <div>{JSON.stringify(filter)}</div> */}
       <ListFilter
-        filter={{ keyword: filters.keyword ?? '' }}
+        filter={{ keyword: filter.keyword ?? '' }}
         onKeywordChange={(value: string) => updateFilters('keyword', value)}
         onSearch={() => undefined}
-        onReset={() => {
-          updateFilters('status', '');
-          updateFilters('keyword', '');
-        }}
-        isFilterEmpty={!filters.status && !filters.keyword}
+        onReset={handleReset}
+        isFilterEmpty={!filter.status && !filter.keyword}
         t={t}
       >
         <ExamenStatusFilter
           onFilterChange={(value) => updateFilters('status', value)}
-          value={filters}
+          value={{ status: filter.status as ExamenStatus }}
         />
       </ListFilter>
     </>

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, ExamStatus as PrismaExamStatus } from '@prisma/client';
 
 export type ExamWithRelations = Prisma.ExamGetPayload<{
   include: {
@@ -24,6 +24,16 @@ export type ExamSortField =
 export type CanDeleteExamReason = {
   linkedAttachments: boolean;
   linkedAdditionalTests: boolean;
+};
+
+
+
+export const ExamStatus = {
+  PENDING: PrismaExamStatus.PENDING,
+  PROCESSING: PrismaExamStatus.PROCESSING,
+  COMPLETED: PrismaExamStatus.COMPLETED,
+  ARCHIVED: PrismaExamStatus.ARCHIVED,
+  CANCELLED: PrismaExamStatus.CANCELLED,
 };
 
 // Using Prisma's generated types

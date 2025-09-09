@@ -42,7 +42,7 @@ export function SidemenuWrapper() {
 
   const menuItems = [
     { href: `/${currentStructure?.id}`, label: t('home') },
-    { href: `/${currentStructure?.id}/exams`, label: t('exams') },
+    { href: `/${currentStructure?.id}/examens`, label: t('exams') },
     { href: `/${currentStructure?.id}/animals`, label: t('animals') },
     { href: '#', label: t('messages'), badge: 1 },
   ];

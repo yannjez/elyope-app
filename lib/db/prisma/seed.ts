@@ -9,7 +9,12 @@
 import fs from 'fs';
 import path from 'path';
 
-import { PrismaClient, AnimalSpecies, Prisma, ExamStaus } from '@prisma/client';
+import {
+  PrismaClient,
+  AnimalSpecies,
+  Prisma,
+  ExamStatus,
+} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -438,7 +443,7 @@ async function insertAnimalData() {
 }
 
 async function insertExamenData() {
-  // Get references using queries
+  // Get references using queries - Create 15 exams total with all statuses
   const animals = await prisma.animal.findMany({
     select: {
       id: true,
@@ -448,7 +453,7 @@ async function insertExamenData() {
         select: { name: true },
       },
     },
-    take: 4, // Limit to first 4 animals for seed data
+    take: 6, // Get more animals to create 15 exams total
   });
 
   const interpreters = await prisma.user.findMany({
@@ -458,7 +463,7 @@ async function insertExamenData() {
       },
     },
     select: { id: true, externalId: true },
-    take: 2,
+    take: 3,
   });
 
   if (animals.length === 0) {
@@ -475,82 +480,247 @@ async function insertExamenData() {
     `Found ${animals.length} animals and ${interpreters.length} interpreters`
   );
 
-  // Create exam data for each animal
+  // Create exam data for each animal - aiming for 15 total exams
   const examsToCreate: Prisma.ExamCreateManyInput[] = [];
 
-  for (let i = 0; i < animals.length; i++) {
+  // Define the statuses we want to distribute
+  const statuses = [
+    ExamStatus.PENDING,
+    ExamStatus.PROCESSING,
+    ExamStatus.COMPLETED,
+    ExamStatus.ARCHIVED,
+    ExamStatus.CANCELLED,
+  ];
+
+  // Create 3 exams per animal (but we'll limit to 15 total)
+  for (let i = 0; i < animals.length && examsToCreate.length < 15; i++) {
     const animal = animals[i];
-    const interpreter = interpreters[i % interpreters.length]; // Cycle through interpreters
+    const interpreter = interpreters[i % interpreters.length];
 
-    // Create a pending exam
-    examsToCreate.push({
-      status: ExamStaus.PENDING,
-      requestedAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000), // Stagger dates
-      vetReference: `VET-${Date.now()}-${i + 1}`,
-      animalId: animal.id,
-      structureId: animal.structureId,
-      interpreterUserId: interpreter.id,
-      requestReason: `Suspicion d'épilepsie pour ${animal.name}`,
-      history: `Historique médical de ${animal.name} - Animal présentant des signes neurologiques`,
-      clinicalExams: 'Examen clinique général normal, reflexes normaux',
-      manifestationCategory: i % 2 === 0 ? 'paroxysmal' : 'vigilance',
-      paroxysmalSubtype: i % 2 === 0 ? 'isolated' : null,
-      manifestationOther:
-        i % 2 === 1 ? 'Troubles de la vigilance observés' : null,
-      firstManifestationAt: new Date(
-        Date.now() - (30 + i * 10) * 24 * 60 * 60 * 1000
-      ),
-      lastManifestationAt: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
-      manifestationDescription: `Manifestations observées chez ${animal.name}`,
-      manifestationFrequency: ['daily', 'weekly', 'monthly', 'occasional'][
-        i % 4
-      ],
-      avgManifestationDurationMin: [5, 10, 15, 20][i % 4],
-      clinicalSuspicion: 'Épilepsie idiopathique',
-      currentAntiepilepticTreatments:
-        i % 2 === 0 ? 'Phénobarbital 2mg/kg BID' : null,
-      otherTreatments: 'Aucun autre traitement en cours',
-      examCondition: 'Animal calme et coopératif',
-      sedationProtocol: i % 3 === 0 ? 'Médétomidine 10μg/kg IM' : null,
-      eegSpecificEvents: "À surveiller pendant l'examen EEG",
-      duringExamClinical: "Observations cliniques pendant l'examen",
-      comments: `Examen EEG programmé pour ${animal.name} - Structure: ${animal.structure.name}`,
-    });
+    // Create 3 exams per animal with different statuses
+    for (let j = 0; j < 3 && examsToCreate.length < 15; j++) {
+      const statusIndex = (i * 3 + j) % statuses.length;
+      const status = statuses[statusIndex];
 
-    // Create a completed exam
-    if (i < 2) {
-      // Only create completed exams for first 2 animals
-      examsToCreate.push({
-        status: ExamStaus.COMPLETED,
-        requestedAt: new Date(Date.now() - (60 + i * 20) * 24 * 60 * 60 * 1000),
-        vetReference: `VET-COMP-${Date.now()}-${i + 1}`,
-        animalId: animal.id,
-        structureId: animal.structureId,
-        interpreterUserId: interpreter.id,
-        requestReason: `Examen EEG complémentaire pour ${animal.name}`,
-        history: `Suivi de l'épilepsie de ${animal.name}`,
-        clinicalExams: 'Examen clinique post-traitement',
-        manifestationCategory: 'paroxysmal',
-        paroxysmalSubtype: 'isolated',
-        firstManifestationAt: new Date(
-          Date.now() - (90 + i * 15) * 24 * 60 * 60 * 1000
-        ),
-        lastManifestationAt: new Date(
-          Date.now() - (30 + i * 10) * 24 * 60 * 60 * 1000
-        ),
-        manifestationDescription: `Évolution favorable des manifestations de ${animal.name}`,
-        manifestationFrequency: 'weekly',
-        avgManifestationDurationMin: 3,
-        clinicalSuspicion: 'Épilepsie idiopathique confirmée',
-        currentAntiepilepticTreatments:
-          'Phénobarbital 2mg/kg BID - dosage ajusté',
-        otherTreatments: 'Complément nutritionnel',
-        examCondition: 'Animal bien contrôlé sous traitement',
-        sedationProtocol: 'Médétomidine 10μg/kg IM',
-        eegSpecificEvents: 'Activité EEG normale sous traitement',
-        duringExamClinical: "Aucune manifestation observée pendant l'examen",
-        comments: `Examen de contrôle - Réponse favorable au traitement pour ${animal.name}`,
-      });
+      let examData: Prisma.ExamCreateManyInput;
+
+      switch (status) {
+        case ExamStatus.PENDING:
+          examData = {
+            status: ExamStatus.PENDING,
+            requestedAt: new Date(
+              Date.now() - (i * 3 + j) * 24 * 60 * 60 * 1000
+            ),
+            vetReference: `VET-PENDING-${Date.now()}-${i}-${j}`,
+            animalId: animal.id,
+            structureId: animal.structureId,
+            interpreterUserId: interpreter.id,
+            requestReason: `Suspicion d'épilepsie pour ${animal.name}`,
+            history: `Historique médical de ${animal.name} - Animal présentant des signes neurologiques`,
+            clinicalExams: 'Examen clinique général normal, reflexes normaux',
+            manifestationCategory:
+              (i + j) % 2 === 0 ? 'paroxysmal' : 'vigilance',
+            paroxysmalSubtype: (i + j) % 2 === 0 ? 'isolated' : null,
+            manifestationOther:
+              (i + j) % 2 === 1 ? 'Troubles de la vigilance observés' : null,
+            firstManifestationAt: new Date(
+              Date.now() - (30 + (i * 3 + j) * 10) * 24 * 60 * 60 * 1000
+            ),
+            lastManifestationAt: new Date(
+              Date.now() - (i * 3 + j) * 7 * 24 * 60 * 60 * 1000
+            ),
+            manifestationDescription: `Manifestations observées chez ${animal.name}`,
+            manifestationFrequency: [
+              'daily',
+              'weekly',
+              'monthly',
+              'occasional',
+            ][(i + j) % 4],
+            avgManifestationDurationMin: [5, 10, 15, 20][(i + j) % 4],
+            clinicalSuspicion: 'Épilepsie idiopathique',
+            currentAntiepilepticTreatments:
+              (i + j) % 2 === 0 ? 'Phénobarbital 2mg/kg BID' : null,
+            otherTreatments: 'Aucun autre traitement en cours',
+            examCondition: 'Animal calme et coopératif',
+            sedationProtocol:
+              (i + j) % 3 === 0 ? 'Médétomidine 10μg/kg IM' : null,
+            eegSpecificEvents: "À surveiller pendant l'examen EEG",
+            duringExamClinical: "Observations cliniques pendant l'examen",
+            comments: `Examen EEG programmé pour ${animal.name} - Structure: ${animal.structure.name}`,
+          };
+          break;
+
+        case ExamStatus.PROCESSING:
+          examData = {
+            status: ExamStatus.PROCESSING,
+            requestedAt: new Date(
+              Date.now() - (20 + (i * 3 + j) * 15) * 24 * 60 * 60 * 1000
+            ),
+            vetReference: `VET-PROC-${Date.now()}-${i}-${j}`,
+            animalId: animal.id,
+            structureId: animal.structureId,
+            interpreterUserId: interpreter.id,
+            requestReason: `Évaluation neurologique en cours pour ${animal.name}`,
+            history: `Suivi neurologique de ${animal.name}`,
+            clinicalExams: 'Examen en cours - résultats partiels disponibles',
+            manifestationCategory: 'paroxysmal',
+            paroxysmalSubtype: 'grouped',
+            firstManifestationAt: new Date(
+              Date.now() - (45 + (i * 3 + j) * 12) * 24 * 60 * 60 * 1000
+            ),
+            lastManifestationAt: new Date(
+              Date.now() - (i * 3 + j) * 5 * 24 * 60 * 60 * 1000
+            ),
+            manifestationDescription: `Manifestations épileptiques en cours d'analyse pour ${animal.name}`,
+            manifestationFrequency: 'daily',
+            avgManifestationDurationMin: 8,
+            clinicalSuspicion: 'Épilepsie en cours de diagnostic',
+            currentAntiepilepticTreatments: 'Phénobarbital 1.5mg/kg BID',
+            otherTreatments: "En cours d'évaluation",
+            examCondition: 'Animal sous sédation légère',
+            sedationProtocol: 'Midazolam 0.2mg/kg IV',
+            eegSpecificEvents: 'Analyse EEG en cours',
+            duringExamClinical: "Manifestations observées pendant l'examen",
+            comments: `Examen en cours d'analyse pour ${animal.name}`,
+          };
+          break;
+
+        case ExamStatus.COMPLETED:
+          examData = {
+            status: ExamStatus.COMPLETED,
+            requestedAt: new Date(
+              Date.now() - (60 + (i * 3 + j) * 20) * 24 * 60 * 60 * 1000
+            ),
+            vetReference: `VET-COMP-${Date.now()}-${i}-${j}`,
+            animalId: animal.id,
+            structureId: animal.structureId,
+            interpreterUserId: interpreter.id,
+            requestReason: `Examen EEG complémentaire pour ${animal.name}`,
+            history: `Suivi de l'épilepsie de ${animal.name}`,
+            clinicalExams: 'Examen clinique post-traitement',
+            manifestationCategory: 'paroxysmal',
+            paroxysmalSubtype: 'isolated',
+            firstManifestationAt: new Date(
+              Date.now() - (90 + (i * 3 + j) * 15) * 24 * 60 * 60 * 1000
+            ),
+            lastManifestationAt: new Date(
+              Date.now() - (30 + (i * 3 + j) * 10) * 24 * 60 * 60 * 1000
+            ),
+            manifestationDescription: `Évolution favorable des manifestations de ${animal.name}`,
+            manifestationFrequency: 'weekly',
+            avgManifestationDurationMin: 3,
+            clinicalSuspicion: 'Épilepsie idiopathique confirmée',
+            currentAntiepilepticTreatments:
+              'Phénobarbital 2mg/kg BID - dosage ajusté',
+            otherTreatments: 'Complément nutritionnel',
+            examCondition: 'Animal bien contrôlé sous traitement',
+            sedationProtocol: 'Médétomidine 10μg/kg IM',
+            eegSpecificEvents: 'Activité EEG normale sous traitement',
+            duringExamClinical:
+              "Aucune manifestation observée pendant l'examen",
+            comments: `Examen terminé avec succès pour ${animal.name}`,
+          };
+          break;
+
+        case ExamStatus.ARCHIVED:
+          examData = {
+            status: ExamStatus.ARCHIVED,
+            requestedAt: new Date(
+              Date.now() - (120 + (i * 3 + j) * 30) * 24 * 60 * 60 * 1000
+            ),
+            vetReference: `VET-ARCH-${Date.now()}-${i}-${j}`,
+            animalId: animal.id,
+            structureId: animal.structureId,
+            interpreterUserId: interpreter.id,
+            requestReason: `Examen archivé pour ${animal.name}`,
+            history: `Historique archivé de ${animal.name}`,
+            clinicalExams: 'Examen archivé - résultats conservés',
+            manifestationCategory: 'vigilance',
+            paroxysmalSubtype: null,
+            firstManifestationAt: new Date(
+              Date.now() - (180 + (i * 3 + j) * 25) * 24 * 60 * 60 * 1000
+            ),
+            lastManifestationAt: new Date(
+              Date.now() - (90 + (i * 3 + j) * 20) * 24 * 60 * 60 * 1000
+            ),
+            manifestationDescription: `Manifestations anciennes de ${animal.name} - archivées`,
+            manifestationFrequency: 'occasional',
+            avgManifestationDurationMin: 12,
+            clinicalSuspicion: 'Épilepsie ancienne - stabilisée',
+            currentAntiepilepticTreatments: 'Traitement arrêté - surveillance',
+            otherTreatments: 'Suivi vétérinaire régulier',
+            examCondition: 'Animal stabilisé',
+            sedationProtocol: null,
+            eegSpecificEvents: 'Résultats archivés',
+            duringExamClinical: 'Examen archivé',
+            comments: `Examen archivé - ${animal.name} - Structure: ${animal.structure.name}`,
+          };
+          break;
+
+        case ExamStatus.CANCELLED:
+          examData = {
+            status: ExamStatus.CANCELLED,
+            requestedAt: new Date(
+              Date.now() - (40 + (i * 3 + j) * 18) * 24 * 60 * 60 * 1000
+            ),
+            vetReference: `VET-CANCEL-${Date.now()}-${i}-${j}`,
+            animalId: animal.id,
+            structureId: animal.structureId,
+            interpreterUserId: interpreter.id,
+            requestReason: `Examen annulé pour ${animal.name}`,
+            history: `Demande d'examen annulée pour ${animal.name}`,
+            clinicalExams: 'Examen annulé avant réalisation',
+            manifestationCategory: null,
+            paroxysmalSubtype: null,
+            firstManifestationAt: null,
+            lastManifestationAt: null,
+            manifestationDescription: null,
+            manifestationFrequency: null,
+            avgManifestationDurationMin: null,
+            clinicalSuspicion: null,
+            currentAntiepilepticTreatments: null,
+            otherTreatments: null,
+            examCondition: 'Examen annulé',
+            sedationProtocol: null,
+            eegSpecificEvents: null,
+            duringExamClinical: null,
+            comments: `Examen annulé pour ${animal.name} - Motif: amélioration clinique spontanée`,
+          };
+          break;
+
+        default:
+          // Fallback to PENDING if status is not recognized
+          examData = {
+            status: ExamStatus.PENDING,
+            requestedAt: new Date(
+              Date.now() - (i * 3 + j) * 24 * 60 * 60 * 1000
+            ),
+            vetReference: `VET-DEFAULT-${Date.now()}-${i}-${j}`,
+            animalId: animal.id,
+            structureId: animal.structureId,
+            interpreterUserId: interpreter.id,
+            requestReason: `Examen par défaut pour ${animal.name}`,
+            history: `Historique médical de ${animal.name}`,
+            clinicalExams: 'Examen clinique général',
+            manifestationCategory: null,
+            paroxysmalSubtype: null,
+            firstManifestationAt: null,
+            lastManifestationAt: null,
+            manifestationDescription: null,
+            manifestationFrequency: null,
+            avgManifestationDurationMin: null,
+            clinicalSuspicion: null,
+            currentAntiepilepticTreatments: null,
+            otherTreatments: null,
+            examCondition: "Animal en attente d'examen",
+            sedationProtocol: null,
+            eegSpecificEvents: null,
+            duringExamClinical: null,
+            comments: `Examen programmé pour ${animal.name}`,
+          };
+      }
+
+      examsToCreate.push(examData);
     }
   }
 
@@ -560,7 +730,9 @@ async function insertExamenData() {
     skipDuplicates: true,
   });
 
-  console.log(`✅ Created ${examsToCreate.length} exams`);
+  console.log(
+    `✅ Created ${examsToCreate.length} exams (15 total with all statuses)`
+  );
 
   // Display what was created
   const createdExams = await prisma.exam.findMany({
@@ -573,6 +745,18 @@ async function insertExamenData() {
     take: examsToCreate.length,
   });
 
+  // Group exams by status for summary
+  const statusCount = createdExams.reduce((acc, exam) => {
+    acc[exam.status] = (acc[exam.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  console.log('📊 Exam Status Distribution:');
+  Object.entries(statusCount).forEach(([status, count]) => {
+    console.log(`  - ${status}: ${count} exams`);
+  });
+
+  console.log('\n📋 Individual Exams:');
   for (const exam of createdExams) {
     console.log(
       `  - Exam ${exam.vetReference} (${exam.status}) for ${exam.animal.name} at ${exam.structure.name}`

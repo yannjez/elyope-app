@@ -1,6 +1,11 @@
 import { BaseFilter } from './Base';
 
-export type ExamenStatus = 'pending' | 'processing' | 'completed' | 'archived';
+export type ExamenStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'archived'
+  | 'cancelled';
 
 export type Examen = {
   id: string;

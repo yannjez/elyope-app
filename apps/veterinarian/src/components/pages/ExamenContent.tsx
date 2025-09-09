@@ -1,26 +1,21 @@
 'use client';
 
 import { PageHeader, Examens, Button } from '@app-test2/shared-components';
-import { ExamenControllerProvider } from './Examen/ExamenContext';
-import ExamenFilter from './Examen/ExamenFilter';
-import ExamenList from './Examen/ExamenList';
+import ExamenFilter from './Examen/list/ExamenFilter';
+import ExamenList from './Examen/list/ExamenList';
 
 export default function ExamenContent() {
   return (
     <>
-      <ExamenControllerProvider>
-        <PageHeader
-          title="Examens"
-          icon={<Examens className="w-full" />}
-          action={
-            <Button className="button-primary min-w-40">
-              + Créer un examen
-            </Button>
-          }
-          filters={<ExamenFilter />}
-        />
-        <ExamenList />
-      </ExamenControllerProvider>
+      <PageHeader
+        title="Examens"
+        icon={<Examens className="w-full" />}
+        action={
+          <Button className="button-primary min-w-40">+ Créer un examen</Button>
+        }
+        filters={<ExamenFilter />}
+      />
+      <ExamenList />
     </>
   );
 }

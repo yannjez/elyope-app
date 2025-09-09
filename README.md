@@ -82,7 +82,7 @@ Database management and Prisma schema configuration for the application.
 npx nx run db:generate
 
 # Run database migrations
-npx nx run db:migrate
+npx nx run db:migrate --name xxxx
 
 # Reset database
 npx nx run db:migrate-reset

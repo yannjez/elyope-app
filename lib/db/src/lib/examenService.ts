@@ -1,4 +1,4 @@
-import { ExamStaus, Prisma, PrismaClient } from '@prisma/client';
+import { ExamStatus, Prisma, PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import { ExamSortField, CanDeleteExamReason } from '../type/index.js';
 
@@ -104,7 +104,7 @@ export class ExamenService extends BaseService {
     sort?: ExamSortField,
     sortDirection?: 'asc' | 'desc',
     search?: string,
-    status?: ExamStaus
+    status?: ExamStatus
   ) => {
     const offset = (page - 1) * limit;
 
@@ -146,7 +146,7 @@ export class ExamenService extends BaseService {
   getFilteredExamCount = async (
     structureId?: string,
     search?: string,
-    status?: ExamStaus
+    status?: ExamStatus
   ) => {
     const where = this.buildSearchWhere(structureId, search, status);
     const count = await this.prisma.exam.count({
@@ -161,7 +161,7 @@ export class ExamenService extends BaseService {
   private buildSearchWhere(
     structureId?: string,
     keyword?: string,
-    status?: ExamStaus
+    status?: ExamStatus
   ) {
     const where = {
       structureId: structureId,

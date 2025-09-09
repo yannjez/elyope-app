@@ -25,12 +25,12 @@ export type DataGridProps<T> = {
   data: (T & { rowClass?: string })[];
   className?: string;
   skeletonRowClass?: string;
-  onSort?: (field: keyof T, direction: 'asc' | 'desc') => void;
+  onSort?: (field: keyof T | string, direction: 'asc' | 'desc') => void;
   noDataMessage?: string | ReactNode;
   isLoading?: boolean;
   loadingRows?: number;
   // Controlled sort state
-  sortField?: keyof T | null;
+  sortField?: keyof T | string | null;
   sortDirection?: 'asc' | 'desc';
   blueMode?: boolean;
   // Mobile configuration
@@ -133,10 +133,14 @@ export type DataGridProps<T> = {
  * ```
  */
 
-function sortData<T>(data: T[], field: keyof T, direction: 'asc' | 'desc') {
+function sortData<T>(
+  data: T[],
+  field: keyof T | string,
+  direction: 'asc' | 'desc'
+) {
   return [...data].sort((a, b) => {
-    const aValue = a[field];
-    const bValue = b[field];
+    const aValue = (a as T)[field as keyof T];
+    const bValue = (b as T)[field as keyof T];
     if (aValue == null) return 1;
     if (bValue == null) return -1;
     if (aValue === bValue) return 0;
@@ -188,9 +192,9 @@ export function DataGrid<T extends object>({
   forceMobileView = false,
   mobileCardClassName,
 }: DataGridProps<T>) {
-  const [internalSortField, setInternalSortField] = useState<keyof T | null>(
-    null
-  );
+  const [internalSortField, setInternalSortField] = useState<
+    keyof T | string | null
+  >(null);
   const [internalSortDirection, setInternalSortDirection] = useState<
     'asc' | 'desc'
   >('asc');
@@ -207,7 +211,7 @@ export function DataGrid<T extends object>({
       ? externalSortDirection
       : internalSortDirection;
 
-  const handleSort = (field: keyof T, direction: 'asc' | 'desc') => {
+  const handleSort = (field: keyof T | string, direction: 'asc' | 'desc') => {
     // Update internal state if not using external state
     if (externalSortField === undefined) {
       setInternalSortDirection(direction);
