@@ -9,7 +9,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { PrismaClient, AnimalSpecies, Prisma } from '@prisma/client';
+import { PrismaClient, AnimalSpecies, Prisma, ExamStaus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -339,7 +339,6 @@ async function insertBreeds(filePath: string) {
   }
 
   if (toInsert.length) {
-
     await insertBreedBatch(toInsert);
   }
 }
@@ -438,6 +437,177 @@ async function insertAnimalData() {
   }
 }
 
+async function insertExamenData() {
+  // Get references using queries
+  const animals = await prisma.animal.findMany({
+    select: {
+      id: true,
+      name: true,
+      structureId: true,
+      structure: {
+        select: { name: true },
+      },
+    },
+    take: 4, // Limit to first 4 animals for seed data
+  });
+
+  const interpreters = await prisma.user.findMany({
+    where: {
+      roles: {
+        has: 'INTERPRETER',
+      },
+    },
+    select: { id: true, externalId: true },
+    take: 2,
+  });
+
+  if (animals.length === 0) {
+    console.log('Warning: No animals found to create exams');
+    return;
+  }
+
+  if (interpreters.length === 0) {
+    console.log('Warning: No interpreters found to assign to exams');
+    return;
+  }
+
+  console.log(
+    `Found ${animals.length} animals and ${interpreters.length} interpreters`
+  );
+
+  // Create exam data for each animal
+  const examsToCreate: Prisma.ExamCreateManyInput[] = [];
+
+  for (let i = 0; i < animals.length; i++) {
+    const animal = animals[i];
+    const interpreter = interpreters[i % interpreters.length]; // Cycle through interpreters
+
+    // Create a pending exam
+    examsToCreate.push({
+      status: ExamStaus.PENDING,
+      requestedAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000), // Stagger dates
+      vetReference: `VET-${Date.now()}-${i + 1}`,
+      animalId: animal.id,
+      structureId: animal.structureId,
+      interpreterUserId: interpreter.id,
+      requestReason: `Suspicion d'épilepsie pour ${animal.name}`,
+      history: `Historique médical de ${animal.name} - Animal présentant des signes neurologiques`,
+      clinicalExams: 'Examen clinique général normal, reflexes normaux',
+      manifestationCategory: i % 2 === 0 ? 'paroxysmal' : 'vigilance',
+      paroxysmalSubtype: i % 2 === 0 ? 'isolated' : null,
+      manifestationOther:
+        i % 2 === 1 ? 'Troubles de la vigilance observés' : null,
+      firstManifestationAt: new Date(
+        Date.now() - (30 + i * 10) * 24 * 60 * 60 * 1000
+      ),
+      lastManifestationAt: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+      manifestationDescription: `Manifestations observées chez ${animal.name}`,
+      manifestationFrequency: ['daily', 'weekly', 'monthly', 'occasional'][
+        i % 4
+      ],
+      avgManifestationDurationMin: [5, 10, 15, 20][i % 4],
+      clinicalSuspicion: 'Épilepsie idiopathique',
+      currentAntiepilepticTreatments:
+        i % 2 === 0 ? 'Phénobarbital 2mg/kg BID' : null,
+      otherTreatments: 'Aucun autre traitement en cours',
+      examCondition: 'Animal calme et coopératif',
+      sedationProtocol: i % 3 === 0 ? 'Médétomidine 10μg/kg IM' : null,
+      eegSpecificEvents: "À surveiller pendant l'examen EEG",
+      duringExamClinical: "Observations cliniques pendant l'examen",
+      comments: `Examen EEG programmé pour ${animal.name} - Structure: ${animal.structure.name}`,
+    });
+
+    // Create a completed exam
+    if (i < 2) {
+      // Only create completed exams for first 2 animals
+      examsToCreate.push({
+        status: ExamStaus.COMPLETED,
+        requestedAt: new Date(Date.now() - (60 + i * 20) * 24 * 60 * 60 * 1000),
+        vetReference: `VET-COMP-${Date.now()}-${i + 1}`,
+        animalId: animal.id,
+        structureId: animal.structureId,
+        interpreterUserId: interpreter.id,
+        requestReason: `Examen EEG complémentaire pour ${animal.name}`,
+        history: `Suivi de l'épilepsie de ${animal.name}`,
+        clinicalExams: 'Examen clinique post-traitement',
+        manifestationCategory: 'paroxysmal',
+        paroxysmalSubtype: 'isolated',
+        firstManifestationAt: new Date(
+          Date.now() - (90 + i * 15) * 24 * 60 * 60 * 1000
+        ),
+        lastManifestationAt: new Date(
+          Date.now() - (30 + i * 10) * 24 * 60 * 60 * 1000
+        ),
+        manifestationDescription: `Évolution favorable des manifestations de ${animal.name}`,
+        manifestationFrequency: 'weekly',
+        avgManifestationDurationMin: 3,
+        clinicalSuspicion: 'Épilepsie idiopathique confirmée',
+        currentAntiepilepticTreatments:
+          'Phénobarbital 2mg/kg BID - dosage ajusté',
+        otherTreatments: 'Complément nutritionnel',
+        examCondition: 'Animal bien contrôlé sous traitement',
+        sedationProtocol: 'Médétomidine 10μg/kg IM',
+        eegSpecificEvents: 'Activité EEG normale sous traitement',
+        duringExamClinical: "Aucune manifestation observée pendant l'examen",
+        comments: `Examen de contrôle - Réponse favorable au traitement pour ${animal.name}`,
+      });
+    }
+  }
+
+  // Insert all exams
+  await prisma.exam.createMany({
+    data: examsToCreate,
+    skipDuplicates: true,
+  });
+
+  console.log(`✅ Created ${examsToCreate.length} exams`);
+
+  // Display what was created
+  const createdExams = await prisma.exam.findMany({
+    include: {
+      animal: { select: { name: true } },
+      structure: { select: { name: true } },
+      interpreter: { select: { externalId: true } },
+    },
+    orderBy: { createdAt: 'desc' },
+    take: examsToCreate.length,
+  });
+
+  for (const exam of createdExams) {
+    console.log(
+      `  - Exam ${exam.vetReference} (${exam.status}) for ${exam.animal.name} at ${exam.structure.name}`
+    );
+  }
+
+  // Create some additional test data for the exams
+  const firstExam = createdExams[0];
+  if (firstExam) {
+    // Add some additional tests
+    await prisma.examAdditionalTest.createMany({
+      data: [
+        {
+          examId: firstExam.id,
+          type: 'NFS',
+          findings: 'Résultats normaux - numération normale',
+        },
+        {
+          examId: firstExam.id,
+          type: 'BIOCHEMISTRY',
+          findings: 'Biochimie sanguine dans les normes',
+        },
+        {
+          examId: firstExam.id,
+          type: 'MRI',
+          findings: "IRM cérébrale - pas d'anomalie structurelle détectée",
+        },
+      ],
+      skipDuplicates: true,
+    });
+
+    console.log(`✅ Added additional tests for exam ${firstExam.vetReference}`);
+  }
+}
+
 async function main() {
   await insertUserStructureData(); // Insertion des données pour User, Structure, StructureUser
   console.log(`✅ Done : user , structure , structureUser `);
@@ -448,6 +618,9 @@ async function main() {
 
   await insertAnimalData(); // Insertion des données pour Animal
   console.log(`✅ Done : animal `);
+
+  await insertExamenData(); // Insertion des données pour Exam
+  console.log(`✅ Done : exams `);
 }
 
 main()
