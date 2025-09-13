@@ -53,7 +53,9 @@ export default function AnimalListFilter() {
     >
       {/* Species Filter */}
       <div className="flex gap-2 w-full">
-        <span className="text-14 ">{t('species_filter_label')}</span>
+        <span className="text-14 whitespace-nowrap ">
+          {t('species_filter_label')}
+        </span>
         <div className="flex items-center gap-1">
           {animalSpeciesOptions.map((species) => (
             <Button

@@ -36,6 +36,7 @@
             }
         },
         "Examen": {
+            "no_data": "No examen found",
             "name": "Examen",
             "columns": {
                 "date": "Date",
@@ -50,10 +51,11 @@
                 "interpreter": "Interpreter"
             },
             "status": {
-                "pending": "Pending",
-                "processing": "Processing",
-                "completed": "Completed",
-                "archived": "Archived"
+                "PENDING": "Pending",
+                "PROCESSING": "Processing",
+                "COMPLETED": "Completed",
+                "ARCHIVED": "Archived",
+                "CANCELLED": "Cancelled"
             }
         },
         "User": {

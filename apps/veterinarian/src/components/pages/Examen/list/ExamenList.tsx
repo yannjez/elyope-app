@@ -94,12 +94,7 @@ export default function ExamenList() {
               isSortable: true,
               displayCell: (row) => row.animal,
             },
-            {
-              header: t('columns.interpreter'),
-              field: 'vet',
-              isSortable: false,
-              displayCell: (row) => row.vet,
-            },
+
             {
               header: t('columns.comment'),
               field: 'comments',

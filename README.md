@@ -78,6 +78,13 @@ Database management and Prisma schema configuration for the application.
 **Commands:**
 
 ```bash
+
+
+# DEV 
+npx nx dev veterinarian
+npx nx dev elyope-admin
+
+
 # Generate Prisma client
 npx nx run db:generate
 

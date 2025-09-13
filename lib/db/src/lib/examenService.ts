@@ -119,7 +119,7 @@ export class ExamenService extends BaseService {
         structureName: { structure: { name: direction } },
       };
 
-    const orderBy = sort && sortableFields[sort];
+    const orderBy = (sort && sortableFields[sort]) || { requestedAt: 'desc' };
 
     return await this.prisma.exam.findMany({
       where,

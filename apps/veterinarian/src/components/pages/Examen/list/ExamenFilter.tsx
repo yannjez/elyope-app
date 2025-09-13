@@ -23,11 +23,10 @@ function ExamenStatusFilter({ onFilterChange, value }: ExamenFilterProps) {
     <Select
       options={[
         { label: tCommon('all'), value: '' },
-        { label: tStatus('pending'), value: ExamStatus.PENDING },
-        { label: tStatus('processing'), value: ExamStatus.PROCESSING },
-        { label: tStatus('completed'), value: ExamStatus.COMPLETED },
-        { label: tStatus('archived'), value: ExamStatus.ARCHIVED },
-        { label: tStatus('cancelled'), value: ExamStatus.CANCELLED },
+        { label: tStatus('PENDING'), value: ExamStatus.PENDING },
+        { label: tStatus('PROCESSING'), value: ExamStatus.PROCESSING },
+        { label: tStatus('COMPLETED'), value: ExamStatus.COMPLETED },
+        { label: tStatus('ARCHIVED'), value: ExamStatus.ARCHIVED },
       ]}
       value={value.status ?? ''}
       onChange={(value: string) => onFilterChange(value as ExamenStatus)}

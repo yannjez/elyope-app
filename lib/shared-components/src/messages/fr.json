@@ -36,6 +36,7 @@
             }
         },
         "Examen": {
+            "no_data": "Aucun examen trouvé",
             "name": "Examen",
             "columns": {
                 "date": "Date",
@@ -45,10 +46,11 @@
                 "interpreter": "Interprétateur"
             },
             "status": {
-                "pending": "En attente",
-                "processing": "En cours",
-                "completed": "Terminé",
-                "archived": "Archivé"
+                "PENDING": "En attente",
+                "PROCESSING": "En cours",
+                "COMPLETED": "Terminé",
+                "ARCHIVED": "Archivé",
+                "CANCELLED": "Annulé"
             }
         },
         "User": {

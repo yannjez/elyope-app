@@ -36,7 +36,11 @@ export const getExams = async (
     request.keyword,
     request.status as keyof typeof ExamStatus | undefined
   );
-  const pagination = examenService.getPaginationInfo(count);
+  const pagination = examenService.getPaginationInfo(
+    count,
+    examenService.listLimit
+  );
+
   return { data, pagination };
 };
 
