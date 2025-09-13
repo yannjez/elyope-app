@@ -8,7 +8,9 @@ import {
   ExamSortField,
   ExamStatus,
   ExamFullDetail,
+  AnimalService,
 } from '@elyope/db';
+import { getLocale } from 'next-intl/server';
 
 export type ExamenRequest = {
   page?: number;
@@ -61,6 +63,61 @@ export const getExamFullDetail = async (
   id: string,
   structureId: string
 ): Promise<ExamFullDetail | null> => {
+  const locale = await getLocale();
   const examenService = new ExamenService(prisma);
-  return await examenService.getExamFullDetail(id, structureId);
+  return await examenService.getExamFullDetail(
+    id,
+    structureId,
+    locale?.includes('en') ? 'en' : 'fr'
+  );
+};
+
+export const updateExam = async (
+  id: string,
+  input: Partial<{
+    status: keyof typeof ExamStatus;
+    requestedAt: Date;
+    vetReference: string;
+    animalId: string;
+    requestReason: string;
+    history: string;
+    clinicalExams: string;
+    manifestationCategory: string;
+    paroxysmalSubtype: string;
+    manifestationOther: string;
+    firstManifestationAt: Date;
+    lastManifestationAt: Date;
+    manifestationDescription: string;
+    manifestationFrequency: string;
+    avgManifestationDurationMin: number;
+    clinicalSuspicion: string;
+    currentAntiepilepticTreatments: string;
+    otherTreatments: string;
+    examCondition: string;
+    sedationProtocol: string;
+    eegSpecificEvents: string;
+    duringExamClinical: string;
+    comments: string;
+  }>
+) => {
+  const examenService = new ExamenService(prisma);
+  return await examenService.updateExam(id, input);
+};
+
+export const searchAnimalsForExamen = async (
+  structureId: string,
+  keyword?: string,
+  limit = 10
+) => {
+  const animalService = new AnimalService(prisma);
+  return await animalService.getAnimals(
+    structureId,
+    1,
+    limit,
+    'name',
+    'asc',
+    keyword,
+    undefined,
+    'fr'
+  );
 };

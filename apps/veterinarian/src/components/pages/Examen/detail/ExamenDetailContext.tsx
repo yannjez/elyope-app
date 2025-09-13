@@ -1,10 +1,12 @@
 'use client';
 
-import { ExamWithRelations } from '@elyope/db';
+import { AnimalFull, ExamWithRelations } from '@elyope/db';
 import { createContext, useContext } from 'react';
 
 type ExamenDetailContextType = {
   examen?: ExamWithRelations;
+  animal?: AnimalFull;
+  animals?: AnimalFull[];
 };
 
 const ExamenDetailContext = createContext<ExamenDetailContextType | undefined>(
@@ -14,14 +16,24 @@ const ExamenDetailContext = createContext<ExamenDetailContextType | undefined>(
 type ExamenDetailProviderProps = {
   children: React.ReactNode;
   _examen?: ExamWithRelations;
+  _animal?: AnimalFull;
+  _animals?: AnimalFull[];
 };
 
 export const ExamenDetailProvider = ({
   children,
   _examen,
+  _animal,
+  _animals,
 }: ExamenDetailProviderProps) => {
+  const value = {
+    examen: _examen,
+    animal: _animal,
+    animals: _animals,
+  };
+
   return (
-    <ExamenDetailContext.Provider value={{ examen: _examen }}>
+    <ExamenDetailContext.Provider value={value}>
       {children}
     </ExamenDetailContext.Provider>
   );

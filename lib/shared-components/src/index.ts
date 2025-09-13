@@ -32,6 +32,7 @@ export {
 /* Forms */
 export { default as Button } from './lib/forms/Button';
 export { default as Input } from './lib/forms/Input';
+export { default as Textarea } from './lib/forms/Textarea';
 export { default as Select } from './lib/forms/Select';
 export { FormPanel } from './lib/forms/FormPanel';
 export { FormField } from './lib/forms/FormField';

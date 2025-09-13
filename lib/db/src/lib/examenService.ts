@@ -5,6 +5,7 @@ import {
   CanDeleteExamReason,
   ExamFullDetail,
 } from '../type/index.js';
+import { AnimalService } from './animalService.js';
 
 export class ExamenService extends BaseService {
   constructor(prisma: PrismaClient) {
@@ -106,7 +107,8 @@ export class ExamenService extends BaseService {
    */
   getExamFullDetail = async (
     id: string,
-    structureId: string
+    structureId: string,
+    locale: 'fr' | 'en'
   ): Promise<ExamFullDetail | null> => {
     // Get the main exam with full details
     const exam = await this.prisma.exam.findFirst({
@@ -128,6 +130,12 @@ export class ExamenService extends BaseService {
       return null;
     }
 
+    const animal = await new AnimalService(this.prisma).getAnimalById(
+      exam.animalId,
+      structureId,
+      locale
+    );
+
     // Get all completed exams for the same animal (only date and basic info)
     const completedExams = await this.prisma.exam.findMany({
       where: {
@@ -148,6 +156,7 @@ export class ExamenService extends BaseService {
 
     return {
       exam,
+      animal,
       completedExams,
     };
   };

@@ -1,4 +1,5 @@
 import { Prisma, ExamStatus as PrismaExamStatus, Exam } from '@prisma/client';
+import { AnimalFull } from './AnimalType.js';
 
 export type ExamWithRelations = Prisma.ExamGetPayload<{
   include: {
@@ -21,6 +22,7 @@ export type ExamCompletedSummary = Pick<
 
 export type ExamFullDetail = {
   exam: ExamWithRelations;
+  animal: AnimalFull;
   completedExams: ExamCompletedSummary[];
 };
 
@@ -43,6 +45,7 @@ export const ExamStatus = {
   ARCHIVED: PrismaExamStatus.ARCHIVED,
   CANCELLED: PrismaExamStatus.CANCELLED,
 };
+export type ExamStatusType = keyof typeof ExamStatus;
 
 // Using Prisma's generated types
 export type ExamCreateInput = Prisma.ExamCreateInput;

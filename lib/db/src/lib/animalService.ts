@@ -175,12 +175,6 @@ export class AnimalService extends BaseService {
   };
 
   postprocessAnimal = (animal: AnimalWithBreed, locale: 'fr' | 'en' = 'fr') => {
-    console.log(
-      'animal',
-      animal,
-      animal.birthDate ? new Date(animal.birthDate) : null
-    );
-
     let species =
       animal.breed.species === AnimalSpecies.CHAT ? 'Cat >' : 'Dog >';
     if (locale === 'fr') {

@@ -1,13 +1,12 @@
 'use client';
 
 import { Examens, PageHeader, PageMain } from '@app-test2/shared-components';
-import { useExamenDetailContext } from './ExamenDetailContext';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useAppContext } from '@/components/layouts/AppContext';
+import ExamenForm from './ExamenForm';
 
 export default function ExamenDetailContent() {
-  const { examen } = useExamenDetailContext();
   const { currentStructure } = useAppContext();
   const t = useTranslations('Data.Examen.detail');
 
@@ -21,24 +20,19 @@ export default function ExamenDetailContent() {
             href={`/${currentStructure?.id}/examens`}
             className="button-primary-inverse min-w-40"
           >
-            ← {t('back_to_list')}
+            {t('back_to_list')}
           </Link>
         }
       />
-      <PageMain className="p-6">
-        <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">{t('information')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  ID
-                </label>
-                <p className="text-sm text-gray-900 font-mono bg-gray-50 p-2 rounded">
-                  {examen?.id || 'N/A'}
-                </p>
-              </div>
-            </div>
+      <PageMain className="p-0">
+        <div className="flex gap-2.5 ">
+          <div className="w-2/3 bg-white rounded-4 min-h-[calc(100vh-120px)] p-3  max-h-[calc(100vh-120px)] overflow-y-auto">
+            <ExamenForm />
+          </div>
+          <div className="flex flex-col gap-2.5 w-1/3">
+            <div className="bg-white rounded-4 p-3">Interpretation</div>
+            <div className="bg-white rounded-4 p-3">Message</div>
+            <div className="bg-white rounded-4 p-3">Animal</div>
           </div>
         </div>
       </PageMain>

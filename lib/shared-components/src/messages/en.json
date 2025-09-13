@@ -56,6 +56,122 @@
                 "COMPLETED": "Completed",
                 "ARCHIVED": "Archived",
                 "CANCELLED": "Cancelled"
+            },
+            "detail": {
+                "title": "Examen Details",
+                "back_to_list": "← Back to examens"
+            },
+            "edit": {
+                "form_title": "Examen Information",
+                "sections": {
+                    "basic_info": "Basic Information",
+                    "clinical_context": "Clinical Context",
+                    "manifestations": "Manifestations",
+                    "additional_tests": "Additional Tests",
+                    "diagnosis_treatment": "Diagnosis & Treatments",
+                    "exam_conditions": "Exam Conditions",
+                    "eeg_clinical": "EEG & Clinical Notes",
+                    "comments": "Comments",
+                    "attachments": "Attachments"
+                },
+                "fields": {
+                    "status": {
+                        "label": "Status"
+                    },
+                    "requestedAt": {
+                        "label": "Requested Date"
+                    },
+                    "vetReference": {
+                        "label": "Vet Reference",
+                        "placeholder": "Enter vet reference"
+                    },
+                    "animal": {
+                        "label": "Animal",
+                        "placeholder": "Select an animal"
+                    },
+                    "requestReason": {
+                        "label": "Request Reason"
+                    },
+                    "history": {
+                        "label": "History"
+                    },
+                    "clinicalExams": {
+                        "label": "Clinical Exams"
+                    },
+                    "manifestationCategory": {
+                        "label": "Manifestation Category",
+                        "options": {
+                            "paroxysmal": "Paroxysmal",
+                            "vigilance": "Vigilance",
+                            "behavior": "Behavior",
+                            "other": "Other"
+                        }
+                    },
+                    "paroxysmalSubtype": {
+                        "label": "Paroxysmal Subtype",
+                        "options": {
+                            "isolated": "Isolated",
+                            "grouped": "Grouped",
+                            "status_epilepticus": "Status Epilepticus"
+                        }
+                    },
+                    "manifestationOther": {
+                        "label": "Other Manifestation",
+                        "placeholder": "Enter other manifestation details"
+                    },
+                    "firstManifestationAt": {
+                        "label": "First Manifestation Date"
+                    },
+                    "lastManifestationAt": {
+                        "label": "Last Manifestation Date"
+                    },
+                    "manifestationDescription": {
+                        "label": "Manifestation Description"
+                    },
+                    "manifestationFrequency": {
+                        "label": "Manifestation Frequency",
+                        "options": {
+                            "daily": "Daily",
+                            "weekly": "Weekly",
+                            "monthly": "Monthly",
+                            "occasional": "Occasional"
+                        }
+                    },
+                    "avgManifestationDurationMin": {
+                        "label": "Average Duration (minutes)",
+                        "placeholder": "Enter duration in minutes"
+                    },
+                    "clinicalSuspicion": {
+                        "label": "Clinical Suspicion"
+                    },
+                    "currentAntiepilepticTreatments": {
+                        "label": "Current Antiepileptic Treatments"
+                    },
+                    "otherTreatments": {
+                        "label": "Other Treatments"
+                    },
+                    "examCondition": {
+                        "label": "Exam Condition"
+                    },
+                    "sedationProtocol": {
+                        "label": "Sedation Protocol"
+                    },
+                    "eegSpecificEvents": {
+                        "label": "EEG Specific Events"
+                    },
+                    "duringExamClinical": {
+                        "label": "During Exam Clinical Notes"
+                    },
+                    "comments": {
+                        "label": "Comments"
+                    }
+                },
+                "validation": {
+                    "status_required": "Status is required",
+                    "date_required": "Date is required",
+                    "invalid_date": "Please enter a valid date",
+                    "animal_required": "Animal is required"
+                }
             }
         },
         "User": {
