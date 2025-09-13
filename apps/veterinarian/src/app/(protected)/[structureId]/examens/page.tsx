@@ -1,6 +1,6 @@
 import { getInitialExams } from '@/components/pages/ExamenController';
-import ExamenContent from '@/components/pages/ExamenContent';
-import { ExamenControllerProvider } from '@/components/pages/Examen/list/ExamenContext';
+import ExamenContent from '@/components/pages/Examen/list/ExamenListContent';
+import { ExamenControllerProvider } from '@/components/pages/Examen/list/ExamenListContext';
 
 export default async function ExamensPage({
   params,

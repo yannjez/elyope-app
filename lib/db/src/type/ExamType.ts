@@ -1,4 +1,4 @@
-import { Prisma, ExamStatus as PrismaExamStatus } from '@prisma/client';
+import { Prisma, ExamStatus as PrismaExamStatus, Exam } from '@prisma/client';
 
 export type ExamWithRelations = Prisma.ExamGetPayload<{
   include: {
@@ -14,6 +14,16 @@ export type ExamWithRelations = Prisma.ExamGetPayload<{
   };
 }>;
 
+export type ExamCompletedSummary = Pick<
+  Exam,
+  'id' | 'requestedAt' | 'vetReference'
+>;
+
+export type ExamFullDetail = {
+  exam: ExamWithRelations;
+  completedExams: ExamCompletedSummary[];
+};
+
 export type ExamSortField =
   | 'requestedAt'
   | 'status'
@@ -25,8 +35,6 @@ export type CanDeleteExamReason = {
   linkedAttachments: boolean;
   linkedAdditionalTests: boolean;
 };
-
-
 
 export const ExamStatus = {
   PENDING: PrismaExamStatus.PENDING,

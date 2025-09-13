@@ -8,7 +8,7 @@ import {
 } from '@app-test2/shared-components';
 import { ExamStatus } from '@elyope/db';
 
-import { useExamenControllerContext } from './ExamenContext';
+import { useExamenControllerContext } from './ExamenListContext';
 import { useTranslations } from 'next-intl';
 
 type ExamenFilterProps = {

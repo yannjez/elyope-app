@@ -1,6 +1,10 @@
 import { ExamStatus, Prisma, PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
-import { ExamSortField, CanDeleteExamReason } from '../type/index.js';
+import {
+  ExamSortField,
+  CanDeleteExamReason,
+  ExamFullDetail,
+} from '../type/index.js';
 
 export class ExamenService extends BaseService {
   constructor(prisma: PrismaClient) {
@@ -95,6 +99,57 @@ export class ExamenService extends BaseService {
         additionalTests: true,
       },
     });
+  };
+
+  /**
+   * Get full details for an exam including the pet information and list of completed exams for that animal
+   */
+  getExamFullDetail = async (
+    id: string,
+    structureId: string
+  ): Promise<ExamFullDetail | null> => {
+    // Get the main exam with full details
+    const exam = await this.prisma.exam.findFirst({
+      where: { id, structureId },
+      include: {
+        animal: {
+          include: {
+            breed: true,
+          },
+        },
+        structure: true,
+        interpreter: true,
+        attachments: true,
+        additionalTests: true,
+      },
+    });
+
+    if (!exam) {
+      return null;
+    }
+
+    // Get all completed exams for the same animal (only date and basic info)
+    const completedExams = await this.prisma.exam.findMany({
+      where: {
+        animalId: exam.animalId,
+        structureId: structureId,
+        status: 'COMPLETED',
+        id: { not: id }, // Exclude the current exam
+      },
+      select: {
+        id: true,
+        requestedAt: true,
+        vetReference: true,
+      },
+      orderBy: {
+        requestedAt: 'desc',
+      },
+    });
+
+    return {
+      exam,
+      completedExams,
+    };
   };
 
   getExams = async (

@@ -123,7 +123,11 @@ export function DataGridTable<T extends object>({
                 const actionValue = (row as T)[keyToUse];
 
                 return (
-                  <td key={`action-${actionIdx}`} className="rounded-4">
+                  <td
+                    key={`action-${actionIdx}`}
+                    className="rounded-4"
+                    data-action-value={actionValue}
+                  >
                     <div className="flex items-center justify-center">
                       <button
                         type="button"

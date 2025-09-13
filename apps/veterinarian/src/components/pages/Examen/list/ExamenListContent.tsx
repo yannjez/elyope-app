@@ -1,8 +1,8 @@
 'use client';
 
 import { PageHeader, Examens, Button } from '@app-test2/shared-components';
-import ExamenFilter from './Examen/list/ExamenFilter';
-import ExamenList from './Examen/list/ExamenList';
+import ExamenFilter from './ExamenListFilter';
+import ExamenList from './ExamenList';
 
 export default function ExamenContent() {
   return (

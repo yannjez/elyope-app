@@ -6,12 +6,15 @@ import {
   type ExamenStatus,
   PageMain,
   Pagination,
+  PencilIcon,
 } from '@app-test2/shared-components';
 
 import { cn } from '@app-test2/shared-components';
 import { useTranslations } from 'next-intl';
-import { useExamenControllerContext } from './ExamenContext';
+import { useExamenControllerContext } from './ExamenListContext';
 import { ExamStatus } from '@elyope/db';
+import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/components/layouts/AppContext';
 
 export default function ExamenList() {
   const t = useTranslations('Data.Examen');
@@ -25,6 +28,9 @@ export default function ExamenList() {
     sortState,
     handleSort,
   } = useExamenControllerContext();
+  const router = useRouter();
+
+  const { currentStructure } = useAppContext();
 
   const data = exams.map((exam) => ({
     ...exam,
@@ -119,6 +125,16 @@ export default function ExamenList() {
           noDataMessage={t('no_data')}
           isLoading={isSearching}
           loadingRows={5}
+          rowActions={[
+            {
+              name: t('actions.edit'),
+              icon: <PencilIcon className="w-full h-full" />,
+              onClick: (id: string | undefined) => {
+                router.push(`/${currentStructure?.id}/examens/${id}`);
+              },
+              propertyKey: 'id',
+            },
+          ]}
         />
       </div>
     </PageMain>

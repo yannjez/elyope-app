@@ -7,6 +7,7 @@ import {
   PaginationInfo,
   ExamSortField,
   ExamStatus,
+  ExamFullDetail,
 } from '@elyope/db';
 
 export type ExamenRequest = {
@@ -54,4 +55,12 @@ export const getInitialExams = async (
   request.status = undefined;
 
   return await getExams(request);
+};
+
+export const getExamFullDetail = async (
+  id: string,
+  structureId: string
+): Promise<ExamFullDetail | null> => {
+  const examenService = new ExamenService(prisma);
+  return await examenService.getExamFullDetail(id, structureId);
 };
