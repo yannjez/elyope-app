@@ -9,6 +9,7 @@ export { default as SideEmpty } from './lib/commons/SideEmpty';
 export { default as DialogConfirm } from './lib/commons/DialogConfirm';
 export { default as DialogModal } from './lib/commons/DialogModal';
 export { PanelTitle } from './lib/commons/PanelTitle';
+export { default as ExpandablePanel } from './lib/commons/ExpandablePanel';
 
 /* Icons */
 export {
@@ -27,6 +28,7 @@ export {
   NoDataIcon,
   LoadingSpinner,
   ExclamationCircleIcon,
+  ExpandableMarkerIcon,
 } from './lib/icons';
 
 /* Forms */
