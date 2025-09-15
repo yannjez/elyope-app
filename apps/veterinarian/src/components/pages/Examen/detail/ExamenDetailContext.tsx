@@ -2,6 +2,12 @@
 
 import { AnimalFull, ExamWithRelations, ExamStatusType } from '@elyope/db';
 import {
+  ManifestationCategory,
+  ParoxysmalSubtype,
+  ExamCondition,
+  ExamAdditionalTest,
+} from '@prisma/client';
+import {
   createContext,
   useContext,
   useState,
@@ -12,7 +18,127 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/components/layouts/AppContext';
 import { updateExam, searchAnimalsForExamen } from '../../ExamenController';
-import { z } from '@app-test2/shared-components';
+import {
+  z,
+  TreeSelectionSelection,
+  TreeSelectionSelectionValue,
+} from '@app-test2/shared-components';
+
+// Manifestation-specific database conversion functions
+function manifestationSelectionsToDb(
+  selections: Record<string, TreeSelectionSelectionValue>
+) {
+  const selectedKeys = Object.entries(selections)
+    .filter(([, value]) => value.isChecked)
+    .map(([key]) => key);
+
+  // Extract unique categories and map them to enums
+  const categoryKeys = [
+    ...new Set(selectedKeys.map((key) => key.split('.')[0])),
+  ];
+  const manifestationCategories: ManifestationCategory[] = categoryKeys
+    .map((key) => {
+      switch (key) {
+        case 'paroxysmal':
+          return ManifestationCategory.PAROXYSMAL;
+        case 'status_epilepticus':
+          return ManifestationCategory.STATUS_EPILEPTICUS;
+        case 'vigilance':
+          return ManifestationCategory.ALERTNESS;
+        case 'troubles_vigilance':
+          return ManifestationCategory.DISTURBANCE_OF_ALERTNESS;
+        case 'modifications_comportement':
+          return ManifestationCategory.BEHAVIOR_CHANGES;
+        case 'other':
+          return ManifestationCategory.OTHER;
+        default:
+          return null;
+      }
+    })
+    .filter((cat): cat is ManifestationCategory => cat !== null);
+
+  // Handle paroxysmal subtypes (only first one for now since enum is single value)
+  const paroxysmalSubtypeKeys = selectedKeys
+    .filter((key) => key.startsWith('paroxysmal.'))
+    .map((key) => key.split('.')[1]);
+
+  const paroxysmalSubtype =
+    paroxysmalSubtypeKeys.length > 0
+      ? paroxysmalSubtypeKeys[0] === 'isolated'
+        ? ParoxysmalSubtype.ISOLATED
+        : ParoxysmalSubtype.GROUPED
+      : null;
+
+  // Handle "other" text value
+  const otherTextValue =
+    Object.entries(selections).find(
+      ([key, value]) => key.includes('other') && value.isChecked
+    )?.[1]?.textValue || '';
+
+  return {
+    manifestationCategory: manifestationCategories,
+    paroxysmalSubtype,
+    manifestationOther: otherTextValue || undefined,
+  };
+}
+
+function manifestationSelectionsFromDb(
+  manifestationCategories: ManifestationCategory[] = [],
+  paroxysmalSubtype?: ParoxysmalSubtype | null,
+  manifestationOther = ''
+): Record<string, TreeSelectionSelectionValue> {
+  const result: Record<string, TreeSelectionSelectionValue> = {};
+
+  // Convert enum categories back to form keys
+  manifestationCategories.forEach((category) => {
+    let categoryKey = '';
+    switch (category) {
+      case ManifestationCategory.PAROXYSMAL:
+        categoryKey = 'paroxysmal';
+        break;
+      case ManifestationCategory.STATUS_EPILEPTICUS:
+        categoryKey = 'status_epilepticus';
+        break;
+      case ManifestationCategory.ALERTNESS:
+        categoryKey = 'vigilance';
+        break;
+      case ManifestationCategory.DISTURBANCE_OF_ALERTNESS:
+        categoryKey = 'troubles_vigilance';
+        break;
+      case ManifestationCategory.BEHAVIOR_CHANGES:
+        categoryKey = 'modifications_comportement';
+        break;
+      case ManifestationCategory.OTHER:
+        categoryKey = 'other';
+        break;
+    }
+
+    if (categoryKey) {
+      // For paroxysmal category, handle subtypes
+      if (categoryKey === 'paroxysmal' && paroxysmalSubtype) {
+        const subtypeKey =
+          paroxysmalSubtype === ParoxysmalSubtype.ISOLATED
+            ? 'isolated'
+            : 'grouped';
+        const key = `${categoryKey}.${subtypeKey}`;
+        result[key] = {
+          key,
+          isChecked: true,
+          textValue: undefined,
+        };
+      } else if (categoryKey !== 'paroxysmal') {
+        // For non-paroxysmal categories, just select the category
+        result[categoryKey] = {
+          key: categoryKey,
+          isChecked: true,
+          textValue: categoryKey === 'other' ? manifestationOther : undefined,
+        };
+      }
+    }
+  });
+
+  return result;
+}
 
 // Schema for examen form validation
 const createExamenSchema = (
@@ -43,8 +169,18 @@ const createExamenSchema = (
     requestReason: z.string().optional(),
     history: z.string().optional(),
     clinicalExams: z.string().optional(),
+    manifestations: z
+      .record(
+        z.object({
+          key: z.string(),
+          isChecked: z.boolean(),
+          textValue: z.string().optional(),
+        })
+      )
+      .optional(),
+    // Legacy fields for backward compatibility
     manifestationCategory: z.string().optional(),
-    paroxysmalSubtype: z.string().optional(),
+    paroxysmalSubtype: z.union([z.string(), z.null()]).optional(),
     manifestationOther: z.string().optional(),
     firstManifestationAt: z
       .string()
@@ -81,11 +217,20 @@ const createExamenSchema = (
         },
         { message: 'Duration must be a positive number' }
       ),
+    additionalExams: z
+      .record(
+        z.object({
+          key: z.string(),
+          isChecked: z.boolean(),
+          textValue: z.string(),
+        })
+      )
+      .optional(),
     clinicalSuspicion: z.string().optional(),
     currentAntiepilepticTreatments: z.string().optional(),
     otherTreatments: z.string().optional(),
-    examCondition: z.string().optional(),
-    sedationProtocol: z.string().optional(),
+    examCondition: z.nativeEnum(ExamCondition).optional(),
+    examConditionDescription: z.string().optional(),
     eegSpecificEvents: z.string().optional(),
     duringExamClinical: z.string().optional(),
     comments: z.string().optional(),
@@ -103,9 +248,10 @@ type ExamenDetailContextType = {
   currentAnimal: AnimalFull | null;
   // Options for select fields
   statusOptions: { value: ExamStatusType; label: string }[];
-  manifestationCategoryOptions: { value: string; label: string }[];
-  paroxysmalSubtypeOptions: { value: string; label: string }[];
+  manifestationData: TreeSelectionSelection[];
   manifestationFrequencyOptions: { value: string; label: string }[];
+  examConditionData: TreeSelectionSelection[];
+  additionalExamsData: TreeSelectionSelection[];
   // Functions
   searchAnimals: (keyword: string) => Promise<AnimalFull[]>;
   handleSubmit: (data: ExamenFormData) => Promise<void>;
@@ -136,6 +282,7 @@ export const ExamenDetailProvider = ({
 
   // Create schema with translated validation messages
   const schema = createExamenSchema(
+    t('validation.required'),
     t('validation.status_required'),
     t('validation.date_required'),
     t('validation.invalid_date'),
@@ -151,32 +298,42 @@ export const ExamenDetailProvider = ({
             ? new Date(_examen.requestedAt).toISOString().split('T')[0]
             : '',
           animalId: _examen.animalId || '',
-          vetReference: _examen.vetReference || '',
-          requestReason: _examen.requestReason || '',
-          history: _examen.history || '',
-          clinicalExams: _examen.clinicalExams || '',
-          manifestationCategory: _examen.manifestationCategory || '',
-          paroxysmalSubtype: _examen.paroxysmalSubtype || '',
-          manifestationOther: _examen.manifestationOther || '',
+          vetReference: _examen.vetReference ?? '',
+          requestReason: _examen.requestReason ?? '',
+          history: _examen.history ?? '',
+          clinicalExams: _examen.clinicalExams ?? '',
+          manifestations: manifestationSelectionsFromDb(
+            _examen.manifestationCategory ?? [],
+            _examen.paroxysmalSubtype ?? null,
+            _examen.manifestationOther ?? ''
+          ) as Record<
+            string,
+            { key: string; isChecked: boolean; textValue?: string }
+          >,
+          // Legacy fields for backward compatibility
+          manifestationCategory: _examen.manifestationCategory?.[0] ?? '',
+          paroxysmalSubtype: _examen.paroxysmalSubtype?.toString() ?? '',
+          manifestationOther: _examen.manifestationOther ?? '',
           firstManifestationAt: _examen.firstManifestationAt
             ? new Date(_examen.firstManifestationAt).toISOString().split('T')[0]
             : '',
           lastManifestationAt: _examen.lastManifestationAt
             ? new Date(_examen.lastManifestationAt).toISOString().split('T')[0]
             : '',
-          manifestationDescription: _examen.manifestationDescription || '',
-          manifestationFrequency: _examen.manifestationFrequency || '',
+          manifestationDescription: _examen.manifestationDescription ?? '',
+          manifestationFrequency: _examen.manifestationFrequency ?? '',
           avgManifestationDurationMin:
-            _examen.avgManifestationDurationMin?.toString() || '',
-          clinicalSuspicion: _examen.clinicalSuspicion || '',
+            _examen.avgManifestationDurationMin?.toString() ?? '',
+          additionalExams: {},
+          clinicalSuspicion: _examen.clinicalSuspicion ?? '',
           currentAntiepilepticTreatments:
-            _examen.currentAntiepilepticTreatments || '',
-          otherTreatments: _examen.otherTreatments || '',
-          examCondition: _examen.examCondition || '',
-          sedationProtocol: _examen.sedationProtocol || '',
-          eegSpecificEvents: _examen.eegSpecificEvents || '',
-          duringExamClinical: _examen.duringExamClinical || '',
-          comments: _examen.comments || '',
+            _examen.currentAntiepilepticTreatments ?? '',
+          otherTreatments: _examen.otherTreatments ?? '',
+          examCondition: _examen.examCondition as ExamCondition | undefined,
+          examConditionDescription: _examen.examConditionDescription ?? '',
+          eegSpecificEvents: _examen.eegSpecificEvents ?? '',
+          duringExamClinical: _examen.duringExamClinical ?? '',
+          comments: _examen.comments ?? '',
         }
       : null
   );
@@ -199,41 +356,118 @@ export const ExamenDetailProvider = ({
     [tStatus]
   );
 
-  const manifestationCategoryOptions = useMemo(
+  const additionalExamsData = useMemo<TreeSelectionSelection[]>(
     () => [
       {
-        value: 'paroxysmal',
-        label: t('fields.manifestationCategory.options.paroxysmal'),
+        key: 'NFS',
+        label: t('fields.additionalExams.options.NFS'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.additionalExams.placeholders.NFS'),
       },
       {
-        value: 'vigilance',
-        label: t('fields.manifestationCategory.options.vigilance'),
+        key: 'BIOCHEMISTRY',
+        label: t('fields.additionalExams.options.BIOCHEMISTRY'),
+        hasTextField: true,
+        textFieldPlaceholder: t(
+          'fields.additionalExams.placeholders.BIOCHEMISTRY'
+        ),
       },
       {
-        value: 'behavior',
-        label: t('fields.manifestationCategory.options.behavior'),
+        key: 'BILE_ACIDS_PRE_POST',
+        label: t('fields.additionalExams.options.BILE_ACIDS_PRE_POST'),
+        hasTextField: true,
+        textFieldPlaceholder: t(
+          'fields.additionalExams.placeholders.BILE_ACIDS_PRE_POST'
+        ),
       },
       {
-        value: 'other',
-        label: t('fields.manifestationCategory.options.other'),
+        key: 'MRI',
+        label: t('fields.additionalExams.options.MRI'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.additionalExams.placeholders.MRI'),
+      },
+      {
+        key: 'OTHER',
+        label: t('fields.additionalExams.options.OTHER'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.additionalExams.placeholders.OTHER'),
       },
     ],
     [t]
   );
 
-  const paroxysmalSubtypeOptions = useMemo(
+  // Manifestation data for hierarchical component
+  const manifestationData = useMemo<TreeSelectionSelection[]>(
     () => [
       {
-        value: 'isolated',
-        label: t('fields.paroxysmalSubtype.options.isolated'),
+        key: 'paroxysmal',
+        label: t('fields.manifestationCategory.options.paroxysmal'),
+        childrenBehavior: 'single',
+        subChoice: [
+          {
+            key: 'isolated',
+            label: t('fields.paroxysmalSubtype.options.isolated'),
+            hasTextField: false,
+          },
+          {
+            key: 'grouped',
+            label: t('fields.paroxysmalSubtype.options.grouped'),
+            hasTextField: false,
+          },
+        ],
+        hasTextField: false,
       },
       {
-        value: 'grouped',
-        label: t('fields.paroxysmalSubtype.options.grouped'),
-      },
-      {
-        value: 'status_epilepticus',
+        key: 'status_epilepticus',
         label: t('fields.paroxysmalSubtype.options.status_epilepticus'),
+        hasTextField: false,
+      },
+      {
+        key: 'vigilance',
+        label: t('fields.manifestationCategory.options.vigilance'),
+        hasTextField: false,
+      },
+      {
+        key: 'troubles_vigilance',
+        label: t('fields.manifestationCategory.options.troubles_vigilance'),
+        hasTextField: false,
+      },
+      {
+        key: 'modifications_comportement',
+        label: t(
+          'fields.manifestationCategory.options.modifications_comportement'
+        ),
+        hasTextField: false,
+      },
+      {
+        key: 'other',
+        label: t('fields.manifestationCategory.options.other'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.general_placeholder'),
+      },
+    ],
+    [t]
+  );
+
+  const examConditionData = useMemo<TreeSelectionSelection[]>(
+    () => [
+      {
+        key: 'AWAKE_EXAM',
+        label: t('fields.examCondition.options.awake_exam'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.general_placeholder'),
+      },
+      {
+        key: 'SEDATION_AT_PLACEMENT',
+        label: t('fields.examCondition.options.sedation_at_placement'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.general_placeholder'),
+      },
+      {
+        key: 'UNDER_SEDATION',
+        label: t('fields.examCondition.options.under_sedation'),
+        hasTextField: true,
+        textFieldPlaceholder: t('fields.general_placeholder'),
       },
     ],
     [t]
@@ -288,9 +522,8 @@ export const ExamenDetailProvider = ({
         requestReason: data.requestReason || undefined,
         history: data.history || undefined,
         clinicalExams: data.clinicalExams || undefined,
-        manifestationCategory: data.manifestationCategory || undefined,
-        paroxysmalSubtype: data.paroxysmalSubtype || undefined,
-        manifestationOther: data.manifestationOther || undefined,
+        // Convert manifestation data to database format
+        ...manifestationSelectionsToDb(data.manifestations || {}),
         firstManifestationAt: data.firstManifestationAt
           ? new Date(data.firstManifestationAt)
           : undefined,
@@ -306,8 +539,8 @@ export const ExamenDetailProvider = ({
         currentAntiepilepticTreatments:
           data.currentAntiepilepticTreatments || undefined,
         otherTreatments: data.otherTreatments || undefined,
-        examCondition: data.examCondition || undefined,
-        sedationProtocol: data.sedationProtocol || undefined,
+        examCondition: data.examCondition as ExamCondition | undefined,
+        examConditionDescription: data.examConditionDescription || undefined,
         eegSpecificEvents: data.eegSpecificEvents || undefined,
         duringExamClinical: data.duringExamClinical || undefined,
         comments: data.comments || undefined,
@@ -327,12 +560,13 @@ export const ExamenDetailProvider = ({
     defaults,
     currentAnimal,
     statusOptions,
-    manifestationCategoryOptions,
-    paroxysmalSubtypeOptions,
+    manifestationData,
+    additionalExamsData,
     manifestationFrequencyOptions,
     searchAnimals,
     handleSubmit,
     setDefaults,
+    examConditionData,
   };
 
   return (

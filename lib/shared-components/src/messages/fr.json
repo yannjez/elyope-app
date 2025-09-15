@@ -85,19 +85,24 @@
                         "placeholder": "Sélectionner un animal"
                     },
                     "requestReason": {
-                        "label": "Motif de la demande"
+                        "label": "Motif de la demande",
+                        "placeholder": "Saisir le motif de la demande d'examen"
                     },
                     "history": {
-                        "label": "Historique"
+                        "label": "Historique",
+                        "placeholder": "Saisir l'historique médical du patient"
                     },
                     "clinicalExams": {
-                        "label": "Examens cliniques"
+                        "label": "Examens cliniques",
+                        "placeholder": "Saisir les résultats de l'examen clinique"
                     },
                     "manifestationCategory": {
                         "label": "Catégorie de manifestation",
                         "options": {
                             "paroxysmal": "Paroxystique",
                             "vigilance": "Vigilance",
+                            "troubles_vigilance": "Troubles de la vigilance",
+                            "modifications_comportement": "Modifications du comportement",
                             "behavior": "Comportement",
                             "other": "Autre"
                         }
@@ -114,6 +119,10 @@
                         "label": "Autre manifestation",
                         "placeholder": "Saisir les détails d'autre manifestation"
                     },
+                    "general_placeholder": "Précisez...",
+                    "default_text_placeholder": "Entrer les détails...",
+                    "field_required": "Ce champ est requis",
+                    "description_required": "requiert une description",
                     "firstManifestationAt": {
                         "label": "Date de première manifestation"
                     },
@@ -136,30 +145,76 @@
                         "label": "Durée moyenne (minutes)",
                         "placeholder": "Saisir la durée en minutes"
                     },
+                    "additionalExams": {
+                        "label": "Examens supplémentaires",
+                        "options": {
+                            "NFS": "Numération Formule Sanguine (NFS)",
+                            "BIOCHEMISTRY": "Biochimie",
+                            "BILE_ACIDS_PRE_POST": "Acides biliaires (Pré/Post)",
+                            "MRI": "IRM",
+                            "OTHER": "Autre"
+                        },
+                        "placeholders": {
+                            "NFS": "Saisir les détails de la NFS...",
+                            "BIOCHEMISTRY": "Saisir les détails de biochimie...",
+                            "BILE_ACIDS_PRE_POST": "Saisir les détails des acides biliaires...",
+                            "MRI": "Saisir les détails de l'IRM...",
+                            "OTHER": "Saisir les détails d'autres examens..."
+                        }
+                    },
                     "clinicalSuspicion": {
-                        "label": "Suspicion clinique"
+                        "label": "Suspicion clinique",
+                        "placeholder": "Saisir la suspicion clinique et le diagnostic préliminaire"
                     },
                     "currentAntiepilepticTreatments": {
-                        "label": "Traitements antiépileptiques actuels"
+                        "label": "Traitements antiépileptiques actuels",
+                        "placeholder": "Lister les médicaments et dosages antiépileptiques actuels"
                     },
                     "otherTreatments": {
-                        "label": "Autres traitements"
+                        "label": "Autres traitements",
+                        "placeholder": "Lister les autres médicaments et traitements"
                     },
                     "examCondition": {
-                        "label": "Condition d'examen"
+                        "label": "Condition d'examen",
+                        "options": {
+                            "awake_exam": "Examen éveillé",
+                            "sedation_at_placement": "Sédation au placement",
+                            "under_sedation": "Sous sédation"
+                        }
                     },
                     "sedationProtocol": {
                         "label": "Protocole de sédation"
                     },
                     "eegSpecificEvents": {
-                        "label": "Événements spécifiques EEG"
+                        "label": "Événements spécifiques EEG",
+                        "placeholder": "Décrire les événements et observations spécifiques EEG"
                     },
                     "duringExamClinical": {
-                        "label": "Notes cliniques pendant l'examen"
+                        "label": "Notes cliniques pendant l'examen",
+                        "placeholder": "Observations cliniques et notes pendant l'examen"
                     },
                     "comments": {
-                        "label": "Commentaires"
+                        "label": "Commentaires",
+                        "placeholder": "Commentaires et observations supplémentaires"
                     }
+                },
+                "exam_condition_options": {
+                    "awake_exam": {
+                        "label": "Examen éveillé",
+                        "placeholder": "Décrire les conditions d'examen éveillé..."
+                    },
+                    "sedation_at_placement": {
+                        "label": "Sédation au placement",
+                        "placeholder": "Décrire le protocole de sédation et les détails de placement..."
+                    },
+                    "under_sedation": {
+                        "label": "Sous sédation",
+                        "placeholder": "Décrire le protocole de sédation et les conditions d'examen..."
+                    }
+                },
+                "todo_messages": {
+                    "additional_tests_component": "TODO: Créer le composant AdditionalTests pour multiple entrées de tests",
+                    "file_upload_component": "TODO: Créer le composant FileUpload pour les pièces jointes d'examen"
                 },
                 "validation": {
                     "status_required": "Le statut est requis",

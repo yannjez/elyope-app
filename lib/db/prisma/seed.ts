@@ -14,6 +14,10 @@ import {
   AnimalSpecies,
   Prisma,
   ExamStatus,
+  ManifestationCategory,
+  ParoxysmalSubtype,
+  ExamAdditionalTestType,
+  ExamCondition,
 } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -519,8 +523,11 @@ async function insertExamenData() {
             history: `Historique médical de ${animal.name} - Animal présentant des signes neurologiques`,
             clinicalExams: 'Examen clinique général normal, reflexes normaux',
             manifestationCategory:
-              (i + j) % 2 === 0 ? 'paroxysmal' : 'vigilance',
-            paroxysmalSubtype: (i + j) % 2 === 0 ? 'isolated' : null,
+              (i + j) % 2 === 0
+                ? [ManifestationCategory.PAROXYSMAL]
+                : [ManifestationCategory.ALERTNESS],
+            paroxysmalSubtype:
+              (i + j) % 2 === 0 ? ParoxysmalSubtype.ISOLATED : null,
             manifestationOther:
               (i + j) % 2 === 1 ? 'Troubles de la vigilance observés' : null,
             firstManifestationAt: new Date(
@@ -541,9 +548,8 @@ async function insertExamenData() {
             currentAntiepilepticTreatments:
               (i + j) % 2 === 0 ? 'Phénobarbital 2mg/kg BID' : null,
             otherTreatments: 'Aucun autre traitement en cours',
-            examCondition: 'Animal calme et coopératif',
-            sedationProtocol:
-              (i + j) % 3 === 0 ? 'Médétomidine 10μg/kg IM' : null,
+            examCondition: ExamCondition.AWAKE_EXAM,
+            examConditionDescription: 'Animal calme et coopératif',
             eegSpecificEvents: "À surveiller pendant l'examen EEG",
             duringExamClinical: "Observations cliniques pendant l'examen",
             comments: `Examen EEG programmé pour ${animal.name} - Structure: ${animal.structure.name}`,
@@ -563,8 +569,8 @@ async function insertExamenData() {
             requestReason: `Évaluation neurologique en cours pour ${animal.name}`,
             history: `Suivi neurologique de ${animal.name}`,
             clinicalExams: 'Examen en cours - résultats partiels disponibles',
-            manifestationCategory: 'paroxysmal',
-            paroxysmalSubtype: 'grouped',
+            manifestationCategory: [ManifestationCategory.PAROXYSMAL],
+            paroxysmalSubtype: ParoxysmalSubtype.GROUPED,
             firstManifestationAt: new Date(
               Date.now() - (45 + (i * 3 + j) * 12) * 24 * 60 * 60 * 1000
             ),
@@ -577,8 +583,8 @@ async function insertExamenData() {
             clinicalSuspicion: 'Épilepsie en cours de diagnostic',
             currentAntiepilepticTreatments: 'Phénobarbital 1.5mg/kg BID',
             otherTreatments: "En cours d'évaluation",
-            examCondition: 'Animal sous sédation légère',
-            sedationProtocol: 'Midazolam 0.2mg/kg IV',
+            examCondition: ExamCondition.SEDATION_AT_PLACEMENT,
+            examConditionDescription: 'Animal sous sédation légère',
             eegSpecificEvents: 'Analyse EEG en cours',
             duringExamClinical: "Manifestations observées pendant l'examen",
             comments: `Examen en cours d'analyse pour ${animal.name}`,
@@ -598,8 +604,8 @@ async function insertExamenData() {
             requestReason: `Examen EEG complémentaire pour ${animal.name}`,
             history: `Suivi de l'épilepsie de ${animal.name}`,
             clinicalExams: 'Examen clinique post-traitement',
-            manifestationCategory: 'paroxysmal',
-            paroxysmalSubtype: 'isolated',
+            manifestationCategory: [ManifestationCategory.PAROXYSMAL],
+            paroxysmalSubtype: ParoxysmalSubtype.ISOLATED,
             firstManifestationAt: new Date(
               Date.now() - (90 + (i * 3 + j) * 15) * 24 * 60 * 60 * 1000
             ),
@@ -613,8 +619,8 @@ async function insertExamenData() {
             currentAntiepilepticTreatments:
               'Phénobarbital 2mg/kg BID - dosage ajusté',
             otherTreatments: 'Complément nutritionnel',
-            examCondition: 'Animal bien contrôlé sous traitement',
-            sedationProtocol: 'Médétomidine 10μg/kg IM',
+            examCondition: ExamCondition.UNDER_SEDATION,
+            examConditionDescription: 'Animal bien contrôlé sous traitement',
             eegSpecificEvents: 'Activité EEG normale sous traitement',
             duringExamClinical:
               "Aucune manifestation observée pendant l'examen",
@@ -635,7 +641,7 @@ async function insertExamenData() {
             requestReason: `Examen archivé pour ${animal.name}`,
             history: `Historique archivé de ${animal.name}`,
             clinicalExams: 'Examen archivé - résultats conservés',
-            manifestationCategory: 'vigilance',
+            manifestationCategory: [ManifestationCategory.ALERTNESS],
             paroxysmalSubtype: null,
             firstManifestationAt: new Date(
               Date.now() - (180 + (i * 3 + j) * 25) * 24 * 60 * 60 * 1000
@@ -649,8 +655,8 @@ async function insertExamenData() {
             clinicalSuspicion: 'Épilepsie ancienne - stabilisée',
             currentAntiepilepticTreatments: 'Traitement arrêté - surveillance',
             otherTreatments: 'Suivi vétérinaire régulier',
-            examCondition: 'Animal stabilisé',
-            sedationProtocol: null,
+            examCondition: ExamCondition.AWAKE_EXAM,
+            examConditionDescription: 'Animal stabilisé',
             eegSpecificEvents: 'Résultats archivés',
             duringExamClinical: 'Examen archivé',
             comments: `Examen archivé - ${animal.name} - Structure: ${animal.structure.name}`,
@@ -670,7 +676,7 @@ async function insertExamenData() {
             requestReason: `Examen annulé pour ${animal.name}`,
             history: `Demande d'examen annulée pour ${animal.name}`,
             clinicalExams: 'Examen annulé avant réalisation',
-            manifestationCategory: null,
+            manifestationCategory: [],
             paroxysmalSubtype: null,
             firstManifestationAt: null,
             lastManifestationAt: null,
@@ -680,8 +686,8 @@ async function insertExamenData() {
             clinicalSuspicion: null,
             currentAntiepilepticTreatments: null,
             otherTreatments: null,
-            examCondition: 'Examen annulé',
-            sedationProtocol: null,
+            examCondition: null,
+            examConditionDescription: 'Examen annulé',
             eegSpecificEvents: null,
             duringExamClinical: null,
             comments: `Examen annulé pour ${animal.name} - Motif: amélioration clinique spontanée`,
@@ -702,7 +708,7 @@ async function insertExamenData() {
             requestReason: `Examen par défaut pour ${animal.name}`,
             history: `Historique médical de ${animal.name}`,
             clinicalExams: 'Examen clinique général',
-            manifestationCategory: null,
+            manifestationCategory: [],
             paroxysmalSubtype: null,
             firstManifestationAt: null,
             lastManifestationAt: null,
@@ -712,8 +718,8 @@ async function insertExamenData() {
             clinicalSuspicion: null,
             currentAntiepilepticTreatments: null,
             otherTreatments: null,
-            examCondition: "Animal en attente d'examen",
-            sedationProtocol: null,
+            examCondition: ExamCondition.AWAKE_EXAM,
+            examConditionDescription: "Animal en attente d'examen",
             eegSpecificEvents: null,
             duringExamClinical: null,
             comments: `Examen programmé pour ${animal.name}`,
@@ -771,17 +777,17 @@ async function insertExamenData() {
       data: [
         {
           examId: firstExam.id,
-          type: 'NFS',
+          type: ExamAdditionalTestType.NFS,
           findings: 'Résultats normaux - numération normale',
         },
         {
           examId: firstExam.id,
-          type: 'BIOCHEMISTRY',
+          type: ExamAdditionalTestType.BIOCHEMISTRY,
           findings: 'Biochimie sanguine dans les normes',
         },
         {
           examId: firstExam.id,
-          type: 'MRI',
+          type: ExamAdditionalTestType.MRI,
           findings: "IRM cérébrale - pas d'anomalie structurelle détectée",
         },
       ],

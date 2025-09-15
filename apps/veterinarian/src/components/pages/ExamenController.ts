@@ -10,6 +10,7 @@ import {
   ExamFullDetail,
   AnimalService,
 } from '@elyope/db';
+import { ManifestationCategory, ParoxysmalSubtype, ExamCondition } from '@prisma/client';
 import { getLocale } from 'next-intl/server';
 
 export type ExamenRequest = {
@@ -82,8 +83,8 @@ export const updateExam = async (
     requestReason: string;
     history: string;
     clinicalExams: string;
-    manifestationCategory: string;
-    paroxysmalSubtype: string;
+    manifestationCategory: ManifestationCategory[];
+    paroxysmalSubtype: ParoxysmalSubtype | null;
     manifestationOther: string;
     firstManifestationAt: Date;
     lastManifestationAt: Date;
@@ -93,8 +94,8 @@ export const updateExam = async (
     clinicalSuspicion: string;
     currentAntiepilepticTreatments: string;
     otherTreatments: string;
-    examCondition: string;
-    sedationProtocol: string;
+    examCondition: ExamCondition;
+    examConditionDescription: string;
     eegSpecificEvents: string;
     duringExamClinical: string;
     comments: string;

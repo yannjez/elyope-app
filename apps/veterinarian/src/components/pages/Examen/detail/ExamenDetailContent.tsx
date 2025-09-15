@@ -26,7 +26,7 @@ export default function ExamenDetailContent() {
       />
       <PageMain className="p-0">
         <div className="flex gap-2.5 ">
-          <div className="w-2/3 bg-white rounded-4 min-h-[calc(100vh-120px)] p-3  max-h-[calc(100vh-120px)] overflow-y-auto">
+          <div className="w-2/3 bg-white rounded-4  overflow-y-auto">
             <ExamenForm />
           </div>
           <div className="flex flex-col gap-2.5 w-1/3">

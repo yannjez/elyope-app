@@ -40,6 +40,13 @@
                 "cwd": "lib/db"
             }
         },
+        "migrate:reset": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm prisma migrate reset --force --skip-seed",
+                "cwd": "lib/db"
+            }
+        },
         "migrate": {
             "executor": "nx:run-commands",
             "options": {

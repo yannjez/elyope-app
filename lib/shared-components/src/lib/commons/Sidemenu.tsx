@@ -134,11 +134,11 @@ export default function Sidemenu({
       {/* Sidemenu */}
       <div
         className={cn(
-          'max-h-screen  bg-el-grey-100 transition-all duration-300 min-h-screen py-5 px-3 flex flex-col gap-5',
+          'max-h-screen bg-el-grey-100 transition-all duration-300 min-h-screen py-5 px-3 flex flex-col gap-5',
           // Desktop styles
           'lg:sticky lg:top-0 lg:min-w-[230px]',
           // Mobile styles - z-50 to be above backdrop (z-40)
-          'fixed inset-y-0 left-0 z-50  w-full lg:w-[280px] lg:relative lg:w-auto',
+          'fixed inset-y-0 left-0 z-50  w-full lg:w-[280px]  lg:w-auto',
           // Mobile menu visibility
           isMobileMenuOpen
             ? 'translate-x-0'

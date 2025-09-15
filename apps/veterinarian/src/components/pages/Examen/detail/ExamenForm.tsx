@@ -11,11 +11,14 @@ import {
   useFormContext,
   SelectButton,
   SelectEntity,
+  SelectMultiTreeOptions,
+  SelectTreeOptions,
 } from '@app-test2/shared-components';
 
 import { AnimalFull } from '@elyope/db';
 import { useTranslations } from 'next-intl';
 import { useExamenDetailContext, ExamenFormData } from './ExamenDetailContext';
+import { TreeSelectionValue } from '@app-test2/shared-components/lib/types/TreeOptionType';
 
 export default function ExamenForm() {
   const { examen, schema, defaults, handleSubmit } = useExamenDetailContext();
@@ -88,14 +91,14 @@ export default function ExamenForm() {
                 label={t('fields.requestReason.label')}
               >
                 <Textarea
-                  placeholder="Enter the reason for the examination request"
+                  placeholder={t('fields.requestReason.placeholder')}
                   lines={3}
                 />
               </FormField>
 
               <FormField name="history" label={t('fields.history.label')}>
                 <Textarea
-                  placeholder="Enter patient medical history"
+                  placeholder={t('fields.history.placeholder')}
                   lines={4}
                 />
               </FormField>
@@ -105,7 +108,7 @@ export default function ExamenForm() {
                 label={t('fields.clinicalExams.label')}
               >
                 <Textarea
-                  placeholder="Enter clinical examination findings"
+                  placeholder={t('fields.clinicalExams.placeholder')}
                   lines={4}
                 />
               </FormField>
@@ -120,74 +123,72 @@ export default function ExamenForm() {
               </h3>
 
               <FormField
-                name="manifestationCategory"
+                name="manifestations"
                 label={t('fields.manifestationCategory.label')}
               >
-                <SelectCategory />
-              </FormField>
-
-              <FormField
-                name="paroxysmalSubtype"
-                label={t('fields.paroxysmalSubtype.label')}
-              >
-                <SelectSubtype />
-              </FormField>
-
-              <FormField
-                name="manifestationOther"
-                label={t('fields.manifestationOther.label')}
-              >
-                <Input placeholder="Enter other manifestation details" />
+                <SelectManifestationsField />
               </FormField>
 
               <FormField
                 name="firstManifestationAt"
-                label="First Manifestation Date"
+                label={t('fields.firstManifestationAt.label')}
               >
                 <Input type="date" />
               </FormField>
 
               <FormField
                 name="lastManifestationAt"
-                label="Last Manifestation Date"
+                label={t('fields.lastManifestationAt.label')}
               >
                 <Input type="date" />
               </FormField>
 
               <FormField
                 name="manifestationDescription"
-                label="Manifestation Description"
+                label={t('fields.manifestationDescription.label')}
               >
                 <Textarea
-                  placeholder="Describe the manifestations in detail"
+                  placeholder={t('fields.manifestationDescription.placeholder')}
                   lines={4}
                 />
               </FormField>
 
               <FormField
                 name="manifestationFrequency"
-                label="Manifestation Frequency"
+                label={t('fields.manifestationFrequency.label')}
               >
                 <SelectFrequency />
               </FormField>
 
               <FormField
                 name="avgManifestationDurationMin"
-                label="Average Duration (minutes)"
+                label={t('fields.avgManifestationDurationMin.label')}
               >
-                <Input type="text" placeholder="Enter duration in minutes" />
+                <Input
+                  type="text"
+                  placeholder={t(
+                    'fields.avgManifestationDurationMin.placeholder'
+                  )}
+                />
               </FormField>
             </div>
 
             <FormSeparator className="w-full my-4" />
 
+            <FormField
+              name="additionalExams"
+              label={t('fields.additionalExams.label')}
+            >
+              <SelectAdditionalTestsField />
+            </FormField>
+
             {/* Additional Tests */}
             <div className="space-y-2">
               <h3 className="text-16 font-semibold text-el-grey-700">
-                Additional Tests
+                {t('sections.additional_tests')}
               </h3>
               <div className="text-12 text-el-orange-500">
-                TODO: Create AdditionalTests component for multiple test entries
+                {t('todo_messages.additional_tests_component')}
               </div>
             </div>
 
@@ -196,29 +197,37 @@ export default function ExamenForm() {
             {/* Diagnosis & Treatments */}
             <div className="space-y-2">
               <h3 className="text-16 font-semibold text-el-grey-700">
-                Diagnosis & Treatments
+                {t('sections.diagnosis_treatment')}
               </h3>
 
-              <FormField name="clinicalSuspicion" label="Clinical Suspicion">
+              <FormField
+                name="clinicalSuspicion"
+                label={t('fields.clinicalSuspicion.label')}
+              >
                 <Textarea
-                  placeholder="Enter clinical suspicion and preliminary diagnosis"
+                  placeholder={t('fields.clinicalSuspicion.placeholder')}
                   lines={3}
                 />
               </FormField>
 
               <FormField
                 name="currentAntiepilepticTreatments"
-                label="Current Antiepileptic Treatments"
+                label={t('fields.currentAntiepilepticTreatments.label')}
               >
                 <Textarea
-                  placeholder="List current antiepileptic medications and dosages"
+                  placeholder={t(
+                    'fields.currentAntiepilepticTreatments.placeholder'
+                  )}
                   lines={3}
                 />
               </FormField>
 
-              <FormField name="otherTreatments" label="Other Treatments">
+              <FormField
+                name="otherTreatments"
+                label={t('fields.otherTreatments.label')}
+              >
                 <Textarea
-                  placeholder="List other medications and treatments"
+                  placeholder={t('fields.otherTreatments.placeholder')}
                   lines={3}
                 />
               </FormField>
@@ -229,21 +238,14 @@ export default function ExamenForm() {
             {/* Exam Conditions */}
             <div className="space-y-2">
               <h3 className="text-16 font-semibold text-el-grey-700">
-                Exam Conditions
+                {t('sections.exam_conditions')}
               </h3>
 
-              <FormField name="examCondition" label="Exam Condition">
-                <Textarea
-                  placeholder="Describe the conditions during the examination"
-                  lines={3}
-                />
-              </FormField>
-
-              <FormField name="sedationProtocol" label="Sedation Protocol">
-                <Textarea
-                  placeholder="Describe sedation protocol and medications used"
-                  lines={3}
-                />
+              <FormField
+                name="examConditions"
+                label={t('fields.examCondition.label')}
+              >
+                <SelectExamConditionsField />
               </FormField>
             </div>
 
@@ -252,22 +254,25 @@ export default function ExamenForm() {
             {/* EEG & Clinical Notes */}
             <div className="space-y-2">
               <h3 className="text-16 font-semibold text-el-grey-700">
-                EEG & Clinical Notes
+                {t('sections.eeg_clinical')}
               </h3>
 
-              <FormField name="eegSpecificEvents" label="EEG Specific Events">
+              <FormField
+                name="eegSpecificEvents"
+                label={t('fields.eegSpecificEvents.label')}
+              >
                 <Textarea
-                  placeholder="Describe specific EEG events and findings"
+                  placeholder={t('fields.eegSpecificEvents.placeholder')}
                   lines={4}
                 />
               </FormField>
 
               <FormField
                 name="duringExamClinical"
-                label="During Exam Clinical Notes"
+                label={t('fields.duringExamClinical.label')}
               >
                 <Textarea
-                  placeholder="Clinical observations and notes during the examination"
+                  placeholder={t('fields.duringExamClinical.placeholder')}
                   lines={4}
                 />
               </FormField>
@@ -278,12 +283,12 @@ export default function ExamenForm() {
             {/* Comments */}
             <div className="space-y-2">
               <h3 className="text-16 font-semibold text-el-grey-700">
-                Comments
+                {t('sections.comments')}
               </h3>
 
-              <FormField name="comments" label="Comments">
+              <FormField name="comments" label={t('fields.comments.label')}>
                 <Textarea
-                  placeholder="Additional comments and observations"
+                  placeholder={t('fields.comments.placeholder')}
                   lines={3}
                 />
               </FormField>
@@ -294,10 +299,10 @@ export default function ExamenForm() {
             {/* Attachments */}
             <div className="space-y-2">
               <h3 className="text-16 font-semibold text-el-grey-700">
-                Attachments
+                {t('sections.attachments')}
               </h3>
               <div className="text-12 text-el-orange-500">
-                TODO: Create FileUpload component for exam attachments
+                {t('todo_messages.file_upload_component')}
               </div>
             </div>
 
@@ -334,36 +339,30 @@ function SelectStatus() {
   );
 }
 
-function SelectCategory() {
-  const { manifestationCategoryOptions, defaults } = useExamenDetailContext();
+function SelectManifestationsField() {
+  const { manifestationData, defaults } = useExamenDetailContext();
   const form = useFormContext<ExamenFormData>();
+  const t = useTranslations('Data.Examen.edit');
 
   return (
-    <SelectButton
-      options={manifestationCategoryOptions}
-      value={defaults?.manifestationCategory || ''}
-      onValueChange={(selectedValue) => {
+    <SelectMultiTreeOptions
+      data={manifestationData}
+      value={defaults?.manifestations}
+      t={t}
+      onValueChange={(selectedValue: Record<string, TreeSelectionValue>) => {
         if (form) {
-          form.setValue('manifestationCategory', selectedValue);
-          form.trigger('manifestationCategory');
-        }
-      }}
-    />
-  );
-}
-
-function SelectSubtype() {
-  const { paroxysmalSubtypeOptions, defaults } = useExamenDetailContext();
-  const form = useFormContext<ExamenFormData>();
-
-  return (
-    <SelectButton
-      options={paroxysmalSubtypeOptions}
-      value={defaults?.paroxysmalSubtype || ''}
-      onValueChange={(selectedValue) => {
-        if (form) {
-          form.setValue('paroxysmalSubtype', selectedValue);
-          form.trigger('paroxysmalSubtype');
+          // Ensure all isChecked are boolean, not undefined
+          const sanitizedValue = Object.fromEntries(
+            Object.entries(selectedValue).map(([k, v]) => [
+              k,
+              {
+                ...v,
+                isChecked: v.isChecked ?? false,
+              },
+            ])
+          );
+          form.setValue('manifestations', sanitizedValue);
+          form.trigger('manifestations');
         }
       }}
     />
@@ -382,6 +381,90 @@ function SelectFrequency() {
         if (form) {
           form.setValue('manifestationFrequency', selectedValue);
           form.trigger('manifestationFrequency');
+        }
+      }}
+    />
+  );
+}
+
+function SelectAdditionalTestsField() {
+  const { additionalExamsData, defaults } = useExamenDetailContext();
+  const form = useFormContext<ExamenFormData>();
+  const t = useTranslations('Data.Examen.edit');
+
+  return (
+    <SelectMultiTreeOptions
+      data={additionalExamsData}
+      value={defaults?.additionalExams}
+      t={t}
+      onValueChange={(selectedValue: Record<string, TreeSelectionValue>) => {
+        if (form) {
+          // Ensure all isChecked are boolean, not undefined
+          const sanitizedValue = Object.fromEntries(
+            Object.entries(selectedValue).map(([k, v]) => [
+              k,
+              {
+                ...v,
+                isChecked: v.isChecked ?? false,
+              },
+            ])
+          );
+          form.setValue('additionalExams', sanitizedValue);
+          form.trigger('additionalExams');
+        }
+      }}
+    />
+  );
+}
+
+function SelectExamConditionsField() {
+  const { defaults } = useExamenDetailContext();
+  const form = useFormContext<ExamenFormData>();
+  const t = useTranslations('Data.Examen.edit');
+
+  return (
+    <SelectTreeOptions
+      name="examCondition"
+      t={t}
+      options={[
+        {
+          key: 'AWAKE_EXAM',
+          label: t('exam_condition_options.awake_exam.label'),
+          hasTextField: true,
+          textFieldPlaceholder: t(
+            'exam_condition_options.awake_exam.placeholder'
+          ),
+        },
+        {
+          key: 'SEDATION_AT_PLACEMENT',
+          label: t('exam_condition_options.sedation_at_placement.label'),
+          hasTextField: true,
+          textFieldPlaceholder: t(
+            'exam_condition_options.sedation_at_placement.placeholder'
+          ),
+        },
+        {
+          key: 'UNDER_SEDATION',
+          label: t('exam_condition_options.under_sedation.label'),
+          hasTextField: true,
+          textFieldPlaceholder: t(
+            'exam_condition_options.under_sedation.placeholder'
+          ),
+        },
+      ]}
+      value={{
+        key: (defaults?.examCondition || '') as string,
+        textValue: defaults?.examConditionDescription || '',
+      }}
+      onValueChange={(key: string, textValue: string) => {
+        if (form) {
+          form.setValue(
+            'examCondition',
+            key as 'AWAKE_EXAM' | 'SEDATION_AT_PLACEMENT' | 'UNDER_SEDATION'
+          );
+          form.trigger('examCondition');
+          form.setValue('examConditionDescription', textValue);
+          form.trigger('examConditionDescription');
         }
       }}
     />

@@ -90,19 +90,24 @@
                         "placeholder": "Select an animal"
                     },
                     "requestReason": {
-                        "label": "Request Reason"
+                        "label": "Request Reason",
+                        "placeholder": "Enter the reason for the examination request"
                     },
                     "history": {
-                        "label": "History"
+                        "label": "History",
+                        "placeholder": "Enter patient medical history"
                     },
                     "clinicalExams": {
-                        "label": "Clinical Exams"
+                        "label": "Clinical Exams",
+                        "placeholder": "Enter clinical examination findings"
                     },
                     "manifestationCategory": {
                         "label": "Manifestation Category",
                         "options": {
                             "paroxysmal": "Paroxysmal",
                             "vigilance": "Vigilance",
+                            "troubles_vigilance": "Alertness Disorders",
+                            "modifications_comportement": "Behavioral Changes",
                             "behavior": "Behavior",
                             "other": "Other"
                         }
@@ -119,6 +124,10 @@
                         "label": "Other Manifestation",
                         "placeholder": "Enter other manifestation details"
                     },
+                    "general_placeholder": "Specify...",
+                    "default_text_placeholder": "Enter details...",
+                    "field_required": "This field is required",
+                    "description_required": "requires a description",
                     "firstManifestationAt": {
                         "label": "First Manifestation Date"
                     },
@@ -141,30 +150,76 @@
                         "label": "Average Duration (minutes)",
                         "placeholder": "Enter duration in minutes"
                     },
+                    "additionalExams": {
+                        "label": "Additional Exams",
+                        "options": {
+                            "NFS": "Complete Blood Count (CBC)",
+                            "BIOCHEMISTRY": "Biochemistry",
+                            "BILE_ACIDS_PRE_POST": "Bile Acids (Pre/Post)",
+                            "MRI": "MRI",
+                            "OTHER": "Other"
+                        },
+                        "placeholders": {
+                            "NFS": "Enter CBC details...",
+                            "BIOCHEMISTRY": "Enter biochemistry details...",
+                            "BILE_ACIDS_PRE_POST": "Enter bile acids test details...",
+                            "MRI": "Enter MRI details...",
+                            "OTHER": "Enter other exam details..."
+                        }
+                    },
                     "clinicalSuspicion": {
-                        "label": "Clinical Suspicion"
+                        "label": "Clinical Suspicion",
+                        "placeholder": "Enter clinical suspicion and preliminary diagnosis"
                     },
                     "currentAntiepilepticTreatments": {
-                        "label": "Current Antiepileptic Treatments"
+                        "label": "Current Antiepileptic Treatments",
+                        "placeholder": "List current antiepileptic medications and dosages"
                     },
                     "otherTreatments": {
-                        "label": "Other Treatments"
+                        "label": "Other Treatments",
+                        "placeholder": "List other medications and treatments"
                     },
                     "examCondition": {
-                        "label": "Exam Condition"
+                        "label": "Exam Condition",
+                        "options": {
+                            "awake_exam": "Awake Examination",
+                            "sedation_at_placement": "Sedation at Placement",
+                            "under_sedation": "Under Sedation"
+                        }
                     },
                     "sedationProtocol": {
                         "label": "Sedation Protocol"
                     },
                     "eegSpecificEvents": {
-                        "label": "EEG Specific Events"
+                        "label": "EEG Specific Events",
+                        "placeholder": "Describe specific EEG events and findings"
                     },
                     "duringExamClinical": {
-                        "label": "During Exam Clinical Notes"
+                        "label": "During Exam Clinical Notes",
+                        "placeholder": "Clinical observations and notes during the examination"
                     },
                     "comments": {
-                        "label": "Comments"
+                        "label": "Comments",
+                        "placeholder": "Additional comments and observations"
                     }
+                },
+                "exam_condition_options": {
+                    "awake_exam": {
+                        "label": "Awake Examination",
+                        "placeholder": "Describe awake examination conditions..."
+                    },
+                    "sedation_at_placement": {
+                        "label": "Sedation at Placement",
+                        "placeholder": "Describe sedation protocol and placement details..."
+                    },
+                    "under_sedation": {
+                        "label": "Under Sedation",
+                        "placeholder": "Describe sedation protocol and exam conditions..."
+                    }
+                },
+                "todo_messages": {
+                    "additional_tests_component": "TODO: Create AdditionalTests component for multiple test entries",
+                    "file_upload_component": "TODO: Create FileUpload component for exam attachments"
                 },
                 "validation": {
                     "status_required": "Status is required",

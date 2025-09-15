@@ -44,6 +44,8 @@ export { default as SelectMultiButtons } from './lib/forms/SelectMultiButtons';
 export { default as SelectButton } from './lib/forms/SelectButton';
 export { default as Toggle } from './lib/forms/Toggle';
 export { default as SelectEntity } from './lib/forms/SelectEntity';
+export { default as SelectMultiTreeOptions } from './lib/forms/SelectMultiTreeOptions';
+export { default as SelectTreeOptions } from './lib/forms/SelectTreeOptions';
 
 /* Form Hooks */
 export * from './lib/forms/hooks';
@@ -65,6 +67,10 @@ export type { BaseFilter } from './lib/types/Base';
 /* Types */
 export type { ExamenFilter, ExamenStatus } from './lib/types/Examens';
 export type { AppUser, Option } from './lib/types/Base';
+export type {
+  TreeSelectionOption as TreeSelectionSelection,
+  TreeSelectionValue as TreeSelectionSelectionValue,
+} from './lib/types/TreeOptionType';
 
 // /* Messages */
 export { default as enMessages } from './messages/en.json';

@@ -133,6 +133,26 @@ enum ExamStatus {
   CANCELLED
 }
 
+enum ManifestationCategory {
+  PAROXYSMAL
+  STATUS_EPILEPTICUS
+  ALERTNESS
+  DISTURBANCE_OF_ALERTNESS
+  BEHAVIOR_CHANGES
+  OTHER
+}
+
+enum ParoxysmalSubtype {
+  ISOLATED
+  GROUPED
+}
+enum ExamCondition {
+  AWAKE_EXAM
+  SEDATION_AT_PLACEMENT
+  UNDER_SEDATION
+}
+
+
 model Exam {
   id             String   @id @default(uuid())
 
@@ -155,8 +175,8 @@ model Exam {
   clinicalExams  String?
 
   // Manifestations (free text + dates)
-  manifestationCategory    String?   // e.g. "paroxysmal", "vigilance", "behavior", "other"
-  paroxysmalSubtype        String?   // e.g. "isolated", "grouped", "status_epilepticus"
+  manifestationCategory    ManifestationCategory[] // e.g. "paroxysmal", "vigilance", "behavior", "other"
+  paroxysmalSubtype        ParoxysmalSubtype?   // e.g. "isolated", "grouped", "or null
   manifestationOther       String?
   firstManifestationAt     DateTime?
   lastManifestationAt      DateTime?
@@ -173,8 +193,8 @@ model Exam {
   otherTreatments                 String?
 
   // Exam conditions
-  examCondition   String?
-  sedationProtocol String?
+  examCondition   ExamCondition?
+  examConditionDescription String?
 
   // EEG focus & during-exam notes
   eegSpecificEvents  String?
@@ -209,12 +229,20 @@ model ExamAttachment {
   @@index([examId, kind])
 }
 
+enum ExamAdditionalTestType {
+  NFS
+  BIOCHEMISTRY
+  BILE_ACIDS_PRE_POST
+  MRI
+  LCS
+  OTHER
+}
+
 model ExamAdditionalTest {
   id        String   @id @default(uuid())
   examId    String
   exam      Exam     @relation(fields: [examId], references: [id])
-
-  type      String   // e.g. "NFS", "BIOCHEMISTRY", "BILE_ACIDS_PRE_POST", "MRI", "CSF", "OTHER"
+  type      ExamAdditionalTestType   // e.g. "NFS", "BIOCHEMISTRY", "BILE_ACIDS_PRE_POST", "MRI", "CSF", "OTHER"
   findings  String?
 
   @@index([examId, type])
