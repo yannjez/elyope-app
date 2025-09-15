@@ -14,10 +14,10 @@ export default function Textarea({
   ...props
 }: Props) {
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn('relative leading-[.5]', className)}>
       <textarea
         className={cn(
-          'px-2 py-1 md:min-w-[400px] outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control resize-none',
+          'px-2 leading-tight py-1 md:min-w-[400px] outline-none ring-0 text-12 w-full border border-el-grey-400 rounded-4 control resize-none',
           {
             'pl-8': icon && iconPosition === 'left',
             'pr-8': icon && iconPosition === 'right',

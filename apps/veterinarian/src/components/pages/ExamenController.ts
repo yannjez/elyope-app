@@ -10,7 +10,12 @@ import {
   ExamFullDetail,
   AnimalService,
 } from '@elyope/db';
-import { ManifestationCategory, ParoxysmalSubtype, ExamCondition } from '@prisma/client';
+import {
+  ManifestationCategory,
+  ParoxysmalSubtype,
+  ExamCondition,
+  ExamAdditionalTestType,
+} from '@prisma/client';
 import { getLocale } from 'next-intl/server';
 
 export type ExamenRequest = {
@@ -99,10 +104,13 @@ export const updateExam = async (
     eegSpecificEvents: string;
     duringExamClinical: string;
     comments: string;
-  }>
+  }>,
+  additionalExams:
+    | Record<string, { key: ExamAdditionalTestType; textValue: string }>
+    | undefined
 ) => {
   const examenService = new ExamenService(prisma);
-  return await examenService.updateExam(id, input);
+  return await examenService.updateExam(id, input, additionalExams);
 };
 
 export const searchAnimalsForExamen = async (

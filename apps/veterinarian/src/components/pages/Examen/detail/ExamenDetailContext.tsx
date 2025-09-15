@@ -5,6 +5,8 @@ import {
   ManifestationCategory,
   ParoxysmalSubtype,
   ExamCondition,
+  ExamAdditionalTest,
+  ExamAdditionalTestType,
 } from '@prisma/client';
 import {
   createContext,
@@ -219,9 +221,9 @@ const createExamenSchema = (
     additionalExams: z
       .record(
         z.object({
-          key: z.string(),
+          key: z.nativeEnum(ExamAdditionalTestType),
           isChecked: z.boolean(),
-          textValue: z.string().optional(),
+          textValue: z.string(),
         })
       )
       .optional(),
@@ -333,7 +335,25 @@ export const ExamenDetailProvider = ({
           manifestationFrequency: _examen.manifestationFrequency ?? '',
           avgManifestationDurationMin:
             _examen.avgManifestationDurationMin?.toString() ?? '',
-          additionalExams: {},
+          additionalExams: _examen.additionalTests
+            ? _examen.additionalTests.reduce(
+                (
+                  acc: Record<
+                    string,
+                    { key: string; isChecked: boolean; textValue: string }
+                  >,
+                  exam: ExamAdditionalTest
+                ) => {
+                  acc[exam.type as string] = {
+                    key: exam.type as string,
+                    isChecked: true,
+                    textValue: exam.findings ?? '',
+                  };
+                  return acc;
+                },
+                {}
+              )
+            : {},
           clinicalSuspicion: _examen.clinicalSuspicion ?? '',
           currentAntiepilepticTreatments:
             _examen.currentAntiepilepticTreatments ?? '',
@@ -666,7 +686,7 @@ export const ExamenDetailProvider = ({
         comments: data.comments || undefined,
       };
 
-      await updateExam(_examen.id, dataToSubmit);
+      await updateExam(_examen.id, dataToSubmit, data?.additionalExams);
       router.refresh();
     },
     [_examen, router]

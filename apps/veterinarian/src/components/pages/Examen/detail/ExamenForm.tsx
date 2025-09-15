@@ -101,143 +101,139 @@ export default function ExamenForm() {
           defaultValues={defaults}
           className="space-y-4 max-w-4xl"
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2 ">
             {/* Basic Information */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.basic_info')}
-              </h3>
 
-              <FormField
-                name="status"
-                label={t('fields.status.label')}
-                isMandatory
-              >
-                <SelectStatus />
-              </FormField>
+            <FormField
+              name="status"
+              label={t('fields.status.label')}
+              isMandatory
+            >
+              <SelectStatus />
+            </FormField>
 
-              <FormField
-                name="requestedAt"
-                label={t('fields.requestedAt.label')}
-                isMandatory
-              >
-                <Input type="date" />
-              </FormField>
+            <FormField
+              name="requestedAt"
+              label={t('fields.requestedAt.label')}
+              isMandatory
+            >
+              <Input type="date" />
+            </FormField>
 
-              <FormField
-                name="animalId"
-                label={t('fields.animal.label')}
-                isMandatory
-              >
-                <SelectAnimal />
-              </FormField>
+            <FormField
+              name="animalId"
+              label={t('fields.animal.label')}
+              isMandatory
+            >
+              <SelectAnimal />
+            </FormField>
 
-              <FormField
-                name="vetReference"
-                label={t('fields.vetReference.label')}
-              >
-                <Input placeholder={t('fields.vetReference.placeholder')} />
-              </FormField>
-            </div>
+            <FormField
+              name="vetReference"
+              label={t('fields.vetReference.label')}
+            >
+              <Input placeholder={t('fields.vetReference.placeholder')} />
+            </FormField>
 
             <FormSeparator className="w-full my-4" />
 
             {/* Clinical Context */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.clinical_context')}
-              </h3>
 
-              <FormField
-                name="requestReason"
-                label={t('fields.requestReason.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.requestReason.placeholder')}
-                  lines={3}
-                />
-              </FormField>
+            <FormField
+              name="requestReason"
+              label={t('fields.requestReason.label')}
+            >
+              <Textarea
+                placeholder={t('fields.requestReason.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
-              <FormField name="history" label={t('fields.history.label')}>
-                <Textarea
-                  placeholder={t('fields.history.placeholder')}
-                  lines={4}
-                />
-              </FormField>
-
-              <FormField
-                name="clinicalExams"
-                label={t('fields.clinicalExams.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.clinicalExams.placeholder')}
-                  lines={4}
-                />
-              </FormField>
+            <div className="text-12 py-5 flex gap-2 justify-between bg-el-grey-100">
+              <div> &nbsp; </div>
+              <div className=" w-2/3 p-5">
+                <strong>TODO:</strong> Add upload for animal exam related files
+              </div>
             </div>
+
+            <FormField name="history" label={t('fields.history.label')}>
+              <Textarea
+                placeholder={t('fields.history.placeholder')}
+                lines={2}
+              />
+            </FormField>
+
+            <FormField
+              name="clinicalExams"
+              label={t('fields.clinicalExams.label')}
+            >
+              <Textarea
+                placeholder={t('fields.clinicalExams.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
             <FormSeparator className="w-full my-4" />
 
             {/* Manifestations */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.manifestations')}
-              </h3>
 
-              <FormField
-                name="manifestations"
-                label={t('fields.manifestationCategory.label')}
-              >
-                <SelectManifestationsField
-                  onClearErrors={clearValidationErrors}
-                />
-              </FormField>
+            <FormField
+              name="manifestations"
+              label={t('fields.manifestationCategory.label')}
+            >
+              <SelectManifestationsField
+                onClearErrors={clearValidationErrors}
+              />
+            </FormField>
 
-              <FormField
-                name="firstManifestationAt"
-                label={t('fields.firstManifestationAt.label')}
-              >
-                <Input type="date" />
-              </FormField>
+            <FormField
+              name="firstManifestationAt"
+              label={t('fields.firstManifestationAt.label')}
+            >
+              <Input type="date" />
+            </FormField>
 
-              <FormField
-                name="lastManifestationAt"
-                label={t('fields.lastManifestationAt.label')}
-              >
-                <Input type="date" />
-              </FormField>
+            <FormField
+              name="lastManifestationAt"
+              label={t('fields.lastManifestationAt.label')}
+            >
+              <Input type="date" />
+            </FormField>
 
-              <FormField
-                name="manifestationDescription"
-                label={t('fields.manifestationDescription.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.manifestationDescription.placeholder')}
-                  lines={4}
-                />
-              </FormField>
-
-              <FormField
-                name="manifestationFrequency"
-                label={t('fields.manifestationFrequency.label')}
-              >
-                <SelectFrequency />
-              </FormField>
-
-              <FormField
-                name="avgManifestationDurationMin"
-                label={t('fields.avgManifestationDurationMin.label')}
-              >
-                <Input
-                  type="text"
-                  placeholder={t(
-                    'fields.avgManifestationDurationMin.placeholder'
-                  )}
-                />
-              </FormField>
+            <FormField
+              name="manifestationDescription"
+              label={t('fields.manifestationDescription.label')}
+            >
+              <Textarea
+                placeholder={t('fields.manifestationDescription.placeholder')}
+                lines={2}
+              />
+            </FormField>
+            <div className="text-12 py-5 flex gap-2 justify-between bg-el-grey-100">
+              <div> &nbsp; </div>
+              <div className=" w-2/3 p-5">
+                <strong>TODO:</strong>dd upload for animal crisis média
+              </div>
             </div>
 
-            <FormSeparator className="w-full my-4" />
+            <FormField
+              name="manifestationFrequency"
+              label={t('fields.manifestationFrequency.label')}
+            >
+              <SelectFrequency />
+            </FormField>
+
+            <FormField
+              name="avgManifestationDurationMin"
+              label={t('fields.avgManifestationDurationMin.label')}
+            >
+              <Input
+                type="text"
+                placeholder={t(
+                  'fields.avgManifestationDurationMin.placeholder'
+                )}
+              />
+            </FormField>
 
             <FormField
               name="additionalExams"
@@ -248,133 +244,85 @@ export default function ExamenForm() {
               />
             </FormField>
 
-            {/* Additional Tests */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.additional_tests')}
-              </h3>
-              <div className="text-12 text-el-orange-500">
-                {t('todo_messages.additional_tests_component')}
-              </div>
-            </div>
-
-            <FormSeparator className="w-full my-4" />
-
             {/* Diagnosis & Treatments */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.diagnosis_treatment')}
-              </h3>
 
-              <FormField
-                name="clinicalSuspicion"
-                label={t('fields.clinicalSuspicion.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.clinicalSuspicion.placeholder')}
-                  lines={3}
-                />
-              </FormField>
+            <FormField
+              name="clinicalSuspicion"
+              label={t('fields.clinicalSuspicion.label')}
+            >
+              <Textarea
+                placeholder={t('fields.clinicalSuspicion.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
-              <FormField
-                name="currentAntiepilepticTreatments"
-                label={t('fields.currentAntiepilepticTreatments.label')}
-              >
-                <Textarea
-                  placeholder={t(
-                    'fields.currentAntiepilepticTreatments.placeholder'
-                  )}
-                  lines={3}
-                />
-              </FormField>
+            <FormField
+              name="currentAntiepilepticTreatments"
+              label={t('fields.currentAntiepilepticTreatments.label')}
+            >
+              <Textarea
+                placeholder={t(
+                  'fields.currentAntiepilepticTreatments.placeholder'
+                )}
+                lines={2}
+              />
+            </FormField>
 
-              <FormField
-                name="otherTreatments"
-                label={t('fields.otherTreatments.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.otherTreatments.placeholder')}
-                  lines={3}
-                />
-              </FormField>
-            </div>
+            <FormField
+              name="otherTreatments"
+              label={t('fields.otherTreatments.label')}
+            >
+              <Textarea
+                placeholder={t('fields.otherTreatments.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
             <FormSeparator className="w-full my-4" />
 
             {/* Exam Conditions */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.exam_conditions')}
-              </h3>
 
-              <FormField
-                name="examConditions"
-                label={t('fields.examCondition.label')}
-              >
-                <SelectExamConditionsField
-                  onClearErrors={clearValidationErrors}
-                />
-              </FormField>
-            </div>
+            <FormField
+              name="examConditions"
+              label={t('fields.examCondition.label')}
+            >
+              <SelectExamConditionsField
+                onClearErrors={clearValidationErrors}
+              />
+            </FormField>
 
             <FormSeparator className="w-full my-4" />
 
             {/* EEG & Clinical Notes */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.eeg_clinical')}
-              </h3>
 
-              <FormField
-                name="eegSpecificEvents"
-                label={t('fields.eegSpecificEvents.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.eegSpecificEvents.placeholder')}
-                  lines={4}
-                />
-              </FormField>
+            <FormField
+              name="eegSpecificEvents"
+              label={t('fields.eegSpecificEvents.label')}
+            >
+              <Textarea
+                placeholder={t('fields.eegSpecificEvents.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
-              <FormField
-                name="duringExamClinical"
-                label={t('fields.duringExamClinical.label')}
-              >
-                <Textarea
-                  placeholder={t('fields.duringExamClinical.placeholder')}
-                  lines={4}
-                />
-              </FormField>
-            </div>
-
-            <FormSeparator className="w-full my-4" />
+            <FormField
+              name="duringExamClinical"
+              label={t('fields.duringExamClinical.label')}
+            >
+              <Textarea
+                placeholder={t('fields.duringExamClinical.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
             {/* Comments */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.comments')}
-              </h3>
 
-              <FormField name="comments" label={t('fields.comments.label')}>
-                <Textarea
-                  placeholder={t('fields.comments.placeholder')}
-                  lines={3}
-                />
-              </FormField>
-            </div>
-
-            <FormSeparator className="w-full my-4" />
-
-            {/* Attachments */}
-            <div className="space-y-2">
-              <h3 className="text-16 font-semibold text-el-grey-700">
-                {t('sections.attachments')}
-              </h3>
-              <div className="text-12 text-el-orange-500">
-                {t('todo_messages.file_upload_component')}
-              </div>
-            </div>
-
-            <FormSeparator className="w-full my-4" />
+            <FormField name="comments" label={t('fields.comments.label')}>
+              <Textarea
+                placeholder={t('fields.comments.placeholder')}
+                lines={2}
+              />
+            </FormField>
 
             <div>
               <Button type="submit" className="button-primary">

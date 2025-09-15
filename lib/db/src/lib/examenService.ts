@@ -1,4 +1,9 @@
-import { ExamStatus, Prisma, PrismaClient } from '@prisma/client';
+import {
+  ExamAdditionalTestType,
+  ExamStatus,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import {
   ExamSortField,
@@ -67,21 +72,45 @@ export class ExamenService extends BaseService {
     });
   };
 
-  updateExam = async (id: string, input: Prisma.ExamUpdateInput) => {
-    return await this.prisma.exam.update({
-      where: { id },
-      data: input,
-      include: {
-        animal: {
-          include: {
-            breed: true,
+  updateExam = async (
+    id: string,
+    input: Prisma.ExamUpdateInput,
+    additionalExams:
+      | Record<string, { key: ExamAdditionalTestType; textValue: string }>
+      | undefined
+  ) => {
+    return await this.prisma.$transaction(async (tx) => {
+      // Delete existing additional tests
+      await tx.examAdditionalTest.deleteMany({
+        where: { examId: id },
+      });
+
+      // Create new additional tests if provided
+      if (additionalExams) {
+        await tx.examAdditionalTest.createMany({
+          data: Object.values(additionalExams).map((value) => ({
+            examId: id,
+            type: value.key as ExamAdditionalTestType,
+            findings: value.textValue,
+          })) satisfies Prisma.ExamAdditionalTestCreateManyInput[],
+        });
+      }
+
+      // Update the exam
+      return await tx.exam.update({
+        where: { id },
+        data: input,
+        include: {
+          animal: {
+            include: {
+              breed: true,
+            },
           },
+          structure: true,
+          interpreter: true,
+          attachments: true,
         },
-        structure: true,
-        interpreter: true,
-        attachments: true,
-        additionalTests: true,
-      },
+      });
     });
   };
 
