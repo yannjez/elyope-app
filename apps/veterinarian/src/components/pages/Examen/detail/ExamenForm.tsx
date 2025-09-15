@@ -467,7 +467,14 @@ function SelectAdditionalTestsField({
                 isChecked: v.isChecked ?? false,
               },
             ])
-          );
+          ) as Record<
+            string,
+            {
+              key: 'NFS' | 'BIOCHEMISTRY' | 'BILE_ACIDS_PRE_POST' | 'MRI' | 'LCS' | 'OTHER';
+              isChecked: boolean;
+              textValue: string;
+            }
+          >;
           form.setValue('additionalExams', sanitizedValue);
           form.trigger('additionalExams');
         }

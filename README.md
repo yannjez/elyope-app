@@ -104,7 +104,7 @@ npx nx run db:db-push
 npx nx run-many --target=lint  --all
 
 #check lint
-npx nx run-many --target=typechek  --all
+npx nx run-many --target=typecheck  --all
 ```
 
 ### Theme

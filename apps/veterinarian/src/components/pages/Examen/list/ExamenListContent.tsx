@@ -11,7 +11,9 @@ export default function ExamenContent() {
         title="Examens"
         icon={<Examens className="w-full" />}
         action={
-          <Button className="button-primary min-w-40">+ Créer un examen</Button>
+          <Button className="button-primary min-w-40" disabled>
+            + Créer un examen
+          </Button>
         }
         filters={<ExamenFilter />}
       />

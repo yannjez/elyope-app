@@ -340,18 +340,54 @@ export const ExamenDetailProvider = ({
                 (
                   acc: Record<
                     string,
-                    { key: string; isChecked: boolean; textValue: string }
+                    {
+                      key:
+                        | 'OTHER'
+                        | 'NFS'
+                        | 'BIOCHEMISTRY'
+                        | 'BILE_ACIDS_PRE_POST'
+                        | 'MRI'
+                        | 'LCS';
+                      isChecked: boolean;
+                      textValue: string;
+                    }
                   >,
                   exam: ExamAdditionalTest
                 ) => {
-                  acc[exam.type as string] = {
-                    key: exam.type as string,
-                    isChecked: true,
-                    textValue: exam.findings ?? '',
-                  };
+                  // Only include keys that are valid according to ExamenFormData
+                  const validKeys = [
+                    'OTHER',
+                    'NFS',
+                    'BIOCHEMISTRY',
+                    'BILE_ACIDS_PRE_POST',
+                    'MRI',
+                    'LCS',
+                  ] as const;
+                  if (
+                    validKeys.includes(exam.type as (typeof validKeys)[number])
+                  ) {
+                    acc[exam.type as (typeof validKeys)[number]] = {
+                      key: exam.type as (typeof validKeys)[number],
+                      isChecked: true,
+                      textValue: exam.findings ?? '',
+                    };
+                  }
                   return acc;
                 },
-                {}
+                {} as Record<
+                  string,
+                  {
+                    key:
+                      | 'OTHER'
+                      | 'NFS'
+                      | 'BIOCHEMISTRY'
+                      | 'BILE_ACIDS_PRE_POST'
+                      | 'MRI'
+                      | 'LCS';
+                    isChecked: boolean;
+                    textValue: string;
+                  }
+                >
               )
             : {},
           clinicalSuspicion: _examen.clinicalSuspicion ?? '',
