@@ -17,3 +17,4 @@ export { UserIcon } from './UserIcon';
 export { default as NoDataIcon } from './NoData';
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as ExclamationCircleIcon } from './ExclamationCircle';
+export { default as ExpandableMarkerIcon } from './ExpandableMarker';

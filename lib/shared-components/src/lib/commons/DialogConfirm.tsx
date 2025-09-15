@@ -18,6 +18,7 @@ export type DialogConfirmProps = {
   cancelClassName?: string;
   icon?: ReactNode;
   disableOutsideClick?: boolean;
+  disableCancel?: boolean;
 };
 
 export default function DialogConfirm({
@@ -33,6 +34,7 @@ export default function DialogConfirm({
   confirmClassName,
   cancelClassName,
   icon,
+  disableCancel = true,
   disableOutsideClick = false,
 }: DialogConfirmProps) {
   const handleBackdropClick = useCallback(
@@ -79,16 +81,18 @@ export default function DialogConfirm({
         </div>
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button
-            type="button"
-            onClick={onCancel}
-            className={cn(
-              'min-w-24 bg-el-grey-100 text-el-grey-500',
-              cancelClassName
-            )}
-          >
-            {cancelLabel}
-          </Button>
+          {!disableCancel && (
+            <Button
+              type="button"
+              onClick={onCancel}
+              className={cn(
+                'min-w-24 bg-el-grey-100 text-el-grey-500',
+                cancelClassName
+              )}
+            >
+              {cancelLabel}
+            </Button>
+          )}
           <Button
             type="button"
             onClick={onConfirm}

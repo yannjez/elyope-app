@@ -10,17 +10,17 @@ const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin');
  **/
 const nextConfig = {
   nx: {},
-  webpack: (config, { isServer }) => {
-    // Add Prisma plugin for monorepo support
-    config.plugins = [...config.plugins, new PrismaPlugin()];
-
+  webpack: (config, { isServer, nextRuntime }) => {
+    if (isServer) {
+      config.plugins.push(new PrismaPlugin());
+    }
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
 
     // Exclude Prisma Client from client-side bundle
-    if (config.name === 'client') {
+    if (nextRuntime === 'edge' || !isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
@@ -32,9 +32,11 @@ const nextConfig = {
 
     return config;
   },
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', '@elyope/db'],
+  outputFileTracingIncludes: {
+    '.': ['node_modules/.prisma/client/**/*'],
   },
+
+  serverExternalPackages: ['@elyope/db'],
 };
 
 module.exports = composePlugins(withNx, withNextIntl)(nextConfig);

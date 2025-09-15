@@ -9,3 +9,9 @@ export type ListRequestType = {
 export type PaginationInfo = {
   totalPages: number;
 };
+
+export type SortDirection = 'asc' | 'desc';
+export type SortState = {
+  field?: string;
+  direction?: SortDirection;
+};

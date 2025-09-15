@@ -128,6 +128,7 @@ export function StructureEditContent(props: StructureEditContentProps) {
             message={t('users_panel.dialog.remove_message', {
               name: pendingUserName,
             })}
+            disableCancel={false}
             confirmLabel={tCommon('actions.remove')}
             cancelLabel={tCommon('actions.cancel')}
             onCancel={() => {

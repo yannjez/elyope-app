@@ -78,11 +78,18 @@ Database management and Prisma schema configuration for the application.
 **Commands:**
 
 ```bash
+
+
+# DEV 
+npx nx dev veterinarian
+npx nx dev elyope-admin
+
+
 # Generate Prisma client
 npx nx run db:generate
 
 # Run database migrations
-npx nx run db:migrate
+npx nx run db:migrate --name xxxx
 
 # Reset database
 npx nx run db:migrate-reset
@@ -97,7 +104,7 @@ npx nx run db:db-push
 npx nx run-many --target=lint  --all
 
 #check lint
-npx nx run-many --target=typechek  --all
+npx nx run-many --target=typecheck  --all
 ```
 
 ### Theme
@@ -134,6 +141,13 @@ npx nx serve veterinarian
 
 # Run all tests
 npx nx run-many --target=test --all
+
+# Run all lint
+npx nx run-many --target=lint --all
+
+# Run all typecheck
+npx nx run-many --target=typecheck --all
+
 
 # Build all projects
 npx nx run-many --target=build --all

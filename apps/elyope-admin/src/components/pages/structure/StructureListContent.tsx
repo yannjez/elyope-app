@@ -142,10 +142,7 @@ export default function StructureListContent() {
             className="rounded-4 w-full"
             skeletonRowClass="!p-3"
             onSort={
-              handleSort as (
-                field: keyof Structure,
-                direction: 'asc' | 'desc'
-              ) => void
+              handleSort as (field: string, direction: 'asc' | 'desc') => void
             }
             sortField={(sortState.field as keyof Structure) ?? undefined}
             sortDirection={sortState.direction}
@@ -182,6 +179,7 @@ export default function StructureListContent() {
             confirmLabel={t('actions.delete')}
             cancelLabel={tCommon('actions.cancel')}
             confirmClassName="button-destructive"
+            disableCancel={false}
             onCancel={() => {
               setConfirmOpen(false);
               setSelectedId(null);

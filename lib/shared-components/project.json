@@ -47,13 +47,9 @@
             "executor": "@nx/eslint:lint"
         },
         "typecheck": {
-            "executor": "@nx/js:tsc",
+            "executor": "nx:run-commands",
             "options": {
-                "main": "lib/shared-components/src/index.ts",
-                "tsConfig": "lib/shared-components/tsconfig.lib.json",
-                "outputPath": "dist/lib/shared-components",
-                "noEmit": true,
-                "verbose": true
+                "command": "npx tsc -p lib/shared-components/tsconfig.lib.json --noEmit"
             },
             "dependsOn": [
                 "^typecheck"

@@ -58,12 +58,7 @@ export function FormField<T extends FieldValues>({
 
   return (
     <div className="w-full">
-      <div
-        className={cn(
-          'flex flex-col md:flex-row md:items-center gap-1',
-          className
-        )}
-      >
+      <div className={cn('flex flex-col md:flex-row  gap-1', className)}>
         {label && (
           <label
             htmlFor={name}

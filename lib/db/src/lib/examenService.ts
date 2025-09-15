@@ -1,0 +1,279 @@
+import {
+  ExamAdditionalTestType,
+  ExamStatus,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
+import { BaseService } from './_baseService.js';
+import {
+  ExamSortField,
+  CanDeleteExamReason,
+  ExamFullDetail,
+} from '../type/index.js';
+import { AnimalService } from './animalService.js';
+
+export class ExamenService extends BaseService {
+  constructor(prisma: PrismaClient) {
+    super(prisma);
+  }
+
+  canDeleteExam = async (
+    structureId: string,
+    id: string
+  ): Promise<{ canDelete: boolean; reason: CanDeleteExamReason }> => {
+    // Check if there are attachments or additional tests linked to the exam
+    const attachmentsCount = await this.prisma.examAttachment.count({
+      where: { examId: id },
+    });
+
+    const additionalTestsCount = await this.prisma.examAdditionalTest.count({
+      where: { examId: id },
+    });
+
+    const reason: CanDeleteExamReason = {
+      linkedAttachments: attachmentsCount > 0,
+      linkedAdditionalTests: additionalTestsCount > 0,
+    };
+
+    return {
+      canDelete: attachmentsCount === 0 && additionalTestsCount === 0,
+      reason,
+    };
+  };
+
+  deleteExam = async (structureId: string, id: string) => {
+    const exam = await this.prisma.exam.findFirst({
+      where: { id: id, structureId: structureId },
+    });
+
+    if (!exam) {
+      throw new Error('Exam not found');
+    }
+
+    await this.prisma.exam.delete({
+      where: { id: id },
+    });
+  };
+
+  createExam = async (input: Prisma.ExamCreateInput) => {
+    return await this.prisma.exam.create({
+      data: input,
+      include: {
+        animal: {
+          include: {
+            breed: true,
+          },
+        },
+        structure: true,
+        interpreter: true,
+        attachments: true,
+        additionalTests: true,
+      },
+    });
+  };
+
+  updateExam = async (
+    id: string,
+    input: Prisma.ExamUpdateInput,
+    additionalExams:
+      | Record<string, { key: ExamAdditionalTestType; textValue: string }>
+      | undefined
+  ) => {
+    return await this.prisma.$transaction(async (tx) => {
+      // Delete existing additional tests
+      await tx.examAdditionalTest.deleteMany({
+        where: { examId: id },
+      });
+
+      // Create new additional tests if provided
+      if (additionalExams) {
+        await tx.examAdditionalTest.createMany({
+          data: Object.values(additionalExams).map((value) => ({
+            examId: id,
+            type: value.key as ExamAdditionalTestType,
+            findings: value.textValue,
+          })) satisfies Prisma.ExamAdditionalTestCreateManyInput[],
+        });
+      }
+
+      // Update the exam
+      return await tx.exam.update({
+        where: { id },
+        data: input,
+        include: {
+          animal: {
+            include: {
+              breed: true,
+            },
+          },
+          structure: true,
+          interpreter: true,
+          attachments: true,
+        },
+      });
+    });
+  };
+
+  getExamById = async (id: string, structureId: string) => {
+    return await this.prisma.exam.findFirst({
+      where: { id, structureId },
+      include: {
+        animal: {
+          include: {
+            breed: true,
+          },
+        },
+        structure: true,
+        interpreter: true,
+        attachments: true,
+        additionalTests: true,
+      },
+    });
+  };
+
+  /**
+   * Get full details for an exam including the pet information and list of completed exams for that animal
+   */
+  getExamFullDetail = async (
+    id: string,
+    structureId: string,
+    locale: 'fr' | 'en'
+  ): Promise<ExamFullDetail | null> => {
+    // Get the main exam with full details
+    const exam = await this.prisma.exam.findFirst({
+      where: { id, structureId },
+      include: {
+        animal: {
+          include: {
+            breed: true,
+          },
+        },
+        structure: true,
+        interpreter: true,
+        attachments: true,
+        additionalTests: true,
+      },
+    });
+
+    if (!exam) {
+      return null;
+    }
+
+    const animal = await new AnimalService(this.prisma).getAnimalById(
+      exam.animalId,
+      structureId,
+      locale
+    );
+
+    // Get all completed exams for the same animal (only date and basic info)
+    const completedExams = await this.prisma.exam.findMany({
+      where: {
+        animalId: exam.animalId,
+        structureId: structureId,
+        status: 'COMPLETED',
+        id: { not: id }, // Exclude the current exam
+      },
+      select: {
+        id: true,
+        requestedAt: true,
+        vetReference: true,
+      },
+      orderBy: {
+        requestedAt: 'desc',
+      },
+    });
+
+    return {
+      exam,
+      animal,
+      completedExams,
+    };
+  };
+
+  getExams = async (
+    structureId: string,
+    page: number,
+    limit: number,
+    sort?: ExamSortField,
+    sortDirection?: 'asc' | 'desc',
+    search?: string,
+    status?: ExamStatus
+  ) => {
+    const offset = (page - 1) * limit;
+
+    const where = this.buildSearchWhere(structureId, search, status);
+    const direction = sortDirection === 'asc' ? 'asc' : 'desc';
+    const sortableFields: Record<string, Prisma.ExamOrderByWithRelationInput> =
+      {
+        requestedAt: { requestedAt: direction },
+        status: { status: direction },
+        vetReference: { vetReference: direction },
+        animalName: { animal: { name: direction } },
+        structureName: { structure: { name: direction } },
+      };
+
+    const orderBy = (sort && sortableFields[sort]) || { requestedAt: 'desc' };
+
+    return await this.prisma.exam.findMany({
+      where,
+      include: {
+        animal: {
+          include: {
+            breed: true,
+          },
+        },
+        structure: true,
+        interpreter: true,
+        attachments: true,
+        additionalTests: true,
+      },
+      skip: offset,
+      take: limit,
+      orderBy: orderBy,
+    });
+  };
+
+  /**
+   * Return count of exams matching optional keyword search
+   */
+  getFilteredExamCount = async (
+    structureId?: string,
+    search?: string,
+    status?: ExamStatus
+  ) => {
+    const where = this.buildSearchWhere(structureId, search, status);
+    const count = await this.prisma.exam.count({
+      where: where as Prisma.ExamWhereInput,
+    });
+    return count;
+  };
+
+  /**
+   * Build a Prisma where clause for keyword search across multiple fields
+   */
+  private buildSearchWhere(
+    structureId?: string,
+    keyword?: string,
+    status?: ExamStatus
+  ) {
+    const where = {
+      structureId: structureId,
+    } as Prisma.ExamWhereInput;
+
+    if (status) {
+      where.status = status;
+    }
+
+    const query = keyword?.trim();
+    if (query) {
+      where.OR = [
+        { vetReference: { contains: query, mode: 'insensitive' } },
+        { animal: { name: { contains: query, mode: 'insensitive' } } },
+        { requestReason: { contains: query, mode: 'insensitive' } },
+        { clinicalSuspicion: { contains: query, mode: 'insensitive' } },
+        { comments: { contains: query, mode: 'insensitive' } },
+      ];
+    }
+    return where;
+  }
+}

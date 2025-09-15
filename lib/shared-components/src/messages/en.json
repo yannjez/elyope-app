@@ -36,6 +36,7 @@
             }
         },
         "Examen": {
+            "no_data": "No examen found",
             "name": "Examen",
             "columns": {
                 "date": "Date",
@@ -50,10 +51,183 @@
                 "interpreter": "Interpreter"
             },
             "status": {
-                "pending": "Pending",
-                "processing": "Processing",
-                "completed": "Completed",
-                "archived": "Archived"
+                "PENDING": "Pending",
+                "PROCESSING": "Processing",
+                "COMPLETED": "Completed",
+                "ARCHIVED": "Archived",
+                "CANCELLED": "Cancelled"
+            },
+            "detail": {
+                "title": "Examen Details",
+                "back_to_list": "← Back to examens"
+            },
+            "edit": {
+                "form_title": "Examen Information",
+                "sections": {
+                    "basic_info": "Basic Information",
+                    "clinical_context": "Clinical Context",
+                    "manifestations": "Manifestations",
+                    "additional_tests": "Additional Tests",
+                    "diagnosis_treatment": "Diagnosis & Treatments",
+                    "exam_conditions": "Exam Conditions",
+                    "eeg_clinical": "EEG & Clinical Notes",
+                    "comments": "Comments",
+                    "attachments": "Attachments"
+                },
+                "fields": {
+                    "status": {
+                        "label": "Status"
+                    },
+                    "requestedAt": {
+                        "label": "Requested Date"
+                    },
+                    "vetReference": {
+                        "label": "Vet Reference",
+                        "placeholder": "Enter vet reference"
+                    },
+                    "animal": {
+                        "label": "Animal",
+                        "placeholder": "Select an animal"
+                    },
+                    "requestReason": {
+                        "label": "Request Reason",
+                        "placeholder": "Enter the reason for the examination request"
+                    },
+                    "history": {
+                        "label": "History",
+                        "placeholder": "Enter patient medical history"
+                    },
+                    "clinicalExams": {
+                        "label": "Clinical Exams",
+                        "placeholder": "Enter clinical examination findings"
+                    },
+                    "manifestationCategory": {
+                        "label": "Manifestation Category",
+                        "options": {
+                            "paroxysmal": "Paroxysmal",
+                            "vigilance": "Vigilance",
+                            "troubles_vigilance": "Alertness Disorders",
+                            "modifications_comportement": "Behavioral Changes",
+                            "behavior": "Behavior",
+                            "other": "Other"
+                        }
+                    },
+                    "paroxysmalSubtype": {
+                        "label": "Paroxysmal Subtype",
+                        "options": {
+                            "isolated": "Isolated",
+                            "grouped": "Grouped",
+                            "status_epilepticus": "Status Epilepticus"
+                        }
+                    },
+                    "manifestationOther": {
+                        "label": "Other Manifestation",
+                        "placeholder": "Enter other manifestation details"
+                    },
+                    "general_placeholder": "Specify...",
+                    "default_text_placeholder": "Enter details...",
+                    "field_required": "This field is required",
+                    "description_required": "requires a description",
+                    "firstManifestationAt": {
+                        "label": "First Manifestation Date"
+                    },
+                    "lastManifestationAt": {
+                        "label": "Last Manifestation Date"
+                    },
+                    "manifestationDescription": {
+                        "label": "Manifestation Description"
+                    },
+                    "manifestationFrequency": {
+                        "label": "Manifestation Frequency",
+                        "options": {
+                            "daily": "Daily",
+                            "weekly": "Weekly",
+                            "monthly": "Monthly",
+                            "occasional": "Occasional"
+                        }
+                    },
+                    "avgManifestationDurationMin": {
+                        "label": "Average Duration (minutes)",
+                        "placeholder": "Enter duration in minutes"
+                    },
+                    "additionalExams": {
+                        "label": "Additional Exams",
+                        "options": {
+                            "NFS": "Complete Blood Count (CBC)",
+                            "BIOCHEMISTRY": "Biochemistry",
+                            "BILE_ACIDS_PRE_POST": "Bile Acids (Pre/Post)",
+                            "MRI": "MRI",
+                            "OTHER": "Other"
+                        },
+                        "placeholders": {
+                            "NFS": "Enter CBC details...",
+                            "BIOCHEMISTRY": "Enter biochemistry details...",
+                            "BILE_ACIDS_PRE_POST": "Enter bile acids test details...",
+                            "MRI": "Enter MRI details...",
+                            "OTHER": "Enter other exam details..."
+                        }
+                    },
+                    "clinicalSuspicion": {
+                        "label": "Clinical Suspicion",
+                        "placeholder": "Enter clinical suspicion and preliminary diagnosis"
+                    },
+                    "currentAntiepilepticTreatments": {
+                        "label": "Current Antiepileptic Treatments",
+                        "placeholder": "List current antiepileptic medications and dosages"
+                    },
+                    "otherTreatments": {
+                        "label": "Other Treatments",
+                        "placeholder": "List other medications and treatments"
+                    },
+                    "examCondition": {
+                        "label": "Exam Condition",
+                        "options": {
+                            "awake_exam": "Awake Examination",
+                            "sedation_at_placement": "Sedation at Placement",
+                            "under_sedation": "Under Sedation"
+                        }
+                    },
+                    "sedationProtocol": {
+                        "label": "Sedation Protocol"
+                    },
+                    "eegSpecificEvents": {
+                        "label": "EEG Specific Events",
+                        "placeholder": "Describe specific EEG events and findings"
+                    },
+                    "duringExamClinical": {
+                        "label": "During Exam Clinical Notes",
+                        "placeholder": "Clinical observations and notes during the examination"
+                    },
+                    "comments": {
+                        "label": "Comments",
+                        "placeholder": "Additional comments and observations"
+                    }
+                },
+                "exam_condition_options": {
+                    "awake_exam": {
+                        "label": "Awake Examination",
+                        "placeholder": "Describe awake examination conditions..."
+                    },
+                    "sedation_at_placement": {
+                        "label": "Sedation at Placement",
+                        "placeholder": "Describe sedation protocol and placement details..."
+                    },
+                    "under_sedation": {
+                        "label": "Under Sedation",
+                        "placeholder": "Describe sedation protocol and exam conditions..."
+                    }
+                },
+                "todo_messages": {
+                    "additional_tests_component": "TODO: Create AdditionalTests component for multiple test entries",
+                    "file_upload_component": "TODO: Create FileUpload component for exam attachments"
+                },
+                "validation": {
+                    "status_required": "Status is required",
+                    "date_required": "Date is required",
+                    "invalid_date": "Please enter a valid date",
+                    "animal_required": "Animal is required",
+                    "form_has_errors": "Please fix the following errors before saving:"
+                }
             }
         },
         "User": {
@@ -272,12 +446,86 @@
                 }
             }
         },
+        "Animal": {
+            "list": {
+                "title": "Animals",
+                "create_button": "+ Create Animal",
+                "columns": {
+                    "name": "Name",
+                    "breed": "Breed",
+                    "birthDate": "Birth Date",
+                    "comment": "Comment",
+                    "externalRef": "Ref."
+                },
+                "no_data": "No animals found",
+                "actions": {
+                    "edit": "Edit",
+                    "delete": "Delete"
+                },
+                "species_filter_label": "Species:",
+                "select_species": "Select species",
+                "dialog": {
+                    "delete_title": "Delete animal",
+                    "delete_message": "Are you sure you want to delete this animal? This action cannot be undone.",
+                    "cannot_delete_title": "Cannot delete animal",
+                    "cannot_delete_linked_exams": "This animal cannot be deleted because it has linked exams.",
+                    "cannot_delete_linked_messages": "This animal cannot be deleted because it has linked messages.",
+                    "cannot_delete_multiple_reasons": "This animal cannot be deleted because it has linked exams and messages."
+                }
+            },
+            "create": {
+                "title": "Create Animal",
+                "form_title": "Animal Information",
+                "fields": {
+                    "name": {
+                        "label": "Name",
+                        "placeholder": "Enter animal name"
+                    },
+                    "species": {
+                        "label": "Species",
+                        "placeholder": "Select species"
+                    },
+                    "breed": {
+                        "label": "Breed",
+                        "placeholder": "Select breed"
+                    },
+                    "externalRef": {
+                        "label": "External Reference",
+                        "placeholder": "External reference (optional)"
+                    },
+                    "birthDate": {
+                        "label": "Birth Date",
+                        "placeholder": "Select birth date"
+                    },
+                    "comment": {
+                        "label": "Comment",
+                        "placeholder": "Additional comments (optional)"
+                    }
+                },
+                "validation": {
+                    "name_required": "Name is required",
+                    "species_required": "Species is required",
+                    "breed_required": "Breed is required",
+                    "invalid_date": "Please enter a valid date"
+                }
+            },
+            "species": {
+                "CHIEN": "Dog",
+                "CHAT": "Cat",
+                "OTHER": "Other"
+            }
+        },
         "Tools": {
             "title": "Tools",
             "soon_badge": "SOON",
             "description": "Here you can download examens with a period filter",
             "support_message": "For questions or assistance, contact us:"
         }
+    },
+    "Filter": {
+        "filter": "Filter",
+        "search": "Search",
+        "reset": "Reset"
     },
     "Validation": {
         "SelectMultiButtons": {

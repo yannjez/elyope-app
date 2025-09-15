@@ -16,7 +16,7 @@ export default function MenuBlock() {
     <div className="flex flex-col gap-3 justify-center items-center">
       <div className="flex flex-wrap gap-3 ">
         <MenuCard
-          href="/examens"
+          href="#"
           icon={<Examens className="w-8 h-8 text-el-blue-500" />}
           title={t('examens.title')}
           description={t('examens.description')}

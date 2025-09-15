@@ -20,5 +20,4 @@ export type AppUser = {
   firstName: string;
   lastName: string;
   emailAddress: string;
-  organizationId: string;
 };

@@ -8,7 +8,11 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -19,11 +23,15 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": [
+        "./src/*"
+      ],
       "@app-test2/shared-components": [
         "../../lib/shared-components/src/index.ts"
       ],
-      "@elyope/db": ["../../lib/db/src/index.ts"]
+      "@elyope/db": [
+        "../../lib/db/src/index.ts"
+      ]
     },
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
@@ -34,7 +42,8 @@
     "src/**/*.js",
     "src/**/*.jsx",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "../../dist/apps/elyope-admin/.next/types/**/*.ts"
   ],
   "exclude": [
     "out-tsc",

@@ -5,13 +5,27 @@ import { cn } from '../utils/cn';
 import CarretIcon from '../icons/Carret';
 import { DataGridColumn } from './DataGrid';
 
+/**
+ * Helper function to get nested object values using dot notation
+ * @param obj - The object to traverse
+ * @param path - The dot-separated path (e.g., 'breed.name_fr')
+ * @returns The value at the specified path or undefined if not found
+ */
+function getNestedValue(obj: unknown, path: string): unknown {
+  return path.split('.').reduce((current, key) => {
+    return current && typeof current === 'object'
+      ? (current as Record<string, unknown>)[key]
+      : undefined;
+  }, obj);
+}
+
 export type DataGridCardProps<T> = {
   columns: DataGridColumn<T>[];
   data: (T & { rowClass?: string })[];
   className?: string;
   cardClassName?: string;
-  onSort?: (field: keyof T, direction: 'asc' | 'desc') => void;
-  sortField?: keyof T | null;
+  onSort?: (field: keyof T | string, direction: 'asc' | 'desc') => void;
+  sortField?: keyof T | string | null;
   sortDirection?: 'asc' | 'desc';
   blueMode?: boolean;
   rowActions?: Array<{
@@ -66,8 +80,7 @@ function MobileCard<T extends object>({
           <div className="font-semibold text-16 text-el-grey-700">
             {primaryColumn.displayCell
               ? primaryColumn.displayCell(row)
-              : String(row[primaryColumn.field] ?? '')}
-            {blueMode ? 'true' : 'false'} {row.rowClass} {className}
+              : String(getNestedValue(row, String(primaryColumn.field)) ?? '')}
           </div>
         </div>
       )}
@@ -83,7 +96,7 @@ function MobileCard<T extends object>({
                 : `Field ${idx + 1}`);
             const value = col.displayCell
               ? col.displayCell(row)
-              : String(row[col.field] ?? '');
+              : String(getNestedValue(row, String(col.field)) ?? '');
 
             if (!value || value === '') return null;
 
@@ -150,7 +163,7 @@ export function DataGridCard<T extends object>({
   blueMode = false,
   rowActions = [],
 }: DataGridCardProps<T>) {
-  const handleSort = (field: keyof T) => {
+  const handleSort = (field: keyof T | string) => {
     const newSortDirection =
       sortField === field ? (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc';
     onSort?.(field, newSortDirection);

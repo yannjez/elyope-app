@@ -22,14 +22,28 @@
         "migrate-reset": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma migrate reset",
+                "command": "pnpm  prisma migrate reset",
                 "cwd": "lib/db"
             }
         },
         "generate": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma generate",
+                "command": "pnpm  prisma generate",
+                "cwd": "lib/db"
+            }
+        },
+        "migrate-deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm  prisma migrate deploy",
+                "cwd": "lib/db"
+            }
+        },
+        "migrate:reset": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm prisma migrate reset --force --skip-seed",
                 "cwd": "lib/db"
             }
         },
@@ -43,14 +57,21 @@
         "studio": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma studio",
+                "command": "pnpm  prisma studio",
                 "cwd": "lib/db"
             }
         },
         "db-push": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "pnpm dlx prisma db push --accept-data-loss",
+                "command": "pnpm  prisma db push --accept-data-loss",
+                "cwd": "lib/db"
+            }
+        },
+        "seed": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "pnpm ts-node prisma/seed.ts",
                 "cwd": "lib/db"
             }
         },

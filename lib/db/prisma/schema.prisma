@@ -15,19 +15,12 @@ datasource db {
 }
 
 
-
 enum UserType {
   VETERINARIAN
   ADMIN
   INTERPRETER
 }
 
-enum InvitationStatus {
-  PENDING
-  ACCEPTED
-  EXPIRED
-  CANCELLED
-}
 
 model User {
   id    String @id @default(uuid())
@@ -38,7 +31,7 @@ model User {
   Interpreters Structure[] @relation("interpreter")
   Members StructureUser[] @relation("members")
   SentInvitations UserInvitation[] @relation("user")
- 
+  Exams Exam[]
 }
 
 model Structure {
@@ -68,6 +61,9 @@ model Structure {
   Interpreter User? @relation("interpreter", fields: [interpreterId], references: [id])
   interpreterId String?
   Members StructureUser[] @relation("members")
+  @@index([interpreterId])
+  Animal Animal[]
+  Exams Exam[]
 }
 
 model StructureUser {
@@ -76,6 +72,7 @@ model StructureUser {
   structure Structure @relation("members" , fields: [structureId], references: [id])
   userId String
   user User @relation("members", fields: [userId], references: [id])
+  @@index([structureId, userId])
 }
 
 model UserInvitation {
@@ -90,5 +87,165 @@ model UserInvitation {
   veterinarianAppUrl String?
   interpreterAppUrl String?
   @@index([email])
+  @@index([userId])
 }
+
+enum AnimalSpecies {
+  CHIEN
+  CHAT
+  OTHER   // nouveaux animaux de compagnie (lapin, hamster, etc.)
+}
+
+model AnimalBreed {
+  id        String       @id @default(uuid())
+  name      String
+  name_fr   String
+  species   AnimalSpecies
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  Animals   Animal[]     // no @relation here
+  isArchived Boolean      @default(false)
+}
+
+model Animal {
+  id        String       @id @default(uuid())
+  name      String
+  species   AnimalSpecies
+  breedId   String
+  externalRef String?
+  breed     AnimalBreed  @relation(fields: [breedId], references: [id])
+  structureId String
+  structure Structure @relation(fields: [structureId], references: [id]) 
+  birthDate DateTime?
+  comment String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  @@index([structureId])
+  @@index([species])
+  Exams Exam[]
+}
+
+enum ExamStatus {
+  PENDING              // Examen vigile
+  PROCESSING
+  COMPLETED
+  ARCHIVED
+  CANCELLED
+}
+
+enum ManifestationCategory {
+  PAROXYSMAL
+  STATUS_EPILEPTICUS
+  ALERTNESS
+  DISTURBANCE_OF_ALERTNESS
+  BEHAVIOR_CHANGES
+  OTHER
+}
+
+enum ParoxysmalSubtype {
+  ISOLATED
+  GROUPED
+}
+enum ExamCondition {
+  AWAKE_EXAM
+  SEDATION_AT_PLACEMENT
+  UNDER_SEDATION
+}
+
+
+model Exam {
+  id             String   @id @default(uuid())
+
+  status ExamStatus
+  // Header
+  requestedAt    DateTime
+  vetReference   String?
+
+  // Links (adapt id types to your models)
+  animalId       String
+  animal         Animal    @relation(fields: [animalId], references: [id])
+  structureId    String
+  structure      Structure @relation(fields: [structureId], references: [id])
+  interpreterUserId String?
+  interpreter    User?     @relation(fields: [interpreterUserId], references: [id])
+
+  // Clinical context
+  requestReason  String?
+  history        String?
+  clinicalExams  String?
+
+  // Manifestations (free text + dates)
+  manifestationCategory    ManifestationCategory[] // e.g. "paroxysmal", "vigilance", "behavior", "other"
+  paroxysmalSubtype        ParoxysmalSubtype?   // e.g. "isolated", "grouped", "or null
+  manifestationOther       String?
+  firstManifestationAt     DateTime?
+  lastManifestationAt      DateTime?
+  manifestationDescription String?
+  manifestationFrequency   String?   // e.g. "daily", "weekly", "monthly", "occasional"
+  avgManifestationDurationMin Int?
+
+  // Complementary exams (checkboxes as rows)
+  additionalTests ExamAdditionalTest[]
+
+  // Diagnosis & treatments
+  clinicalSuspicion               String?
+  currentAntiepilepticTreatments  String?
+  otherTreatments                 String?
+
+  // Exam conditions
+  examCondition   ExamCondition?
+  examConditionDescription String?
+
+  // EEG focus & during-exam notes
+  eegSpecificEvents  String?
+  duringExamClinical String?
+
+  // Comments
+  comments        String?
+
+  // Files
+  attachments     ExamAttachment[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([animalId])
+  @@index([structureId])
+  @@index([requestedAt])
+}
+
+model ExamAttachment {
+  id        String   @id @default(uuid())
+  examId    String
+  exam      Exam     @relation(fields: [examId], references: [id])
+
+  url       String
+  filename  String?
+  mimeType  String?
+  kind      String?  // e.g. "FOLLOWUP", "MANIFESTATION_VIDEO", "OTHER"
+
+  createdAt DateTime @default(now())
+
+  @@index([examId, kind])
+}
+
+enum ExamAdditionalTestType {
+  NFS
+  BIOCHEMISTRY
+  BILE_ACIDS_PRE_POST
+  MRI
+  LCS
+  OTHER
+}
+
+model ExamAdditionalTest {
+  id        String   @id @default(uuid())
+  examId    String
+  exam      Exam     @relation(fields: [examId], references: [id])
+  type      ExamAdditionalTestType   // e.g. "NFS", "BIOCHEMISTRY", "BILE_ACIDS_PRE_POST", "MRI", "CSF", "OTHER"
+  findings  String?
+
+  @@index([examId, type])
+}
+
 

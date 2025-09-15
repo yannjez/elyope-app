@@ -215,6 +215,7 @@ export default function UserDetailContent() {
       <DialogConfirm
         open={confirmRemove.show}
         title={t('dialog.remove_title')}
+        disableCancel={false}
         message={
           confirmRemove.structure
             ? t('dialog.remove_message', { name: confirmRemove.structure.name })

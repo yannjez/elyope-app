@@ -7,6 +7,7 @@
     "@clerk/localizations": "^3.17.1",
     "@clerk/nextjs": "^6.23.1",
     "@elyope/db": "*",
+    "@prisma/client": "^6.10.1",
     "next": "~15.2.4",
     "next-intl": "^4.3.1",
     "react": "19.0.0",

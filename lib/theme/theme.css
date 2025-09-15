@@ -41,6 +41,19 @@
     --text-24:24px;
     --text-34:34px;
 }
+
+@layer utilities {
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--color-el-grey-100);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--color-el-grey-300);
+
+      }
+}
  
 @utility main-container {
     @apply max-w-7xl pr-0;

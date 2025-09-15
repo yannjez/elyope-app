@@ -31,6 +31,30 @@
     "animals": "Animals",
     "messages": "Messages",
     "design": "Design",
-    "profile": "My Profile"
+    "profile": "My Profile",
+    "myStructure": "My Structure",
+    "currentStructure": "Current Structure",
+    "switchTo": "Switch to:"
+  },
+  "Data": {
+    "Animal": {
+      "no_animal_selected": "No animal selected",
+      "fields": {
+        "name": "Name",
+        "species": "Species",
+        "breed": "Breed",
+        "birthDate": "Birth Date",
+        "externalRef": "External Reference"
+      },
+      "species": {
+        "CHIEN": "Dog",
+        "CHAT": "Cat"
+      }
+    },
+    "Common": {
+      "actions": {
+        "view_details": "View Details"
+      }
+    }
   }
 }

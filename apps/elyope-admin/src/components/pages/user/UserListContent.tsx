@@ -171,6 +171,7 @@ export default function UserListContent() {
           />
           <DialogConfirm
             open={confirmOpen}
+            disableCancel={false}
             title={t('dialog.delete_title')}
             message={t('dialog.delete_message')}
             confirmLabel={t('actions.delete')}

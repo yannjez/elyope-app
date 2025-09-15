@@ -17,6 +17,7 @@ type SidemenuProps = {
   className?: string;
   menuItems?: MenuItem[];
   languageSelector?: React.ReactNode;
+  additionalElement?: React.ReactNode;
   footer?: {
     copyright: string;
     version: string;
@@ -59,6 +60,7 @@ export default function Sidemenu({
     copyright: `©${new Date().getFullYear()} Elyope`,
     version: 'Elyope App V1.0.0',
   },
+  additionalElement,
   profileButton,
   qualifier = 'APP',
   onMobileMenuToggle,
@@ -91,7 +93,7 @@ export default function Sidemenu({
   return (
     <>
       {/* Mobile Menu Button - Only visible on mobile */}
-      <div className="lg:hidden flex gap-2 py-2 px-3 bg-white backdrop-blur-sm  items-center justify-between fixed  w-full  z-50 ">
+      <div className="lg:hidden  flex gap-2 py-2 px-3 bg-white backdrop-blur-sm  items-center justify-between fixed  w-full  z-50 ">
         <button
           onClick={toggleMobileMenu}
           className=" p-2 bg-el-grey-100 rounded-4 "
@@ -132,11 +134,11 @@ export default function Sidemenu({
       {/* Sidemenu */}
       <div
         className={cn(
-          'bg-el-grey-100 transition-all duration-300 min-h-screen py-5 px-3 flex flex-col gap-5',
+          'max-h-screen bg-el-grey-100 transition-all duration-300 min-h-screen py-5 px-3 flex flex-col gap-5',
           // Desktop styles
           'lg:sticky lg:top-0 lg:min-w-[230px]',
           // Mobile styles - z-50 to be above backdrop (z-40)
-          'fixed inset-y-0 left-0 z-50  w-full lg:w-[280px] lg:relative lg:w-auto',
+          'fixed inset-y-0 left-0 z-50  w-full lg:w-[280px]  lg:w-auto',
           // Mobile menu visibility
           isMobileMenuOpen
             ? 'translate-x-0'
@@ -199,6 +201,9 @@ export default function Sidemenu({
           </nav>
         </div>
         <div className="flex gap-2 justify-between mt-auto items-center">
+          {additionalElement}
+        </div>
+        <div className="flex gap-2 justify-between  items-center">
           {profileButton}
           {languageSelector}
         </div>

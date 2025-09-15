@@ -49,12 +49,10 @@ export class ClerkService {
         url.searchParams.append('user_id', id);
       });
     }
-    console.log('url', url.searchParams.toString());
 
     const data = await this.baseFetch<ClerkUser[]>(
       '/users?' + url.searchParams.toString()
     );
-    console.log('data', data);
     return data;
   };
 
