@@ -1,4 +1,13 @@
-import { Prisma, ExamStatus as PrismaExamStatus, Exam } from '@prisma/client';
+import {
+  Prisma,
+  ExamStatus as PrismaExamStatus,
+  Exam,
+  ManifestationCategory as PrismaManifestationCategory,
+  ParoxysmalSubtype as PrismaParoxysmalSubtype,
+  ExamCondition as PrismaExamCondition,
+  ExamAdditionalTestType as PrismaExamAdditionalTestType,
+  ExamAdditionalTest as PrismaExamAdditionalTest,
+} from '@prisma/client';
 import { AnimalFull } from './AnimalType.js';
 
 export type ExamWithRelations = Prisma.ExamGetPayload<{
@@ -50,3 +59,17 @@ export type ExamStatusType = keyof typeof ExamStatus;
 // Using Prisma's generated types
 export type ExamCreateInput = Prisma.ExamCreateInput;
 export type ExamUpdateInput = Prisma.ExamUpdateInput;
+
+export type ManifestationCategory = PrismaManifestationCategory;
+export const ManifestationCategory = PrismaManifestationCategory;
+
+export type ParoxysmalSubtype = PrismaParoxysmalSubtype;
+export const ParoxysmalSubtype = PrismaParoxysmalSubtype;
+
+export type ExamCondition = PrismaExamCondition;
+export const ExamCondition = PrismaExamCondition;
+
+export type ExamAdditionalTest = PrismaExamAdditionalTest;
+
+export type ExamAdditionalTestType = PrismaExamAdditionalTestType;
+export const ExamAdditionalTestType = PrismaExamAdditionalTestType;

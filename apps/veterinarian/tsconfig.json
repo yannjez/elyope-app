@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "rootDir": "../../", // ✅ include libs/** and apps/**
+    "composite": false, // ✅ override base; apps don't emit
+    "declarationMap": false, // ✅ disable since composite is false
     "jsx": "preserve",
     "noEmit": true,
     "emitDeclarationOnly": false,
@@ -8,40 +11,26 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
+      "@/*": ["./src/*"],
       "@app-test2/shared-components": [
         "../../lib/shared-components/src/index.ts"
       ],
-      "@app-test2/shared-components/*": [
-        "../../lib/shared-components/src/*"
-      ],
-      "@elyope/db": [
-        "../../lib/db/src/index.ts"
-      ],
-      "@elyope/db/*": [
-        "../../lib/db/src/*"
-      ]
+      "@elyope/db": ["../../lib/db/src/index.ts"]
     },
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
+  "references": [
+    { "path": "../../lib/db" },
+    { "path": "../../lib/shared-components" }
+  ],
   "include": [
     ".next/types/**/*.ts",
     "next-env.d.ts",
@@ -63,13 +52,5 @@
     "eslint.config.js",
     "eslint.config.cjs",
     "eslint.config.mjs"
-  ],
-  "references": [
-    {
-      "path": "../../lib/db"
-    },
-    {
-      "path": "../../lib/shared-components"
-    }
   ]
 }

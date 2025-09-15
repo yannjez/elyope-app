@@ -1,13 +1,16 @@
 'use client';
 
-import { AnimalFull, ExamWithRelations, ExamStatusType } from '@elyope/db';
 import {
+  AnimalFull,
+  ExamWithRelations,
+  ExamStatusType,
   ManifestationCategory,
+  ExamAdditionalTestType,
   ParoxysmalSubtype,
   ExamCondition,
   ExamAdditionalTest,
-  ExamAdditionalTestType,
-} from '@prisma/client';
+} from '@elyope/db';
+
 import {
   createContext,
   useContext,
