@@ -179,6 +179,7 @@ export default function StructureListContent() {
             confirmLabel={t('actions.delete')}
             cancelLabel={tCommon('actions.cancel')}
             confirmClassName="button-destructive"
+            disableCancel={false}
             onCancel={() => {
               setConfirmOpen(false);
               setSelectedId(null);

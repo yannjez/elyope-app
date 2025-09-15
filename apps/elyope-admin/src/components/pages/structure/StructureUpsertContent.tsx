@@ -13,7 +13,7 @@ import {
   useFormContext,
 } from '@app-test2/shared-components';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { createStructure, updateStructure } from './StructureController';
 import { useRouter } from 'next/navigation';
 import { FullUser, Structure } from '@elyope/db';
@@ -63,7 +63,24 @@ export default function StructureUpsertContent({
   const structureSchema = createStructureSchema(t('validation.name_required'));
   const [defaults, setDefaults] = useState<StructureFormData | null>(
     isEdit
-      ? null
+      ? {
+          name: _structure?.name || '',
+          description: _structure?.description || '',
+          address1: _structure?.address1 || '',
+          address2: _structure?.address2 || '',
+          zipcode: _structure?.zipcode || '',
+          town: _structure?.town || '',
+          phone: _structure?.phone || '',
+          mobile: _structure?.mobile || '',
+          account_lastname: _structure?.account_lastname || '',
+          account_firstname: _structure?.account_firstname || '',
+          account_email: _structure?.account_email || '',
+          is_structure_active:
+            typeof _structure?.is_structure_active === 'boolean'
+              ? _structure.is_structure_active
+              : true,
+          interpreterId: _structure?.interpreterId || '',
+        }
       : {
           name: '',
           description: '',
@@ -80,31 +97,6 @@ export default function StructureUpsertContent({
           interpreterId: '',
         }
   );
-
-  useEffect(() => {
-    if (!isEdit) return;
-    (async () => {
-      setDefaults({
-        name: _structure?.name || '',
-        description: _structure?.description || '',
-        address1: _structure?.address1 || '',
-        address2: _structure?.address2 || '',
-        zipcode: _structure?.zipcode || '',
-        town: _structure?.town || '',
-        phone: _structure?.phone || '',
-        mobile: _structure?.mobile || '',
-        account_lastname: _structure?.account_lastname || '',
-        account_firstname: _structure?.account_firstname || '',
-        account_email: _structure?.account_email || '',
-        is_structure_active:
-          typeof _structure?.is_structure_active === 'boolean'
-            ? _structure.is_structure_active
-            : true,
-        interpreterId: _structure?.interpreterId || '',
-      });
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const listInterpreters = useCallback((keyword?: string) => {
     return _interpreters.filter((interpreter) =>

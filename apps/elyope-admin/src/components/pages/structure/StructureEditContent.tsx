@@ -73,7 +73,7 @@ export function StructureEditContent(props: StructureEditContentProps) {
         icon={<BriefCaseIcon className="w-full" />}
         action={
           <Link href="/structures" className="button-primary-inverse">
-            ← {tCommon('navigation.back_to_list')}
+            {tCommon('navigation.back_to_list')}
           </Link>
         }
       />
@@ -128,6 +128,7 @@ export function StructureEditContent(props: StructureEditContentProps) {
             message={t('users_panel.dialog.remove_message', {
               name: pendingUserName,
             })}
+            disableCancel={false}
             confirmLabel={tCommon('actions.remove')}
             cancelLabel={tCommon('actions.cancel')}
             onCancel={() => {
