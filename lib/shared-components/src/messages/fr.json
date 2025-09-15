@@ -220,7 +220,8 @@
                     "status_required": "Le statut est requis",
                     "date_required": "La date est requise",
                     "invalid_date": "Veuillez entrer une date valide",
-                    "animal_required": "L'animal est requis"
+                    "animal_required": "L'animal est requis",
+                    "form_has_errors": "Veuillez corriger les erreurs suivantes avant de sauvegarder :"
                 }
             }
         },

@@ -5,7 +5,6 @@ import {
   ManifestationCategory,
   ParoxysmalSubtype,
   ExamCondition,
-  ExamAdditionalTest,
 } from '@prisma/client';
 import {
   createContext,
@@ -222,7 +221,7 @@ const createExamenSchema = (
         z.object({
           key: z.string(),
           isChecked: z.boolean(),
-          textValue: z.string(),
+          textValue: z.string().optional(),
         })
       )
       .optional(),
@@ -256,6 +255,17 @@ type ExamenDetailContextType = {
   searchAnimals: (keyword: string) => Promise<AnimalFull[]>;
   handleSubmit: (data: ExamenFormData) => Promise<void>;
   setDefaults: (defaults: ExamenFormData) => void;
+  // Validation functions
+  validateManifestations: (
+    manifestations: Record<string, TreeSelectionSelectionValue> | undefined
+  ) => { isValid: boolean; errors: string[] };
+  validateAdditionalExams: (
+    additionalExams: Record<string, TreeSelectionSelectionValue> | undefined
+  ) => { isValid: boolean; errors: string[] };
+  validateExamConditions: (
+    examCondition: string | undefined,
+    examConditionDescription: string | undefined
+  ) => { isValid: boolean; errors: string[] };
 };
 
 const ExamenDetailContext = createContext<ExamenDetailContextType | undefined>(
@@ -282,7 +292,6 @@ export const ExamenDetailProvider = ({
 
   // Create schema with translated validation messages
   const schema = createExamenSchema(
-    t('validation.required'),
     t('validation.status_required'),
     t('validation.date_required'),
     t('validation.invalid_date'),
@@ -509,6 +518,117 @@ export const ExamenDetailProvider = ({
     [currentStructure?.id]
   );
 
+  // Validation functions
+  const validateManifestations = useCallback(
+    (
+      manifestations: Record<string, TreeSelectionSelectionValue> | undefined
+    ) => {
+      if (!manifestations) return { isValid: true, errors: [] };
+
+      const errors: string[] = [];
+
+      manifestationData.forEach((category) => {
+        const categoryKey = category.key;
+        const categorySelection = manifestations[categoryKey];
+        const isCategorySelected = categorySelection?.isChecked || false;
+        const categoryTextValue = categorySelection?.textValue || '';
+
+        // Check category validation
+        if (
+          isCategorySelected &&
+          category.hasTextField &&
+          (!categoryTextValue || categoryTextValue.trim() === '')
+        ) {
+          errors.push(`${category.label} ${t('fields.description_required')}`);
+        }
+
+        // Check subtypes validation
+        if (category.subChoice) {
+          category.subChoice.forEach((subtype) => {
+            const subtypeKey = `${categoryKey}.${subtype.key}`;
+            const subtypeSelection = manifestations[subtypeKey];
+            const isSubtypeSelected = subtypeSelection?.isChecked || false;
+            const subtypeTextValue = subtypeSelection?.textValue || '';
+
+            if (
+              isSubtypeSelected &&
+              subtype.hasTextField &&
+              (!subtypeTextValue || subtypeTextValue.trim() === '')
+            ) {
+              errors.push(
+                `${subtype.label} ${t('fields.description_required')}`
+              );
+            }
+          });
+        }
+      });
+
+      return { isValid: errors.length === 0, errors };
+    },
+    [manifestationData, t]
+  );
+
+  const validateAdditionalExams = useCallback(
+    (
+      additionalExams: Record<string, TreeSelectionSelectionValue> | undefined
+    ) => {
+      if (!additionalExams) return { isValid: true, errors: [] };
+
+      const errors: string[] = [];
+
+      additionalExamsData.forEach((exam) => {
+        const examKey = exam.key;
+        const examSelection = additionalExams[examKey];
+        const isExamSelected = examSelection?.isChecked || false;
+        const examTextValue = examSelection?.textValue || '';
+
+        if (
+          isExamSelected &&
+          exam.hasTextField &&
+          (!examTextValue || examTextValue.trim() === '')
+        ) {
+          errors.push(`${exam.label} ${t('fields.description_required')}`);
+        }
+      });
+
+      return { isValid: errors.length === 0, errors };
+    },
+    [additionalExamsData, t]
+  );
+
+  const validateExamConditions = useCallback(
+    (
+      examCondition: string | undefined,
+      examConditionDescription: string | undefined
+    ) => {
+      if (!examCondition) return { isValid: true, errors: [] };
+
+      const errors: string[] = [];
+
+      // All exam condition options require text description
+      if (
+        examCondition &&
+        (!examConditionDescription || examConditionDescription.trim() === '')
+      ) {
+        const conditionLabels = {
+          AWAKE_EXAM: t('exam_condition_options.awake_exam.label'),
+          SEDATION_AT_PLACEMENT: t(
+            'exam_condition_options.sedation_at_placement.label'
+          ),
+          UNDER_SEDATION: t('exam_condition_options.under_sedation.label'),
+        };
+
+        const label =
+          conditionLabels[examCondition as keyof typeof conditionLabels] ||
+          examCondition;
+        errors.push(`${label} ${t('fields.description_required')}`);
+      }
+
+      return { isValid: errors.length === 0, errors };
+    },
+    [t]
+  );
+
   // Form submission handler
   const handleSubmit = useCallback(
     async (data: ExamenFormData) => {
@@ -567,6 +687,9 @@ export const ExamenDetailProvider = ({
     handleSubmit,
     setDefaults,
     examConditionData,
+    validateManifestations,
+    validateAdditionalExams,
+    validateExamConditions,
   };
 
   return (

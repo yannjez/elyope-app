@@ -225,7 +225,8 @@
                     "status_required": "Status is required",
                     "date_required": "Date is required",
                     "invalid_date": "Please enter a valid date",
-                    "animal_required": "Animal is required"
+                    "animal_required": "Animal is required",
+                    "form_has_errors": "Please fix the following errors before saving:"
                 }
             }
         },

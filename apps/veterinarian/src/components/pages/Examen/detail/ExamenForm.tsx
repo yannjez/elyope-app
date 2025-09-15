@@ -17,14 +17,76 @@ import {
 
 import { AnimalFull } from '@elyope/db';
 import { useTranslations } from 'next-intl';
+import { useCallback, useState } from 'react';
 import { useExamenDetailContext, ExamenFormData } from './ExamenDetailContext';
 import { TreeSelectionValue } from '@app-test2/shared-components/lib/types/TreeOptionType';
 
 export default function ExamenForm() {
-  const { examen, schema, defaults, handleSubmit } = useExamenDetailContext();
+  const {
+    examen,
+    schema,
+    defaults,
+    handleSubmit,
+    validateManifestations,
+    validateAdditionalExams,
+    validateExamConditions,
+  } = useExamenDetailContext();
 
   const t = useTranslations('Data.Examen.edit');
   const tCommon = useTranslations('Data.Common');
+
+  // State for validation errors to display near save button
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  // Function to clear validation errors when user starts fixing them
+  const clearValidationErrors = useCallback(() => {
+    if (validationErrors.length > 0) {
+      setValidationErrors([]);
+    }
+  }, [validationErrors.length]);
+
+  // Custom submit handler that validates the three non-HTML5 fields
+  const onSubmit = useCallback(
+    (data: ExamenFormData) => {
+      // Validate the three non-HTML5 fields
+      const manifestationsValidation = validateManifestations(
+        data.manifestations
+      );
+      const additionalExamsValidation = validateAdditionalExams(
+        data.additionalExams
+      );
+      const examConditionsValidation = validateExamConditions(
+        data.examCondition,
+        data.examConditionDescription
+      );
+
+      // Collect all validation errors
+      const allErrors = [
+        ...manifestationsValidation.errors,
+        ...additionalExamsValidation.errors,
+        ...examConditionsValidation.errors,
+      ];
+
+      if (allErrors.length > 0) {
+        console.warn(
+          'Form submission blocked due to validation errors:',
+          allErrors
+        );
+        setValidationErrors(allErrors);
+        return;
+      }
+
+      // Clear any previous validation errors and submit
+      setValidationErrors([]);
+      handleSubmit(data);
+    },
+    [
+      validateManifestations,
+      validateAdditionalExams,
+      validateExamConditions,
+      handleSubmit,
+    ]
+  );
 
   if (!examen || !defaults) {
     return <div>Loading...</div>;
@@ -35,7 +97,7 @@ export default function ExamenForm() {
       <FormPanel title={t('form_title')} className="main-container w-full">
         <ZodForm
           schema={schema}
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
           defaultValues={defaults}
           className="space-y-4 max-w-4xl"
         >
@@ -126,7 +188,9 @@ export default function ExamenForm() {
                 name="manifestations"
                 label={t('fields.manifestationCategory.label')}
               >
-                <SelectManifestationsField />
+                <SelectManifestationsField
+                  onClearErrors={clearValidationErrors}
+                />
               </FormField>
 
               <FormField
@@ -179,7 +243,9 @@ export default function ExamenForm() {
               name="additionalExams"
               label={t('fields.additionalExams.label')}
             >
-              <SelectAdditionalTestsField />
+              <SelectAdditionalTestsField
+                onClearErrors={clearValidationErrors}
+              />
             </FormField>
 
             {/* Additional Tests */}
@@ -245,7 +311,9 @@ export default function ExamenForm() {
                 name="examConditions"
                 label={t('fields.examCondition.label')}
               >
-                <SelectExamConditionsField />
+                <SelectExamConditionsField
+                  onClearErrors={clearValidationErrors}
+                />
               </FormField>
             </div>
 
@@ -312,6 +380,39 @@ export default function ExamenForm() {
               <Button type="submit" className="button-primary">
                 {tCommon('actions.save')}
               </Button>
+
+              {/* Display validation errors */}
+              {validationErrors.length > 0 && (
+                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg
+                        className="h-5 w-5 text-red-400"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">
+                        {t('validation.form_has_errors')}
+                      </h3>
+                      <div className="mt-2 text-sm text-red-700">
+                        <ul className="list-disc list-inside space-y-1">
+                          {validationErrors.map((error, index) => (
+                            <li key={index}>{error}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </ZodForm>
@@ -339,7 +440,11 @@ function SelectStatus() {
   );
 }
 
-function SelectManifestationsField() {
+function SelectManifestationsField({
+  onClearErrors,
+}: {
+  onClearErrors?: () => void;
+}) {
   const { manifestationData, defaults } = useExamenDetailContext();
   const form = useFormContext<ExamenFormData>();
   const t = useTranslations('Data.Examen.edit');
@@ -350,6 +455,7 @@ function SelectManifestationsField() {
       value={defaults?.manifestations}
       t={t}
       onValueChange={(selectedValue: Record<string, TreeSelectionValue>) => {
+        onClearErrors?.(); // Clear validation errors when user makes changes
         if (form) {
           // Ensure all isChecked are boolean, not undefined
           const sanitizedValue = Object.fromEntries(
@@ -387,7 +493,11 @@ function SelectFrequency() {
   );
 }
 
-function SelectAdditionalTestsField() {
+function SelectAdditionalTestsField({
+  onClearErrors,
+}: {
+  onClearErrors?: () => void;
+}) {
   const { additionalExamsData, defaults } = useExamenDetailContext();
   const form = useFormContext<ExamenFormData>();
   const t = useTranslations('Data.Examen.edit');
@@ -398,6 +508,7 @@ function SelectAdditionalTestsField() {
       value={defaults?.additionalExams}
       t={t}
       onValueChange={(selectedValue: Record<string, TreeSelectionValue>) => {
+        onClearErrors?.(); // Clear validation errors when user makes changes
         if (form) {
           // Ensure all isChecked are boolean, not undefined
           const sanitizedValue = Object.fromEntries(
@@ -417,7 +528,11 @@ function SelectAdditionalTestsField() {
   );
 }
 
-function SelectExamConditionsField() {
+function SelectExamConditionsField({
+  onClearErrors,
+}: {
+  onClearErrors?: () => void;
+}) {
   const { defaults } = useExamenDetailContext();
   const form = useFormContext<ExamenFormData>();
   const t = useTranslations('Data.Examen.edit');
@@ -457,6 +572,7 @@ function SelectExamConditionsField() {
         textValue: defaults?.examConditionDescription || '',
       }}
       onValueChange={(key: string, textValue: string) => {
+        onClearErrors?.(); // Clear validation errors when user makes changes
         if (form) {
           form.setValue(
             'examCondition',
