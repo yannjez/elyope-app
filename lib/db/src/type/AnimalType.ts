@@ -1,8 +1,8 @@
 import {
-  AnimalBreed as PrismaAnimalBreed,
-  AnimalSpecies as PrismaAnimalSpecies,
-  Animal as PrismaAnimal,
-  Prisma,
+  type AnimalBreed as PrismaAnimalBreed,
+  type AnimalSpecies as PrismaAnimalSpecies,
+  type Animal as PrismaAnimal,
+  type Prisma,
 } from '@prisma/client';
 
 export type AnimalBreed = PrismaAnimalBreed;

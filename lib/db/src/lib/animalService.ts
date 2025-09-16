@@ -1,4 +1,8 @@
-import { AnimalSpecies, Prisma, PrismaClient } from '@prisma/client';
+import {
+  type AnimalSpecies,
+  type Prisma,
+  type PrismaClient,
+} from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import {
   AnimalBreed,
@@ -35,9 +39,9 @@ export class AnimalService extends BaseService {
       orderBy,
     })) as AnimalBreed[];
     return breeds.map((breed) => {
-      let species = breed.species === AnimalSpecies.CHAT ? 'Cat >' : 'Dog >';
+      let species = breed.species === 'CHAT' ? 'Cat >' : 'Dog >';
       if (locale === 'fr') {
-        species = breed.species === AnimalSpecies.CHAT ? 'Chat >' : 'Chien >';
+        species = breed.species === 'CHAT' ? 'Chat >' : 'Chien >';
       }
       return {
         ...breed,
@@ -175,11 +179,9 @@ export class AnimalService extends BaseService {
   };
 
   postprocessAnimal = (animal: AnimalWithBreed, locale: 'fr' | 'en' = 'fr') => {
-    let species =
-      animal.breed.species === AnimalSpecies.CHAT ? 'Cat >' : 'Dog >';
+    let species = animal.breed.species === 'CHAT' ? 'Cat >' : 'Dog >';
     if (locale === 'fr') {
-      species =
-        animal.breed.species === AnimalSpecies.CHAT ? 'Chat >' : 'Chien >';
+      species = animal.breed.species === 'CHAT' ? 'Chat >' : 'Chien >';
     }
     return {
       ...animal,

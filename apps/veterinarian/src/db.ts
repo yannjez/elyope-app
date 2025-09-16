@@ -1,7 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-// libs/db/src/db.ts
-export const runtime = 'nodejs';
-
 import { PrismaClient } from '@elyope/db';
 
 const globalForPrisma = globalThis as unknown as {

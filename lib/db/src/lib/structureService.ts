@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Structure } from '@prisma/client';
+import { type Prisma, type PrismaClient, type Structure } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 
 export class StructureService extends BaseService {
