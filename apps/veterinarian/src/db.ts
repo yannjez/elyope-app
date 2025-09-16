@@ -1,5 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-// libs/db/src/db.ts
 import { PrismaClient } from '@elyope/db';
 
 const globalForPrisma = globalThis as unknown as {
@@ -8,5 +6,5 @@ const globalForPrisma = globalThis as unknown as {
 
 export const prisma: PrismaClient =
   globalForPrisma.prisma ?? new PrismaClient();
-
+export type { PrismaClient };
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

@@ -89,6 +89,9 @@ npx nx dev elyope-admin
 npx nx run db:generate
 
 # Run database migrations
+npx nx run db:migrate-deploy
+
+# Create database migrations
 npx nx run db:migrate --name xxxx
 
 # Reset database
@@ -147,6 +150,7 @@ npx nx run-many --target=lint --all
 
 # Run all typecheck
 npx nx run-many --target=typecheck --all
+npx nx run  typecheck veterinarian
 
 
 # Build all projects

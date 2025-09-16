@@ -9,13 +9,12 @@ import {
   ExamStatus,
   ExamFullDetail,
   AnimalService,
-} from '@elyope/db';
-import {
+  ExamAdditionalTestType,
   ManifestationCategory,
   ParoxysmalSubtype,
   ExamCondition,
-  ExamAdditionalTestType,
-} from '@prisma/client';
+} from '@elyope/db';
+
 import { getLocale } from 'next-intl/server';
 
 export type ExamenRequest = {
@@ -88,7 +87,7 @@ export const updateExam = async (
     requestReason: string;
     history: string;
     clinicalExams: string;
-    manifestationCategory: ManifestationCategory[];
+    manifestationCategory: ManifestationCategory[] | null;
     paroxysmalSubtype: ParoxysmalSubtype | null;
     manifestationOther: string;
     firstManifestationAt: Date;
@@ -110,7 +109,17 @@ export const updateExam = async (
     | undefined
 ) => {
   const examenService = new ExamenService(prisma);
-  return await examenService.updateExam(id, input, additionalExams);
+
+  // Convert null manifestationCategory to undefined for Prisma compatibility
+  const prismaInput = {
+    ...input,
+    manifestationCategory:
+      input.manifestationCategory === null
+        ? undefined
+        : input.manifestationCategory,
+  };
+
+  return await examenService.updateExam(id, prismaInput, additionalExams);
 };
 
 export const searchAnimalsForExamen = async (

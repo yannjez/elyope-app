@@ -231,9 +231,6 @@ importers:
       '@elyope/db':
         specifier: '*'
         version: link:../../lib/db
-      '@prisma/client':
-        specifier: ^6.10.1
-        version: 6.13.0(prisma@6.13.0)(typescript@5.9.2)
       next:
         specifier: ~15.2.4
         version: 15.2.5(@babel/core@7.28.0)(react-dom@19.0.0)(react@19.0.0)

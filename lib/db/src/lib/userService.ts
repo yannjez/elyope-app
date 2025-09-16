@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { type PrismaClient } from '@prisma/client';
 import { BaseService } from './_baseService.js';
 import {
   ClerkUser,

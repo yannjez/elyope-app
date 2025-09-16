@@ -13,13 +13,13 @@ import {
   SelectEntity,
   SelectMultiTreeOptions,
   SelectTreeOptions,
+  TreeSelectionValue,
 } from '@app-test2/shared-components';
 
 import { AnimalFull } from '@elyope/db';
 import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { useExamenDetailContext, ExamenFormData } from './ExamenDetailContext';
-import { TreeSelectionValue } from '@app-test2/shared-components/lib/types/TreeOptionType';
 
 export default function ExamenForm() {
   const {
@@ -470,7 +470,13 @@ function SelectAdditionalTestsField({
           ) as Record<
             string,
             {
-              key: 'NFS' | 'BIOCHEMISTRY' | 'BILE_ACIDS_PRE_POST' | 'MRI' | 'LCS' | 'OTHER';
+              key:
+                | 'NFS'
+                | 'BIOCHEMISTRY'
+                | 'BILE_ACIDS_PRE_POST'
+                | 'MRI'
+                | 'LCS'
+                | 'OTHER';
               isChecked: boolean;
               textValue: string;
             }

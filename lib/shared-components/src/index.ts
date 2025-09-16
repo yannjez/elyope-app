@@ -72,6 +72,7 @@ export type { AppUser, Option } from './lib/types/Base';
 export type {
   TreeSelectionOption as TreeSelectionSelection,
   TreeSelectionValue as TreeSelectionSelectionValue,
+  TreeSelectionValue,
 } from './lib/types/TreeOptionType';
 
 // /* Messages */

@@ -1,13 +1,16 @@
 'use client';
 
-import { AnimalFull, ExamWithRelations, ExamStatusType } from '@elyope/db';
 import {
+  AnimalFull,
+  ExamWithRelations,
+  ExamStatus,
   ManifestationCategory,
+  ExamAdditionalTestType,
   ParoxysmalSubtype,
   ExamCondition,
   ExamAdditionalTest,
-  ExamAdditionalTestType,
-} from '@prisma/client';
+} from '@elyope/db';
+
 import {
   createContext,
   useContext,
@@ -248,7 +251,7 @@ type ExamenDetailContextType = {
   defaults: ExamenFormData | null;
   currentAnimal: AnimalFull | null;
   // Options for select fields
-  statusOptions: { value: ExamStatusType; label: string }[];
+  statusOptions: { value: ExamStatus; label: string }[];
   manifestationData: TreeSelectionSelection[];
   manifestationFrequencyOptions: { value: string; label: string }[];
   examConditionData: TreeSelectionSelection[];
@@ -304,7 +307,7 @@ export const ExamenDetailProvider = ({
   const [defaults, setDefaults] = useState<ExamenFormData | null>(
     _examen
       ? {
-          status: _examen.status as ExamStatusType,
+          status: _examen.status as ExamStatus,
           requestedAt: _examen.requestedAt
             ? new Date(_examen.requestedAt).toISOString().split('T')[0]
             : '',
@@ -341,13 +344,7 @@ export const ExamenDetailProvider = ({
                   acc: Record<
                     string,
                     {
-                      key:
-                        | 'OTHER'
-                        | 'NFS'
-                        | 'BIOCHEMISTRY'
-                        | 'BILE_ACIDS_PRE_POST'
-                        | 'MRI'
-                        | 'LCS';
+                      key: ExamAdditionalTestType;
                       isChecked: boolean;
                       textValue: string;
                     }
@@ -377,13 +374,7 @@ export const ExamenDetailProvider = ({
                 {} as Record<
                   string,
                   {
-                    key:
-                      | 'OTHER'
-                      | 'NFS'
-                      | 'BIOCHEMISTRY'
-                      | 'BILE_ACIDS_PRE_POST'
-                      | 'MRI'
-                      | 'LCS';
+                    key: ExamAdditionalTestType;
                     isChecked: boolean;
                     textValue: string;
                   }
@@ -412,11 +403,11 @@ export const ExamenDetailProvider = ({
   // Select options
   const statusOptions = useMemo(
     () => [
-      { value: 'PENDING' as ExamStatusType, label: tStatus('PENDING') },
-      { value: 'PROCESSING' as ExamStatusType, label: tStatus('PROCESSING') },
-      { value: 'COMPLETED' as ExamStatusType, label: tStatus('COMPLETED') },
-      { value: 'ARCHIVED' as ExamStatusType, label: tStatus('ARCHIVED') },
-      { value: 'CANCELLED' as ExamStatusType, label: tStatus('CANCELLED') },
+      { value: 'PENDING' as ExamStatus, label: tStatus('PENDING') },
+      { value: 'PROCESSING' as ExamStatus, label: tStatus('PROCESSING') },
+      { value: 'COMPLETED' as ExamStatus, label: tStatus('COMPLETED') },
+      { value: 'ARCHIVED' as ExamStatus, label: tStatus('ARCHIVED') },
+      { value: 'CANCELLED' as ExamStatus, label: tStatus('CANCELLED') },
     ],
     [tStatus]
   );
@@ -691,7 +682,7 @@ export const ExamenDetailProvider = ({
       if (!_examen) return;
 
       const dataToSubmit = {
-        status: data.status as ExamStatusType,
+        status: data.status as ExamStatus,
         requestedAt: new Date(data.requestedAt),
         animalId: data.animalId,
         vetReference: data.vetReference || undefined,
@@ -722,7 +713,20 @@ export const ExamenDetailProvider = ({
         comments: data.comments || undefined,
       };
 
-      await updateExam(_examen.id, dataToSubmit, data?.additionalExams);
+      // Transform additionalExams to match expected type (filter checked items and remove isChecked property)
+      const transformedAdditionalExams = data?.additionalExams
+        ? Object.entries(data.additionalExams)
+            .filter(([_, value]) => value.isChecked)
+            .reduce((acc, [key, value]) => {
+              acc[key] = {
+                key: value.key as ExamAdditionalTestType,
+                textValue: value.textValue,
+              };
+              return acc;
+            }, {} as Record<string, { key: ExamAdditionalTestType; textValue: string }>)
+        : undefined;
+
+      await updateExam(_examen.id, dataToSubmit, transformedAdditionalExams);
       router.refresh();
     },
     [_examen, router]
